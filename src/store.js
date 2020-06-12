@@ -20,5 +20,10 @@ export const store = new Vuex.Store({
     setResults({commit}, results) {
       commit("setResults", results)
     }
+  },
+  getters: {
+    getResults: state => {
+      return state.results
+    }
   }
 })
