@@ -1,7 +1,8 @@
 <template>
   <div class="test">
     <div class="content">
-      <div>
+      <Navigator @start="start" v-if="!hasTestStarted"/>
+      <div v-else>
         <div class="content__thumbnail">
           <img :src="question.thumbnail" class="content__img">
         </div>
@@ -39,6 +40,7 @@
 <script>
 // import CircularTimer from '../../UI/circular-timer/circular-timer'
 import { questions } from '../../../dummyData'
+import Navigator from './components/navigator/navigator'
 
 export default {
   data() {
@@ -56,6 +58,7 @@ export default {
     }
   },
   components: {
+    Navigator
   },
   created() {
     this.questions = questions
