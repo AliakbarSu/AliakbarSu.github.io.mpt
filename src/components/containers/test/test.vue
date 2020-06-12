@@ -64,6 +64,11 @@ export default {
     this.questions = questions
     this.question = this.questions[0]
   },
+  mounted() {
+    const now = new Date().getTime()
+    this.questions = questions
+    this.question = {...this.questions[0], startAt: now}
+  },
   methods: {
     start() {
       this.hasTestStarted = true
@@ -83,9 +88,11 @@ export default {
     next() {
       this.removeQuestion()
 
+      const now = new Date().getTime()
       this.submitted_questions.push({
         ...this.question, 
-        submitted_answers: this.submitted_answers
+        submitted_answers: this.submitted_answers,
+        endAt: now
       })
 
       this.resetAnswers()
@@ -103,8 +110,9 @@ export default {
       this.questions = this.questions.filter(q => q.id !== this.question.id)
     },
     setNextQuestion() {
+      const now = new Date().getTime()
       const currentIndex = this.questions.findIndex(q => q.id == this.questions.id)
-      this.question = currentIndex == this.questions.length - 1 ? this.question : this.questions[currentIndex + 1]
+      this.question = currentIndex == this.questions.length - 1 ? this.question : {...this.questions[currentIndex + 1], startAt: now}
     },
     applySkippedQuestions() {
       this.questions = this.skipped_questions
@@ -127,6 +135,7 @@ export default {
     },
     endTest() {
       alert("Are you sure you want to end the test?")
+      this.$store.dispatch("setResults", this.submitted_questions)
       this.calculateResults()
     },
     selectAnswer(answer) {
