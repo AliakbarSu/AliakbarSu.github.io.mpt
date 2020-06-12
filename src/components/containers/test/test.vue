@@ -1,34 +1,36 @@
 <template>
   <div class="test">
     <div class="content">
-      <div class="content__thumbnail">
-        <img :src="question.thumbnail" class="content__img">
-      </div>
       <div>
-        <span>Time Remaining: </span>
-        <span>{{timeRemained.h}} : {{timeRemained.m}} : {{timeRemained.s}}</span>
-      </div>
-      <div class="question">
-        <p class="question__explanation" v-html="question.explaination"></p>
-        <br>
-        <p class="question__question">{{question.question}}</p>
-        <span>{{question.id}}</span>
-        <!-- <CircularTimer/> -->
-        <ul class="question__answers">
-          <li class="question__answer" 
-            v-for="option in question.options" 
-            :key="option.id">
-              <i v-if="!isSelected(option)" class="far fa-dot-circle"></i>
-              <i v-else class="fas fa-dot-circle" :class="{'answer__text--active': isSelected(option)}"></i>
-              <span @click="selectAnswer(option)" class="answer__text" >{{option.text}}</span>
-            </li>
-        </ul>
-      </div>
-      <div class="actions">
-        <button class="actions__action" @click="next">Next</button>
-        <button class="actions__action" @click="skip">Skip</button>
-        <button class="actions__action" @click="endTest">End test</button>
-        <button class="actions__action" @click="start">Start</button>
+        <div class="content__thumbnail">
+          <img :src="question.thumbnail" class="content__img">
+        </div>
+        <div>
+          <span>Time Remaining: </span>
+          <span>{{timeRemained.h}} : {{timeRemained.m}} : {{timeRemained.s}}</span>
+        </div>
+        <div class="question">
+          <p class="question__explanation" v-html="question.explaination"></p>
+          <br>
+          <p class="question__question">{{question.question}}</p>
+          <span>{{question.id}}</span>
+          <!-- <CircularTimer/> -->
+          <ul class="question__answers">
+            <li class="question__answer" 
+              v-for="option in question.options" 
+              :key="option.id">
+                <i v-if="!isSelected(option)" class="far fa-dot-circle"></i>
+                <i v-else class="fas fa-dot-circle" :class="{'answer__text--active': isSelected(option)}"></i>
+                <span @click="selectAnswer(option)" class="answer__text" >{{option.text}}</span>
+              </li>
+          </ul>
+        </div>
+        <div class="actions">
+          <button class="actions__action" @click="next">Next</button>
+          <button class="actions__action" @click="skip">Skip</button>
+          <button class="actions__action" @click="endTest">End test</button>
+          <button class="actions__action" @click="start">Start</button>
+        </div>
       </div>
     </div>
   </div>
@@ -49,18 +51,19 @@ export default {
       testEndsIn: 0,
       timeLimit: 1.26e+7,
       timeRemained: {h: 0, m: 0, s: 0},
-      isTimeOver: false
+      isTimeOver: false,
+      hasTestStarted: false
     }
+  },
+  components: {
   },
   created() {
     this.questions = questions
     this.question = this.questions[0]
   },
-  components: {
-    // CircularTimer
-  },
   methods: {
     start() {
+      this.hasTestStarted = true
       this.testEndsIn = this.timeLimit + new Date().getTime()
       var x = setInterval(() => {
         const now = new Date().getTime(); 
@@ -81,6 +84,9 @@ export default {
         ...this.question, 
         submitted_answers: this.submitted_answers
       })
+
+      this.resetAnswers()
+
 
       if(this.isTestOver) {
         this.calculateResults()
@@ -104,12 +110,16 @@ export default {
     calculateResults() {
       this.$router.push('/test-results')
     },
+    resetAnswers() {
+      this.submitted_answers = []
+    },
     skip() {
       this.removeQuestion()
       this.skipped_questions = [...this.skipped_questions.filter(sq => sq.id !== this.question.id), this.question]
       if(this.isLastQuestion) {
         this.applySkippedQuestions()
       }
+      this.resetAnswers()
       this.setNextQuestion()
     },
     endTest() {
