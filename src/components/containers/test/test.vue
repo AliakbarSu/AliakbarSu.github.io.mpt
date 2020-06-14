@@ -162,7 +162,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scopped>
 
 .test {
   height: 100vh;
@@ -172,6 +172,7 @@ export default {
 
 .content {
   padding: 12px;
+  text-align: left;
   @media(min-width: 1200px) {
     width: 1200px;
     margin: auto;

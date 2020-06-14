@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Dashboard from '../components/containers/dashboard/dashboard.vue'
 import Results from '../components/containers/results/results.vue'
 import Auth from '../components/containers/auth/auth'
+import Checkout from '../components/containers/payment-gateway/paymentGateway.vue'
 
 function guardMyroute(to, from, next) {
   const token = localStorage.getItem("token")
@@ -35,6 +36,12 @@ Vue.use(VueRouter)
     path: '/auth',
     name: 'Auth',
     component: Auth
+  },
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    beforeEnter: guardMyroute,
+    component: Checkout
   },
   {
     path: '/test',
