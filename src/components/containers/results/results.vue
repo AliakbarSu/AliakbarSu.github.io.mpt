@@ -86,7 +86,7 @@ export default {
   },
   methods: {
     navigateToDashboard() {
-      this.$router.push("/dashboard")
+      this.$router.push("/")
     }
   },
   computed: {
