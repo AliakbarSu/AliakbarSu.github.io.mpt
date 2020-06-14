@@ -65,9 +65,7 @@ export default {
     this.question = this.questions[0]
   },
   mounted() {
-    const now = new Date().getTime()
     this.questions = questions
-    this.question = {...this.questions[0], startAt: now}
   },
   methods: {
     start() {
@@ -84,6 +82,9 @@ export default {
           this.isTestOver = true
         } 
       }, 100)
+      const now = new Date().getTime(); 
+      this.$store.commit("setTestStartTime", now)
+      this.question = {...this.questions[0], startAt: now}
     },
     next() {
       this.removeQuestion()

@@ -5,6 +5,7 @@ export const questions = [
         question: "What will be your next step in management of this patient?",
         thumbnail: "https://www.mymed.com/image/1030/MedicalArticle/700",
         category: "A",
+        score: 4,
         options: [
             {
                 id: "an1",
@@ -39,6 +40,7 @@ export const questions = [
         question: "All of the following are associated with Shigella infection except?",
         thumbnail: "https://www.researchgate.net/publication/276432879/figure/fig2/AS:267505595842579@1440789712513/A-model-for-Shigella-infection-of-the-intestinal-epithelium-A-schematic-representation.png",
         category: 'B',
+        score: 2,
         options: [
             {
                 id: "an1",
@@ -73,6 +75,7 @@ export const questions = [
         question: "Which of the following is not associated with obesity?",
         thumbnail: "https://www.obesitysurgeon.co.nz/images/2019/02/27/body-mass-index.jpg",
         category: "C",
+        score: 7,
         options: [
             {
                 id: "an1",
@@ -107,6 +110,7 @@ export const questions = [
         question: "What will be your next step in management of this patient?",
         thumbnail: "https://www.mymed.com/image/1030/MedicalArticle/700",
         category: "A",
+        score: 8,
         options: [
             {
                 id: "an1",
@@ -141,6 +145,7 @@ export const questions = [
         question: "All of the following are associated with Shigella infection except?",
         thumbnail: "https://www.researchgate.net/publication/276432879/figure/fig2/AS:267505595842579@1440789712513/A-model-for-Shigella-infection-of-the-intestinal-epithelium-A-schematic-representation.png",
         category: 'B',
+        score: 1,
         options: [
             {
                 id: "an1",
@@ -175,6 +180,7 @@ export const questions = [
         question: "Which of the following is not associated with obesity?",
         thumbnail: "https://www.obesitysurgeon.co.nz/images/2019/02/27/body-mass-index.jpg",
         category: "C",
+        score: 2,
         options: [
             {
                 id: "an1",
@@ -209,6 +215,7 @@ export const questions = [
         question: "What will be your next step in management of this patient?",
         thumbnail: "https://www.mymed.com/image/1030/MedicalArticle/700",
         category: "A",
+        score: 5,
         options: [
             {
                 id: "an1",
@@ -243,6 +250,7 @@ export const questions = [
         question: "All of the following are associated with Shigella infection except?",
         thumbnail: "https://www.researchgate.net/publication/276432879/figure/fig2/AS:267505595842579@1440789712513/A-model-for-Shigella-infection-of-the-intestinal-epithelium-A-schematic-representation.png",
         category: 'B',
+        score: 3,
         options: [
             {
                 id: "an1",
@@ -277,6 +285,7 @@ export const questions = [
         question: "Which of the following is not associated with obesity?",
         thumbnail: "https://www.obesitysurgeon.co.nz/images/2019/02/27/body-mass-index.jpg",
         category: "C",
+        score: 9,
         options: [
             {
                 id: "an1",

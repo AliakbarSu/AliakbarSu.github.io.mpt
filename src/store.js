@@ -3,10 +3,16 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+const convertTimeToMinutes = (time) => {
+  const timeElapsed = time / 60000
+  return Math.round((timeElapsed + Number.EPSILON) * Math.pow(10, 2)) / Math.pow(10, 2)
+}
+
 export const store = new Vuex.Store({
   state: {
     count: 0,
-    results: []
+    results: [],
+    testStartedAt: 0
   },
   mutations: {
     increment (state) {
@@ -14,6 +20,9 @@ export const store = new Vuex.Store({
     },
     setResults(state, results) {
       state.results = results
+    },
+    setTestStartTime(state, startTime) {
+      state.testStartedAt = startTime
     }
   },
   actions: {
@@ -29,7 +38,7 @@ export const store = new Vuex.Store({
       const processedQuestions = state.results.map(question => {
         const correctOptions = question.options.filter(option => option.isCorrect).map(op => op.id)
         const correctSubmittedAnswers = question.submitted_answers.filter(subAn => correctOptions.includes(subAn.id))
-        const gotCorrect = correctOptions.length == correctSubmittedAnswers
+        const gotCorrect = correctOptions.length == correctSubmittedAnswers.length
         const answeredIn = (question.endAt - question.startAt) / 1000 // changes millseconds to seconds
         return {...question, gotCorrect, answeredIn}
       })
@@ -52,7 +61,7 @@ export const store = new Vuex.Store({
         averageAnsweringTime
       }
     },
-    getSectionsScores: (state, getters) => {
+    getCategoriesResults: (state, getters) => {
       const processedQuestions = getters.processData
       const sections = processedQuestions.reduce((prev, curr) => {
         if(!prev.map(dta => dta.category).includes(curr.category)) {
@@ -69,19 +78,42 @@ export const store = new Vuex.Store({
         const gotIncorrectInSection = totalQuestionsInSection.filter(qa => !qa.gotCorrect)
         const answeringTimes = totalQuestionsInSection.map(proQa => proQa.answeredIn)
         const totalAnsweringTime = answeringTimes.reduce((total, curr) => total + curr)
-        const averageAnsweringTime = Math.round(totalAnsweringTime / answeringTimes.length, 2)
+        const averageAnsweringTime = Math.round(totalAnsweringTime / answeringTimes.length)
+        const totalSectionScores = totalQuestionsInSection.map(qa => qa.score).reduce((total, curr) => total + curr)
         
         return {
-          [section]: {
-            section,
-            averageAnsweringTime,
-            correct: gotCorrectInSection.length,
-            incorrect: gotIncorrectInSection.length,
-            of: totalQuestionsInSection.length
-          }
+          section,
+          averageAnsweringTime,
+          correct: gotCorrectInSection.length,
+          incorrect: gotIncorrectInSection.length,
+          of: totalQuestionsInSection.length,
+          score: totalSectionScores
         }
       })
       return scores
+    },
+    getAccuracyOverTime: (state, getters) => {
+      const processedQuestions = getters.processData
+      const questionsWithTime = processedQuestions.map(pq => ({correct: pq.gotCorrect, time: pq.startAt}))
+      const startTime = questionsWithTime[0].time
+      const endTime = questionsWithTime[questionsWithTime.length - 1].time
+      const range = endTime - startTime
+      const interval = range / 10;
+      const times = []
+      for(let t = startTime; t <= endTime; t+= interval) {
+        times.push({time: t})
+      }
+      const data = times.map(({time}) => {
+        const qa = questionsWithTime.filter(q => (q.time <= time) && (q.time >= time - interval))
+        const total = qa.map(q => q.correct).reduce((total, curr) => curr ? total + 1 : total, 0);
+        const timeElapsedInMinutes = convertTimeToMinutes(time - state.testStartedAt)
+        return {time: timeElapsedInMinutes, count: total}
+      })
+      return data
+    },
+    getSpeedOverTime: (state, getters) => {
+      const processedQuestions = getters.processData
+      return processedQuestions.map(pq => ({answeredIn: pq.answeredIn, time: convertTimeToMinutes(pq.startAt - state.testStartedAt)}))
     }
   }
 })
