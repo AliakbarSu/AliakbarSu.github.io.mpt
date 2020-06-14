@@ -5,6 +5,7 @@
         <li class="nav__item"><router-link to="/" tag="a">Dashboard</router-link></li>
         <li class="nav__item"><router-link to="/details" tag="a">Details</router-link></li>
         <li class="nav__item"><router-link to="/payments" tag="a">Payments</router-link></li>
+        <li class="nav__item"><a href="" @click="logout">Logout</a></li>
       </ul>
       <div class="nav__button">
         <router-link to="/test" class="nav__btn" tag="button">New Test</router-link>
@@ -56,7 +57,12 @@
 
 <script>
 export default {
-
+  methods: {
+    logout() {
+      this.$store.dispatch("logout")
+      this.$router.push("/auth")
+    }
+  }
 }
 </script>
 
@@ -142,6 +148,7 @@ export default {
 
 .history__title {
   font-size: 1.5em;
+  text-align: left;
 }
 
 .history__table {
@@ -157,6 +164,7 @@ th {
 td {
   border-top: 1px solid #e6e6e6;
   padding: 12px;
+  text-align: left;
 }
 
 .text__red {

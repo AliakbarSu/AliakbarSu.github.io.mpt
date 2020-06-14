@@ -12,7 +12,12 @@ export const store = new Vuex.Store({
   state: {
     count: 0,
     results: [],
-    testStartedAt: 0
+    testStartedAt: 0,
+    auth: {
+      token: "",
+      expiration: "",
+      id: ""
+    }
   },
   mutations: {
     increment (state) {
@@ -23,14 +28,45 @@ export const store = new Vuex.Store({
     },
     setTestStartTime(state, startTime) {
       state.testStartedAt = startTime
+    },
+    setAuth(state, authDetails) {
+      state.auth.token = authDetails.token
+      state.auth.expiration = authDetails.expiration
+      state.auth.id = authDetails.id
+    },
+    clearAuth(state) {
+      state.auth = {
+        token: "",
+        expiration: "",
+        id: ""
+      }
     }
   },
   actions: {
     setResults({commit}, results) {
       commit("setResults", results)
+    },
+    logout({commit}) {
+      commit("clearAuth")
+      localStorage.setItem("token", "")
+      localStorage.setItem("expiration", "")
+      localStorage.setItem("userId", "")
     }
   },
   getters: {
+    getAuth: state => {
+      return state.auth
+    },
+    isAuth: state => {
+      const token = state.auth.token
+      const expiresIn = state.auth.expiration
+      const now = new Date().getTime()
+      let authenticated = true
+
+      if(!token) { authenticated = false }
+      if(expiresIn <= now) { authenticated = false }
+      return authenticated
+    },
     getResults: state => {
       return state.results
     },
