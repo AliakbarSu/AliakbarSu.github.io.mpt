@@ -1,28 +1,27 @@
 <template>
   <div class="test">
     <div class="content">
-      <Navigator @start="start" v-if="!hasTestStarted"/>
+      <p v-if="loading">Loading questions...</p>
+      <Navigator @start="start" v-if="!hasTestStarted && !loading"/>
       <div v-else>
-        <div class="content__thumbnail">
-          <img :src="question.thumbnail" class="content__img">
+        <div v-if="question.images && question.images.length" class="content__thumbnail">
+          <img :src="question.images[0]" class="content__img">
         </div>
         <div>
           <span>Time Remaining: </span>
           <span>{{timeRemained.h}} : {{timeRemained.m}} : {{timeRemained.s}}</span>
         </div>
         <div class="question">
-          <p class="question__explanation" v-html="question.explaination"></p>
-          <br>
-          <p class="question__question">{{question.question}}</p>
-          <span>{{question.id}}</span>
+          <span>Question: {{question.number}}</span>
+          <p class="question__question" v-html="question.question"></p>
           <!-- <CircularTimer/> -->
           <ul class="question__answers">
             <li class="question__answer" 
-              v-for="option in question.options" 
-              :key="option.id">
-                <i v-if="!isSelected(option)" class="far fa-dot-circle"></i>
-                <i v-else class="fas fa-dot-circle" :class="{'answer__text--active': isSelected(option)}"></i>
-                <span @click="selectAnswer(option)" class="answer__text" >{{option.text}}</span>
+              v-for="choice in question.choices" 
+              :key="choice.id">
+                <i v-if="!isSelected(choice)" class="far fa-dot-circle"></i>
+                <i v-else class="fas fa-dot-circle" :class="{'answer__text--active': isSelected(choice)}"></i>
+                <span @click="selectAnswer(choice)" class="answer__text" >{{choice.text}}</span>
               </li>
           </ul>
         </div>
@@ -41,6 +40,7 @@
 // import CircularTimer from '../../UI/circular-timer/circular-timer'
 import { questions } from '../../../dummyData'
 import Navigator from './components/navigator/navigator'
+import axios from 'axios'
 
 export default {
   data() {
@@ -54,15 +54,24 @@ export default {
       timeLimit: 1.26e+7,
       timeRemained: {h: 0, m: 0, s: 0},
       isTimeOver: false,
-      hasTestStarted: false
+      hasTestStarted: false,
+      loading: true
     }
   },
   components: {
     Navigator
   },
   created() {
-    this.questions = questions
-    this.question = this.questions[0]
+    axios.get(
+      'https://us-central1-acm-test-e80ed.cloudfunctions.net/app/test', 
+      {headers: { 'Authorization': "Bearer " + this.$store.getters.getAuth.token}}
+    ).then(({data}) => {
+      this.questions = data.map((q, index) => ({...q, number: index + 1}))
+      this.question = this.questions[0]
+      this.loading = false
+    }).catch(err => {
+      console.log(err)
+    })
   },
   mounted() {
     this.questions = questions

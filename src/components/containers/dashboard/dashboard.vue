@@ -8,7 +8,7 @@
         <li class="nav__item"><a href="" @click="logout">Logout</a></li>
       </ul>
       <div class="nav__button">
-        <router-link to="/test" class="nav__btn" tag="button">New Test</router-link>
+        <router-link to="/checkout" class="nav__btn" tag="button">New Test</router-link>
       </div>
     </nav>
     <div class="content">
@@ -16,15 +16,15 @@
         <div class="tiles__container">
           <div class="tiles tiles--orange">
             <p class="tiles__heading">Total Tests<p>
-            <p class="tiles__text">3</p>
+            <p class="tiles__text">{{totalTests}}</p>
           </div>
           <div class="tiles tiles--green">
             <p class="tiles__heading">Passed Tests<p>
-            <p class="tiles__text">2</p>
+            <p class="tiles__text">{{passedTests}}</p>
           </div>
           <div class="tiles tiles--red">
             <p class="tiles__heading">Failed Tests<p>
-            <p class="tiles__text">1</p>
+            <p class="tiles__text">{{failedTests}}</p>
           </div>
         </div>
         <div class="history">
@@ -36,16 +36,10 @@
               <th>Result</th>
               <th>Action</th>
             </tr>
-            <tr>
-              <td>General</td>
-              <td>20-4-2019</td>
-              <td><span class="text__green">Passed</span></td>
-              <td><button class="view__btn">View</button></td>
-            </tr>
-            <tr>
-              <td>General</td>
-              <td>20-4-2019</td>
-              <td><span class="text__red">Failed</span></td>
+            <tr v-for="test in testsHistory" :key="test.id">
+              <td>{{test.category}}</td>
+              <td>{{test.date}}</td>
+              <td><span class="text__green">{{test.status}}</span></td>
               <td><button class="view__btn">View</button></td>
             </tr>
           </table>
@@ -61,6 +55,20 @@ export default {
     logout() {
       this.$store.dispatch("logout")
       this.$router.push("/auth")
+    }
+  },
+  computed: {
+    totalTests() {
+      return this.$store.getters.getUserTestData.totalTests
+    },
+    passedTests() {
+      return this.$store.getters.getUserTestData.passedTests
+    },
+    failedTests() {
+      return this.$store.getters.getUserTestData.failedTests
+    },
+    testsHistory() {
+      return this.$store.getters.getUserTestData.testsHistory
     }
   }
 }

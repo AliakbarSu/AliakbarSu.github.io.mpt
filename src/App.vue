@@ -4,6 +4,15 @@
   </div>
 </template>
 
+
+<script>
+export default {
+  created() {
+    this.$store.dispatch("fetchUserData")
+  }
+}
+</script>
+
 <style lang="scss">
 * {
   box-sizing: border-box;

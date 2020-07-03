@@ -4,17 +4,18 @@ import Dashboard from '../components/containers/dashboard/dashboard.vue'
 import Results from '../components/containers/results/results.vue'
 import Auth from '../components/containers/auth/auth'
 import Checkout from '../components/containers/payment-gateway/paymentGateway.vue'
+import { autoLogin } from "../services/auth"
+import { store } from '../store/store'
 
 function guardMyroute(to, from, next) {
-  const token = localStorage.getItem("token")
-  const expiresIn = localStorage.getItem("expiration")
-  const now = new Date().getTime()
-  let authenticated = true
-
-  if(!token) { authenticated = false }
-  if(expiresIn <= now) { authenticated = false }
-
-  authenticated ? next() : next("/auth")
+  const isAuth = autoLogin()
+  if(isAuth) {
+    store.dispatch("setAuth", isAuth)
+    next()
+  }else {
+    store.dispatch("logout")
+    next("/auth")
+  }
 }
 
 Vue.use(VueRouter)

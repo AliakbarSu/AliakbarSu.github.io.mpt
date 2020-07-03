@@ -60,13 +60,8 @@ export default {
                 })
             }
         },
-        authenticate(token, id, exp) {
-            const now = new Date().getTime()
-            const expiration = (Number(exp) * 1000) + now
-            localStorage.setItem("token", token)
-            localStorage.setItem("userId", id)
-            localStorage.setItem("expiration", expiration)
-            this.$store.commit("setAuth", {token, id, expiration})
+        authenticate(token, userId, expiresIn) {
+            this.$store.dispatch("setAuth", {token, userId, expiresIn})
             this.$router.push("/")
         }
     }

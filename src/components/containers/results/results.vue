@@ -65,6 +65,24 @@ import Bar from './components/bar/bar'
 import Pie from './components/pie/pie'
 import Line from './components/line/line'
 
+const backgroundColors = [
+  'rgba(255, 99, 132, 0.2)',
+  'rgba(54, 162, 235, 0.2)',
+  'rgba(255, 206, 86, 0.2)',
+  'rgba(75, 192, 192, 0.2)',
+  'rgba(153, 102, 255, 0.2)',
+  'rgba(255, 159, 64, 0.2)'
+]
+
+const borderColors = [
+  'rgba(255, 99, 132, 1)',
+  'rgba(54, 162, 235, 1)',
+  'rgba(255, 206, 86, 1)',
+  'rgba(75, 192, 192, 1)',
+  'rgba(153, 102, 255, 1)',
+  'rgba(255, 159, 64, 1)'
+]
+
 export default {
   data() {
     return {
@@ -77,6 +95,13 @@ export default {
               }]
           }
       }
+    }
+  },
+  mounted() {
+    if(this.getOverallScore > 2) {
+      this.$store.dispatch("updateTestsStatus", "passed")
+    }else {
+      this.$store.dispatch("updateTestsStatus", "failed")
     }
   },
   components: {
@@ -96,22 +121,8 @@ export default {
         datasets: [{
               label: '# of Votes',
               data: this.$store.getters.getCategoriesResults.map(section => section.correct),
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
               borderWidth: 1
           }]
       }
@@ -122,22 +133,8 @@ export default {
         datasets: [{
               label: '# of Votes',
               data: this.$store.getters.getCategoriesResults.map(section => section.incorrect),
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
               borderWidth: 1
           }]
       }
@@ -148,28 +145,14 @@ export default {
         datasets: [{
               label: 'your average time spent on questions of specific category',
               data: this.$store.getters.getCategoriesResults.map(section => section.averageAnsweringTime),
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
               borderWidth: 1
           }]
       }
     },
     overallScore() {
-      return this.$store.getters.getOverallScore.correct / this.$store.getters.getOverallScore.correct
+      return this.$store.getters.getOverallScore.score
     },
     correct() {
       return this.$store.getters.getOverallScore.correct
@@ -183,22 +166,8 @@ export default {
         datasets: [{
               label: 'your accuracy over the course of the test',
               data: this.$store.getters.getAccuracyOverTime.map(qa => qa.count),
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
               borderWidth: 3
           }]
       }
@@ -209,22 +178,8 @@ export default {
         datasets: [{
               label: 'time spent on questions at each time interval',
               data: this.$store.getters.getSpeedOverTime.map(qa => qa.answeredIn),
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
               borderWidth: 1
           }]
       }
@@ -235,22 +190,8 @@ export default {
         datasets: [{
               label: 'your total score at each category',
               data: this.$store.getters.getCategoriesResults.map(qa => qa.score),
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
               borderWidth: 1
           }]
       }
@@ -274,6 +215,7 @@ export default {
   border-radius: 5px;
   margin-bottom: 10px;
   padding: 8px 0;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .alert__text {
@@ -306,6 +248,7 @@ export default {
   color: white;
   width: 200px;
   text-align: center;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .result__score {
@@ -343,6 +286,7 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .graph__title {
