@@ -1,7 +1,7 @@
 <template>
   <div class="test">
     <div class="content">
-      <p v-if="loading">Loading questions...</p>
+      <Circle8 v-if="loading"></Circle8>
       <Navigator @start="start" v-if="!hasTestStarted && !loading"/>
       <div v-else>
         <div v-if="question.images && question.images.length" class="content__thumbnail">
@@ -42,6 +42,7 @@ import { questions } from '../../../dummyData'
 import Navigator from './components/navigator/navigator'
 import axios from 'axios'
 import firebase from '../../../../firebase'
+import Circle8 from 'vue-loading-spinner/src/components/Circle8'
 
 export default {
   data() {
@@ -60,7 +61,8 @@ export default {
     }
   },
   components: {
-    Navigator
+    Navigator,
+    Circle8
   },
   async created() {
     const token = await firebase.auth.currentUser.getIdToken()
