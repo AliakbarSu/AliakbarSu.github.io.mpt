@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import axios from "axios"
 export default {
     data() {
         return {
@@ -25,44 +24,19 @@ export default {
             }
         }
     },
-    created() {
-        const token = localStorage.getItem("token")
-        const expiresIn = localStorage.getItem("expiration")
-        const now = new Date().getTime()
-        let authenticated = true
-
-        if(!token) { authenticated = false }
-        if(expiresIn <= now) { authenticated = false }
-
-        if(authenticated) {
-            this.$router.go(-1)
-        }
-    },
     methods: {
         toggleMethod() {
             this.login = !this.login
         },
         submit(event) {
-            const signup = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB-IkwadZb67Mb-ceCuViGb0OMfCNwOKaU"
-            const signin = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB-IkwadZb67Mb-ceCuViGb0OMfCNwOKaU"
             event.preventDefault()
             if(this.login) {
-                axios.post(signin, {...this.authData, returnSecureToken: true}).then(({data}) => {
-                    this.authenticate(data.idToken, data.localId, data.expiresIn)
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$store.dispatch("login", this.authData)
+                this.$router.push("/")
             }else {
-                axios.post(signup, {...this.authData, returnSecureToken: true}).then(({data}) => {
-                    this.authenticate(data.idToken, data.localId, data.expiresIn)
-                }).catch(err => {
-                    console.log(err)
-                })
+                this.$store.dispatch("signup", this.authData)
+                this.$router.push("/")
             }
-        },
-        authenticate(token, userId, expiresIn) {
-            this.$store.dispatch("setAuth", {token, userId, expiresIn})
-            this.$router.push("/")
         }
     }
 }

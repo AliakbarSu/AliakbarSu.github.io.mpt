@@ -20,8 +20,9 @@ export const test = {
         }
     },
     actions: {
-        setResults({commit}, results) {
+        setResults({commit, dispatch}, results) {
             commit("setResults", results)
+            dispatch("updateTestsStatus")
         }
     },
     getters: {

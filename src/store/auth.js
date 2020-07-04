@@ -1,33 +1,30 @@
-import { saveAuthToLocalStorage, clearAuthFromLocalStorage } from '../services/auth'
+import firestore from '../../firebase'
 
 export const auth = {
     store: () => {
         return {
-            token: "",
-            expiresIn: "",
-            userId: ""
+            userId: "",
+            isAuth: false
         }
     },
     mutations: {
-        setAuth(state, authData) {
-            state.token = authData.token
-            state.expiresIn = authData.expiresIn
-            state.userId = authData.userId
-        },
-        clearAuth(state) {
-            state.token = ""
-            state.userId = ""
-            state.expiresIn = ""
+        setAuth(state, data) {
+            state.userId = data.userId
+            state.isAuth = data.isAuth
         }
     },
     actions: {
-        setAuth({commit}, authData) {
-            const updatedAuthData = saveAuthToLocalStorage(authData.token, authData.userId, authData.expiresIn)
-            commit("setAuth", updatedAuthData)
+        async logout() {
+            await firestore.auth.signOut()
         },
-        logout({commit}) {
-            commit("clearAuth")
-            clearAuthFromLocalStorage()
+        async login(commit, authData) {
+            await firestore.auth.signInWithEmailAndPassword(authData.email, authData.password)
+        },
+        async signup(commit, authData) {
+            await firestore.auth.createUserWithEmailAndPassword(authData.email, authData.password)
+        },
+        async autoLogin({dispatch}) {
+            dispatch("fetchUserData")
         }
     },
     getters: {
@@ -35,14 +32,7 @@ export const auth = {
             return state
         },
         isAuth: state => {
-            const token = state.token
-            const expiresIn = state.expiresIn
-            const now = new Date().getTime()
-            let authenticated = true
-        
-            if(!token) { authenticated = false }
-            if(expiresIn <= now) { authenticated = false }
-            return authenticated
+            return state.isAuth
         }
     }
 }

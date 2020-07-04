@@ -4,16 +4,14 @@ import Dashboard from '../components/containers/dashboard/dashboard.vue'
 import Results from '../components/containers/results/results.vue'
 import Auth from '../components/containers/auth/auth'
 import Checkout from '../components/containers/payment-gateway/paymentGateway.vue'
-import { autoLogin } from "../services/auth"
+// import { autoLogin } from "../services/auth"
 import { store } from '../store/store'
 
 function guardMyroute(to, from, next) {
-  const isAuth = autoLogin()
+  const isAuth = store.state.auth.isAuth
   if(isAuth) {
-    store.dispatch("setAuth", isAuth)
     next()
   }else {
-    store.dispatch("logout")
     next("/auth")
   }
 }

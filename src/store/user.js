@@ -33,19 +33,20 @@ export const user = {
         }
     },
     actions: {
-        fetchUserData: async ({commit}) => {
-            const userId = localStorage.getItem("userId")
-            const data = await firestore.collection("users").doc(userId).get()
-          
+        fetchUserData: async ({commit, rootState}) => {
+          const userId = rootState.auth.userId
+          if(userId) {
+            const data = await firestore.db.collection("users").doc(userId).get()
             if(data.exists) {
               const userData = data.data()
               commit("setUserData", userData)
-            }
+            }  
+          }
         },
         updateTestsStatus: async ({commit, rootState}, result) => {
-            const userId = rootState.auth.id
+            const userId = rootState.auth.userId
             const now = new Date().getTime()
-            await firestore.collection("users").doc(userId).update({
+            await firestore.db.collection("users").doc(userId).update({
               totalTests: firebase.firestore.FieldValue.increment(1),
               testsHistory: firebase.firestore.FieldValue.arrayUnion({
                 date: now,
@@ -56,12 +57,12 @@ export const user = {
             });
             commit("increaseTotalTests")
             if(result == "passed") {
-              await firestore.collection("users").doc(userId).update({
+              await firestore.db.collection("users").doc(userId).update({
                 passedTests: firebase.firestore.FieldValue.increment(1)
               });
               commit("increasePassedTests")
             }else {
-              await firestore.collection("users").doc(userId).update({
+              await firestore.db.collection("users").doc(userId).update({
                 failedTests: firebase.firestore.FieldValue.increment(1)
               });
               commit("increaseFailedTests")
@@ -70,11 +71,11 @@ export const user = {
         }
     },
     getters: {
-        getUserTestData: (state) => {
-            return state
-        },
-        hasCardOnFile: (state) => {
-            return !!state.customerId
-        }
+      getUserTestData: (state) => {
+        return state
+      },
+      hasCardOnFile: (state) => {
+        return !!state.customerId
+      }
     }
 }

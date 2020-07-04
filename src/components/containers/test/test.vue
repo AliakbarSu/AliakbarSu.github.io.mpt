@@ -41,6 +41,7 @@
 import { questions } from '../../../dummyData'
 import Navigator from './components/navigator/navigator'
 import axios from 'axios'
+import firebase from '../../../../firebase'
 
 export default {
   data() {
@@ -61,10 +62,11 @@ export default {
   components: {
     Navigator
   },
-  created() {
+  async created() {
+    const token = await firebase.auth.currentUser.getIdToken()
     axios.get(
       'https://us-central1-acm-test-e80ed.cloudfunctions.net/app/test', 
-      {headers: { 'Authorization': "Bearer " + this.$store.getters.getAuth.token}}
+      {headers: { 'Authorization': "Bearer " + token}}
     ).then(({data}) => {
       this.questions = data.map((q, index) => ({...q, number: index + 1}))
       this.question = this.questions[0]
@@ -144,9 +146,19 @@ export default {
       this.setNextQuestion()
     },
     endTest() {
-      alert("Are you sure you want to end the test?")
-      this.$store.dispatch("setResults", this.submitted_questions)
-      this.calculateResults()
+      this.$swal({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this imaginary file!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, end test!',
+        cancelButtonText: 'No, continue'
+      }).then(({value}) => {
+        if(value) {
+          this.$store.dispatch("setResults", this.submitted_questions)
+          this.calculateResults()
+        }
+      })    
     },
     selectAnswer(answer) {
       const index = this.submitted_answers.find(op => op.id == answer.id)
