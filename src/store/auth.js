@@ -23,7 +23,11 @@ export const auth = {
         async signup(commit, authData) {
             await firestore.auth.createUserWithEmailAndPassword(authData.email, authData.password)
         },
-        async autoLogin({dispatch}) {
+        async autoLogin({dispatch, commit}) {
+            var user = firestore.auth.currentUser
+            if (user) {
+                commit("setAuth", {userId: user.uid, isAuth: true})
+            }
             dispatch("fetchUserData")
         }
     },

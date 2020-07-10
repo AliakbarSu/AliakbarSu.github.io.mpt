@@ -38,8 +38,8 @@
             </tr>
             <tr v-for="test in testsHistory" :key="test.id">
               <td>{{test.category}}</td>
-              <td>{{test.date}}</td>
-              <td><span class="text__green">{{test.status}}</span></td>
+              <td>{{getDate(test.date)}}</td>
+              <td><span :class="{'text__green': !isFail(test.status), 'text__red': isFail(test.status)}">{{test.status}}</span></td>
               <td><button class="view__btn">View</button></td>
             </tr>
           </table>
@@ -54,7 +54,14 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("logout")
-      this.$router.push("/auth")
+    },
+    getDate(dateToParse) {
+      var time = new Date(dateToParse)
+      var date = new Date(time)
+      return date.toString()
+    },
+    isFail(status) {
+      return status.toLowerCase() == "failed"
     }
   },
   computed: {
@@ -74,7 +81,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scopped>
+<style lang="scss" scoped>
 
 .dashboard {
   height: 100vh;
@@ -90,7 +97,7 @@ export default {
   padding: 12px;
   width: 85%;
   @media(min-width: 1200px) {
-    width: 1200px;
+    max-width: 1200px;
     margin: auto;
   }
 }

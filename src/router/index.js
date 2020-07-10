@@ -6,13 +6,24 @@ import Auth from '../components/containers/auth/auth'
 import Checkout from '../components/containers/payment-gateway/paymentGateway.vue'
 // import { autoLogin } from "../services/auth"
 import { store } from '../store/store'
+import firebase from '../../firebase'
 
-function guardMyroute(to, from, next) {
-  const isAuth = store.state.auth.isAuth
-  if(isAuth) {
+async function guardMyroute(to, from, next) {
+  store.dispatch("autoLogin")
+  if(await firebase.firebase.getCurrentUser()) {
     next()
   }else {
     next("/auth")
+  }
+}
+
+async function notAuthenticatedOnly(to, from, next) {
+  store.dispatch("autoLogin")
+  if(await firebase.firebase.getCurrentUser()) {
+    console.log("loginout")
+    next("/")
+  }else {
+    next()
   }
 }
 
@@ -34,6 +45,7 @@ Vue.use(VueRouter)
   {
     path: '/auth',
     name: 'Auth',
+    beforeEnter: notAuthenticatedOnly,
     component: Auth
   },
   {

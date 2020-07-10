@@ -39,16 +39,45 @@ export default {
 }
 
 .navigator__btn {
+    position: relative;
+    overflow: hidden;
     padding: 20px;
     width: 200px;
     background: #79e279;
-    border: none;
+    border: 1px solid #79e279;
     color: white;
     border-radius: 5px;
     margin: auto;
-    cursor: pointer;
     text-transform: uppercase;
     font-size: 1.2em;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    &:hover {
+        cursor: pointer;
+        transition: 0.3s;
+        background: white;
+        color: #79e279;
+        box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    }
+}
+
+.navigator__btn:after {
+  content: "";
+  background: #f1f1f1;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s
+}
+
+.navigator__btn:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
 }
 
 </style>

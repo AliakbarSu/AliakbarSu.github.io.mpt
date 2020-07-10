@@ -9,13 +9,14 @@
 import firebase from '../firebase'
 export default {
   created() {
-    this.$store.dispatch("autoLogin")
     firebase.auth.onAuthStateChanged((user) => {
       if (user) {
         this.$store.commit("setAuth", {userId: user.uid, isAuth: true})
         this.$store.dispatch("fetchUserData")
+        this.$router.push(this.$store.state.redirect)
       } else {
         this.$store.commit("setAuth", {userId: "", isAuth: false})
+        this.$router.push("/auth")
       }
     })
   }

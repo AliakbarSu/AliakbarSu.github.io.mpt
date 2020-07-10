@@ -1,7 +1,8 @@
 <template>
 <div class="content">
-  <div class="alert">
-    <p class="alert__text">Congratulations you have passed the test</p>
+  <div class="alert" :class="{'alert--red': !passed}">
+    <p class="alert__text" v-if="passed">Congratulations you have passed the test</p>
+    <p class="alert__text" v-else>Unfortunately! you failed the test</p>
   </div>
   <p>Scores Breakdown</p>
   <div class="results">
@@ -94,14 +95,30 @@ export default {
                   }
               }]
           }
-      }
+      },
+      passed: false
     }
   },
   mounted() {
-    if(this.getOverallScore > 2) {
+    if(!this.$store.getters.getResults.length) {
+      return this.$router.push("/")
+    }
+    if(this.getOverallScore >= 250) {
+      this.passed = true
       this.$store.dispatch("updateTestsStatus", "passed")
+      this.$swal.fire(
+        'You Passed',
+        'Congratulations! you passed the test',
+        'success'
+      )
     }else {
+      this.passed = false
       this.$store.dispatch("updateTestsStatus", "failed")
+      this.$swal.fire(
+        'You Failed',
+        'Unfortunately! you failed the test',
+        'error'
+      )
     }
   },
   components: {
@@ -189,7 +206,7 @@ export default {
         labels: this.$store.getters.getCategoriesResults.map(qa => qa.section),
         datasets: [{
               label: 'your total score at each category',
-              data: this.$store.getters.getCategoriesResults.map(qa => qa.score),
+              data: this.$store.getters.getCategoriesResults.map(qa => qa.scorePercentage),
               backgroundColor: backgroundColors,
               borderColor: borderColors,
               borderWidth: 1
@@ -211,11 +228,15 @@ export default {
 }
 
 .alert {
-  background: #cce0ef;
+  background: #96e496;
   border-radius: 5px;
   margin-bottom: 10px;
   padding: 8px 0;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.alert--red {
+  background: #ea6464;
 }
 
 .alert__text {
@@ -224,6 +245,7 @@ export default {
   font-size: 1em;
   margin: 0;
 }
+
 
 .results {
   border: 1px solid #ececec;
@@ -257,15 +279,15 @@ export default {
 }
 
 .result__title--green {
-  background: #9ae89a;
+  background: #53ab53;
 }
 
 .result__title--red {
-  background: #f2d4db;
+  background: #eb6463;
 }
 
 .result__title--orange {
-  background: #f2e8d4;
+  background: #f9ae19;
 }
 
 
@@ -301,11 +323,20 @@ export default {
 
 .actions__buttons {
   padding: 12px;
-  border: none;
   margin-right: 20px;
   width: 150px;
   text-align: center;
-  cursor: pointer;
+  background: #5cbf5c;
+  border: 1px solid #5cbf5c;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  &:hover {
+    cursor: pointer;
+    transition: 0.3s;
+    color: #5cbf5c;
+    background: white;
+  }
 }
 
 </style>

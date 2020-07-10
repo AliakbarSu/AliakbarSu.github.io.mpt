@@ -8,7 +8,8 @@ export const test = {
     state: () => {
         return {
             results: [],
-            testStartedAt: 0
+            testStartedAt: 0,
+            subjects: []
         }
     },
     mutations: {
@@ -17,6 +18,23 @@ export const test = {
         },
         setTestStartTime(state, startTime) {
             state.testStartedAt = startTime
+        },
+        setSubjectsPoints(state, questions) {
+            const subjectsArray = questions.map(q => q.subject)
+            let subjects = []
+            subjectsArray.forEach(sub => {
+                if(!subjects.includes(sub)) {
+                    subjects.push(sub)
+                }
+            })
+            const questionsArray = subjects.map(sub => questions.filter(q => q.subject == sub))
+            const subjectsPoints = questionsArray.map(qArray => {
+                return {
+                    points: qArray.reduce((total, curr) => total + curr.point, 0),
+                    subject: qArray[0].subject
+                }
+            })
+            state.subjects = subjectsPoints
         }
     },
     actions: {
@@ -46,7 +64,7 @@ export const test = {
             const incorrectQuestions = processedQuestions.filter(q => !q.gotCorrect)
             
             const answeringTimes = processedQuestions.map(proQa => proQa.answeredIn)
-            const totalAnsweringTime = answeringTimes.reduce((total, curr) => total + curr)
+            const totalAnsweringTime = answeringTimes.reduce((total, curr) => total + curr, 0)
             const averageAnsweringTime = Math.round(totalAnsweringTime / answeringTimes.length, 2)
             const score = correctQuestions.map(qa => qa.point).reduce((total, curr) => total + curr, 0)
         
@@ -68,7 +86,6 @@ export const test = {
                 }
             }, []).map(dta => dta.subject)
         
-        
             const scores = sections.map(section => {
                 const totalQuestionsInSection = processedQuestions.filter(qa => qa.subject == section)
                 const gotCorrectInSection = totalQuestionsInSection.filter(qa => qa.gotCorrect)
@@ -76,6 +93,7 @@ export const test = {
                 const answeringTimes = totalQuestionsInSection.map(proQa => proQa.answeredIn)
                 const totalAnsweringTime = answeringTimes.reduce((total, curr) => total + curr)
                 const averageAnsweringTime = Math.round(totalAnsweringTime / answeringTimes.length)
+                const totalSectionPotentialScore = state.subjects.filter(sub => sub.subject == section).reduce((total, curr) => total + curr.points, 0)
                 const totalSectionScores = gotCorrectInSection.map(qa => qa.point).reduce((total, curr) => total + curr, 0)
                 
                 return {
@@ -84,7 +102,8 @@ export const test = {
                     correct: gotCorrectInSection.length,
                     incorrect: gotIncorrectInSection.length,
                     of: totalQuestionsInSection.length,
-                    score: totalSectionScores
+                    score: totalSectionScores,
+                    scorePercentage: (totalSectionScores / totalSectionPotentialScore) * 100
                 }
             })
             return scores
@@ -92,8 +111,8 @@ export const test = {
         getAccuracyOverTime: (state, getters) => {
             const processedQuestions = getters.processData
             const questionsWithTime = processedQuestions.map(pq => ({correct: pq.gotCorrect, time: pq.startAt}))
-            const startTime = questionsWithTime[0].time
-            const endTime = questionsWithTime[questionsWithTime.length - 1].time
+            const startTime = questionsWithTime[0] ? questionsWithTime[0].time : 0
+            const endTime = questionsWithTime.length ? questionsWithTime[questionsWithTime.length - 1].time : 1
             const range = endTime - startTime
             const interval = range / 10;
             const times = []

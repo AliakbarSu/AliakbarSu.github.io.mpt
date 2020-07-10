@@ -61,7 +61,7 @@ export default {
             }
 
             console.log(result)
-            self.$router.push("/test")
+            self.$emit("pay", result)
 
         });
     }
@@ -71,13 +71,16 @@ export default {
 
 <style lang="scss" scopped>
 .card {
-    width: 50%;
+    height: 100%;
+    position: relative;
+    width: 100%;
     margin: auto;
     background-color: #f1f1f1;
     border-radius: 5px;
     padding: 20px;
-    text-align: center;
+    text-align: left;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    padding-bottom: 90px;
 }
 
 .card__title {
@@ -124,6 +127,8 @@ export default {
 }
 
 .pay__btn {
+    position: relative;
+    overflow: hidden;
     margin-top: 10%;
     border: 2px solid #45bf5f;
     background-color: #45bf5f;
@@ -134,13 +139,34 @@ export default {
     border-radius: 5px;
     outline: none;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    position: absolute;
+    bottom: 20px;
     &:hover {
-        background-color: white;
-        color: #45bf5f;
         transition: 0.3s;
         cursor: pointer;
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     }
+}
+
+
+.pay__btn:after {
+  content: "";
+  background: #f1f1f1;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s
+}
+
+.pay__btn:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
 }
 
 </style>

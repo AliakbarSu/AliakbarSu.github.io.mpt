@@ -12,8 +12,18 @@ export const store = new Vuex.Store({
     user: user,
     test: test
   },
-  state: {},
-  mutations: {},
-  actions: {},
+  state: {
+    redirect: "/"
+  },
+  mutations: {
+    setRedirect(state, payload) {
+      state.redirect = payload
+    }
+  },
+  actions: {
+    setRedirect({commit},payload) {
+      commit("setRedirect", payload)
+    }
+  },
   getters: {  }
 })

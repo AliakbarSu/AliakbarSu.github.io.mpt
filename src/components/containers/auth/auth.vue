@@ -32,10 +32,10 @@ export default {
             event.preventDefault()
             if(this.login) {
                 this.$store.dispatch("login", this.authData)
-                this.$router.push("/")
+                this.$store.dispatch("setRedirect", "/")
             }else {
                 this.$store.dispatch("signup", this.authData)
-                this.$router.push("/")
+                this.$store.dispatch("setRedirect", "/")
             }
         }
     }

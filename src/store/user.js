@@ -1,5 +1,5 @@
 import firestore from '../../firebase'
-import firebase from 'firebase'
+// import firebase from 'firebase'
 
 
 export const user = {
@@ -44,30 +44,39 @@ export const user = {
           }
         },
         updateTestsStatus: async ({commit, rootState}, result) => {
-            const userId = rootState.auth.userId
-            const now = new Date().getTime()
-            await firestore.db.collection("users").doc(userId).update({
-              totalTests: firebase.firestore.FieldValue.increment(1),
-              testsHistory: firebase.firestore.FieldValue.arrayUnion({
-                date: now,
-                submitted_questions: rootState.results,
-                category: "General",
-                status: result
-              })
-            });
-            commit("increaseTotalTests")
-            if(result == "passed") {
-              await firestore.db.collection("users").doc(userId).update({
-                passedTests: firebase.firestore.FieldValue.increment(1)
-              });
-              commit("increasePassedTests")
-            }else {
-              await firestore.db.collection("users").doc(userId).update({
-                failedTests: firebase.firestore.FieldValue.increment(1)
-              });
-              commit("increaseFailedTests")
-            }
-            
+          const userId = rootState.auth.userId
+          const testsHistoryDoc = await firestore.db.collection("users").doc(userId).get()
+          const userTestsData = testsHistoryDoc.data()
+          
+          const now = new Date().getTime()
+          const testsHistory = [...userTestsData.testsHistory]
+          testsHistory.push({
+            date: now,
+            submitted_questions: rootState.test.results,
+            category: "General",
+            status: result
+          })
+
+          userTestsData.totalTests++
+
+          if(result == "passed") {
+            userTestsData.passedTests++
+            commit("increasePassedTests")
+          }else {
+            userTestsData.failedTests++
+            commit("increaseFailedTests")
+          }
+           
+          const data = {
+            failedTests: userTestsData.failedTests,
+            passedTests: userTestsData.passedTests,
+            totalTests: userTestsData.totalTests,
+            testsHistory: testsHistory
+          }
+          await firestore.db.collection("users").doc(userId).update({...data}).catch(err => {
+            console.log(err)
+          })
+          commit("increaseTotalTests")
         }
     },
     getters: {

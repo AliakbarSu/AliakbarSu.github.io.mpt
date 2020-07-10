@@ -1,19 +1,22 @@
 <template>
   <div class="test">
+    <div v-if="loading" class="spinner__container">
+      <Circle8></Circle8>
+    </div>
     <div class="content">
-      <Circle8 v-if="loading"></Circle8>
       <Navigator @start="start" v-if="!hasTestStarted && !loading"/>
       <div v-else>
-        <div v-if="question.images && question.images.length" class="content__thumbnail">
-          <img :src="question.images[0]" class="content__img">
-        </div>
-        <div>
+        <div v-if="!loading">
           <span>Time Remaining: </span>
           <span>{{timeRemained.h}} : {{timeRemained.m}} : {{timeRemained.s}}</span>
+          <ProgressBar :progress="timeProgress"/>
         </div>
-        <div class="question">
+        <div class="question" v-if="!loading">
           <span>Question: {{question.number}}</span>
           <p class="question__question" v-html="question.question"></p>
+          <div v-if="question.images && question.images.length" class="content__thumbnail">
+            <img :src="question.images[0]" class="content__img">
+          </div>
           <!-- <CircularTimer/> -->
           <ul class="question__answers">
             <li class="question__answer" 
@@ -25,11 +28,10 @@
               </li>
           </ul>
         </div>
-        <div class="actions">
+        <div class="actions" v-if="!loading">
           <button class="actions__action" @click="next">Next</button>
-          <button class="actions__action" @click="skip">Skip</button>
-          <button class="actions__action" @click="endTest">End test</button>
-          <button class="actions__action" @click="start">Start</button>
+          <button class="actions__action actions--yellow" @click="skip">Flag</button>
+          <button class="actions__action actions--red" @click="endTest">End test</button>
         </div>
       </div>
     </div>
@@ -43,6 +45,7 @@ import Navigator from './components/navigator/navigator'
 import axios from 'axios'
 import firebase from '../../../../firebase'
 import Circle8 from 'vue-loading-spinner/src/components/Circle8'
+import ProgressBar from '../../UI/progress-bar/progressBar'
 
 export default {
   data() {
@@ -54,7 +57,7 @@ export default {
       submitted_answers: [],
       testEndsIn: 0,
       timeLimit: 1.26e+7,
-      timeRemained: {h: 0, m: 0, s: 0},
+      timeRemained: {h: 0, m: 0, s: 0, mil: 0},
       isTimeOver: false,
       hasTestStarted: false,
       loading: true
@@ -62,7 +65,8 @@ export default {
   },
   components: {
     Navigator,
-    Circle8
+    Circle8,
+    ProgressBar
   },
   async created() {
     const token = await firebase.auth.currentUser.getIdToken()
@@ -70,10 +74,12 @@ export default {
       'https://us-central1-acm-test-e80ed.cloudfunctions.net/app/test', 
       {headers: { 'Authorization': "Bearer " + token}}
     ).then(({data}) => {
-      this.questions = data.map((q, index) => ({...q, number: index + 1}))
-      this.question = this.questions[0]
       this.loading = false
+      this.questions = data.map((q, index) => ({...q, number: index + 1})).slice(0, 10)
+      this.question = this.questions[0]
+      this.$store.commit("setSubjectsPoints", this.questions)
     }).catch(err => {
+      this.loading = false
       console.log(err)
     })
   },
@@ -85,14 +91,23 @@ export default {
       this.hasTestStarted = true
       this.testEndsIn = this.timeLimit + new Date().getTime()
       var x = setInterval(() => {
-        const now = new Date().getTime(); 
-        const t = this.testEndsIn - now; 
-        this.timeRemained.h = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60)); 
-        this.timeRemained.m = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60)); 
-        this.timeRemained.s = Math.floor((t % (1000 * 60)) / 1000); 
+        const now = new Date().getTime()
+        const t = this.testEndsIn - now
+        this.timeRemained.h = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60))
+        this.timeRemained.m = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60))
+        this.timeRemained.s = Math.floor((t % (1000 * 60)) / 1000)
+        this.timeRemained.mil = t
+        //1.2528e+7
         if (t < 0) { 
-          clearInterval(x); 
-          this.isTestOver = true
+          clearInterval(x)
+          this.isTimeOver = true
+          this.$swal.fire(
+            'Time Over',
+            'Your time is over!',
+            'error'
+          ).then(() => {
+            this.calculateResults()
+          })
         } 
       }, 100)
       const now = new Date().getTime(); 
@@ -101,7 +116,6 @@ export default {
     },
     next() {
       this.removeQuestion()
-
       const now = new Date().getTime()
       this.submitted_questions.push({
         ...this.question, 
@@ -133,6 +147,7 @@ export default {
       this.skipped_questions = []
     },
     calculateResults() {
+      this.$store.dispatch("setResults", this.submitted_questions)
       this.$router.push('/test-results')
     },
     resetAnswers() {
@@ -150,14 +165,13 @@ export default {
     endTest() {
       this.$swal({
         title: 'Are you sure?',
-        text: 'You will not be able to recover this imaginary file!',
+        text: 'You will not be able to return to this test!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, end test!',
         cancelButtonText: 'No, continue'
       }).then(({value}) => {
         if(value) {
-          this.$store.dispatch("setResults", this.submitted_questions)
           this.calculateResults()
         }
       })    
@@ -180,6 +194,9 @@ export default {
     },
     isLastQuestion() {
       return this.questions.length === 0
+    },
+    timeProgress() {
+      return 100 - (((this.timeLimit - this.timeRemained.mil) / this.timeLimit) * 100)
     }
   }
 }
@@ -250,14 +267,78 @@ export default {
 }
 
 .actions__action {
+  position: relative;
+  overflow: hidden;
   padding: 10px 20px;
-  border: none;
   border-radius: 5px;
   margin-right: 10px;
+  background: #70bf70;
+  border: 1px solid #70bf70;
+  color: white;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  outline: none;
   &:hover {
     cursor: pointer;
     transition: 0.3s;
+    background: white;
+    color: #70bf70;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  }
+  &:active {
+    outline: none;
   }
 }
+
+
+.actions__action:after {
+  content: "";
+  background: #f1f1f1;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s
+}
+
+.actions__action:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.spinner__container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  top: 0;
+  bottom: 0;
+  align-items: center;
+  background: #7575759e;
+}
+
+.actions--red {
+  background: #f36c6c;
+  border: 1px solid #f36c6c;
+  &:hover {
+    color: #f36c6c;
+  }
+}
+
+
+.actions--yellow {
+  background: #c5c56d;
+  border: 1px solid #c5c56d;
+  &:hover {
+    color: #c5c56d;
+  }
+}
+
 
 </style>
