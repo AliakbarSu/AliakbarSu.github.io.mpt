@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import { auth } from './auth'
 import { user } from './user'
 import { test } from './test'
+import { admin } from './admin'
 
 Vue.use(Vuex)
 
@@ -10,7 +11,8 @@ export const store = new Vuex.Store({
   modules: {
     auth: auth,
     user: user,
-    test: test
+    test: test,
+    admin: admin
   },
   state: {
     redirect: "/"
@@ -21,9 +23,8 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
-    setRedirect({commit},payload) {
+    setRedirect({commit}, payload) {
       commit("setRedirect", payload)
     }
-  },
-  getters: {  }
+  }
 })

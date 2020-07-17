@@ -22,7 +22,7 @@
   <p>Score Graphs</p>
   <div class="sections__wrapper">
     <div class="sections">
-      <p class="graph__title">Your Scores at Different Categories</p>
+      <p class="graph__title">Your Scores Percentage at Different Categories</p>
       <Bar :data="categoriesScores" :options="options"/>
     </div>
     <div class="sections">
