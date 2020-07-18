@@ -15,10 +15,10 @@ export default {
       if (user) {
         this.$store.commit("setAuth", {userId: user.uid, isAuth: true})
         this.$store.dispatch("fetchUserData")
-        // this.$router.push(this.$store.state.redirect)
+        this.$router.push(this.$store.state.redirect)
       } else {
         this.$store.commit("setAuth", {userId: "", isAuth: false})
-        // this.$router.push("/auth")
+        this.$router.push("/auth")
       }
     })
   }

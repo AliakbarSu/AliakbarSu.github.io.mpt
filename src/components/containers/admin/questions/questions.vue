@@ -1,37 +1,41 @@
 <template>
     <div>
       <h1 class="title">Questions Admin Dashboard</h1>
+      <div v-if="loading" class="spinner-container">
+          <Circle8/>
+      </div>
       <div class="question__update">
-            <div class="update">
+            <div class="update" v-if="question.key">
+                <span class="question__id--update"><strong>ID: </strong>{{question.id}}</span>
                 <ckeditor :editor="editor" v-model="question.question" :config="editorConfig"></ckeditor>
                 <ckeditor v-for="choice in question.choices" v-model="choice.text" :key="choice.id" :editor="editor" :config="editorConfig"></ckeditor>
+                <div v-if="question.key"><Options :optionsProps="options" @optionSelected="selectOption"/></div>
+                <div class="status" v-if="question.key">
+                    <p class="status__items">Grammer: {{question.grammerModified ? "Yes" : "No"}}</p>
+                    <p class="status__items">Context: {{question.contextModified ? "Yes" : "No"}}</p>
+                    <p class="status__items">Choices: {{question.choicesModified ? "Yes" : "No"}}</p>
+                </div>
                 <div class="update__actions" v-if="question.key">
-                    <button class="actions__action" @click="editQuestion(question.key)">Edit</button>
+                    <button class="actions__action" @click="editQuestion(question.key)">Save</button>
                     <button class="actions__action actions--yellow" @click="suspend(question.key)">{{question.active ? 'Suspend' : 'Unsuspend'}}</button>
                     <button class="actions__action actions--red" @click="deleteQuestion(question.key)">Delete</button>
                     <button class="actions__action actions--orange" @click="returnBack()">Return</button>
                 </div>
             </div>
-        <!-- <UpdateQuestion
-            @returnBack="returnBack" 
-            @triggerChange="toggleEditing" 
-            @edit="editQuestion" 
-            @suspend="suspend" 
-            @deleteQuestion="deleteQuestion"/> -->
       </div>
       <div class="questions" v-if="questions">
             <div v-for="question in questions" :key="question.id" class="question" :class="{'question--active': isActive(question.key)}">
-                <span class="question__id">{{question.id}}</span>
+                <span class="question__id"><strong>ID: </strong>{{question.id}}</span>
                 <p class="question__question" v-html="question.question"></p>
+                <div class="status status--nopadding">
+                    <p class="status__items">Grammer: {{question.grammerModified ? "Yes" : "No"}}</p>
+                    <p class="status__items">Context: {{question.contextModified ? "Yes" : "No"}}</p>
+                    <p class="status__items">Choices: {{question.choicesModified ? "Yes" : "No"}}</p>
+                </div>
                 <div class="question__actions">
                     <button class="actions__action" @click="edit(question.key)">Edit</button>
                     <button class="actions__action actions--yellow" @click="suspend(question.key)">{{question.active ? 'Suspend' : 'Unsuspend'}}</button>
                     <button class="actions__action actions--red" @click="deleteQuestion(question.key)">Delete</button>
-                </div>
-                <div class="status">
-                    <p>Grammer: {{question.grammerModified ? "Yes" : "No"}}</p>
-                    <p>Context: {{question.contextModified ? "Yes" : "No"}}</p>
-                    <p>Choices: {{question.choicesModified ? "Yes" : "No"}}</p>
                 </div>
             </div>
       </div>
@@ -39,9 +43,10 @@
 </template>
 
 <script>
-// import UpdateQuestion from './components/updateQuestion/updateQuestion'
 import firestore from '../../../../../firebase'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import Options from './components/checkbox/checkbox'
+import Circle8 from 'vue-loading-spinner/src/components/Circle8'
 
 export default {
     data() {
@@ -50,7 +55,10 @@ export default {
             editorConfig: {},
             questionsArray: [],
             question: {},
-            currentLocation: 0
+            currentLocation: 0,
+            options: ["Context", "Choices", "Grammer"],
+            selectedOptions: [],
+            loading: false
         }
     },
     async created() {
@@ -65,9 +73,13 @@ export default {
         return Promise.resolve()
     },
     components: {
-        // UpdateQuestion
+        Options,
+        Circle8
     },
     methods: {
+        selectOption(options) {
+            this.selectedOptions = options
+        },
         edit(key) {
             if(this.isEditing) {
                 this.$swal({
@@ -87,9 +99,37 @@ export default {
             }
         },
         suspend(key) {
-            this.$store.dispatch("suspend", key)
+            this.loading = true
+            const question = this.questions.find(q => q.key == key)
+            let changeTo = true
+            if(question.active) {
+                changeTo = false
+            }
+            firestore.db.collection("modifiedQuestions").doc(key).update({
+                active: changeTo
+            })
+            .then(() => {
+                this.questionsArray = this.questionsArray.map(q => {
+                    if(q.key == key) {
+                        q.active = changeTo
+                    }
+                    return q
+                })
+                this.question.active = changeTo
+                this.loading = false
+            })
+            .catch(err => {
+                console.log(err); 
+                this.$swal.fire(
+                    'Error Occured',
+                    'Something went wrong!',
+                    'error'
+                ); 
+                this.loading = false
+            })
         },
         async deleteQuestion(key) {
+            this.loading = true
             firestore.db.collection("modifiedQuestions").doc(key).delete()
             .then(() => {
                 if(this.question.key == key) {
@@ -97,23 +137,49 @@ export default {
                 }
                 this.questionsArray = this.questions.filter(q => q.key !== key)
                 this.returnBack()
-            }).catch(console.log)
+                this.loading = false
+            }).catch(err => {
+                console.log(err); 
+                this.$swal.fire(
+                    'Error Occured',
+                    'Something went wrong!',
+                    'error'
+                ); 
+                this.loading = false
+            })
         },
-        async editQuestion(payload) {
-            const question = this.questions.find(q => q.key == payload.key)
-            firestore.db.collection("modifiedQuestions").doc(payload.key).update({
-                question: payload.question,
-                choices: payload.choices,
-                choicesModified: payload.choices.map(ch => ch.text).join("") !== question.choices.map(ch => ch.text).join("")
+        async editQuestion(keyId) {
+            // const question = this.questions.find(q => q.key == keyId)
+            this.loading = true
+            firestore.db.collection("modifiedQuestions").doc(keyId).update({
+                question: this.question.question,
+                choices: this.question.choices,
+                choicesModified: this.isModified("choices"),
+                grammerModified: this.isModified("grammer"),
+                contextModified: this.isModified("context")
             })
             .then(() => {
-                const questionIndex = this.questions.findIndex(q => q.key == payload.key)
-                this.questions[questionIndex].question = payload.question
-                this.questions[questionIndex].choices = payload.choices
-                this.questions[questionIndex].choicesModified = payload.choices.map(ch => ch.text).join("") !== question.choices.map(ch => ch.text).join("")
+                const questionIndex = this.questions.findIndex(q => q.key == keyId)
+                this.questionsArray[questionIndex].question = this.question.question
+                this.questionsArray[questionIndex].choices = this.question.choices
+                this.questionsArray[questionIndex].choicesModified = this.isModified("choices")
+                this.questionsArray[questionIndex].contextModified = this.isModified("context")
+                this.questionsArray[questionIndex].grammerModified = this.isModified("grammer")
+                this.loading = false
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                console.log(err); 
+                this.$swal.fire(
+                    'Error Occured',
+                    'Something went wrong!',
+                    'error'
+                ); 
+                this.loading = false
+            })
 
+        },
+        isModified(value) {
+            return this.selectedOptions.filter(op => op.value.toLowerCase() == value.toLowerCase() && op.state).length > 0
         },
         toggleEditing() {
             this.isEditing = true
@@ -143,7 +209,6 @@ export default {
     },
     computed: {
         questions() {
-            // return this.$store.getters.getQuestions
             return this.questionsArray
         }
     }
@@ -172,6 +237,11 @@ export default {
     margin-right: auto;
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.question__id--update {
+    padding: 12px;
+    display: block;
 }
 
 .question--active {
@@ -325,4 +395,32 @@ export default {
         color: #eab516;
     }
 }
+
+.status  {
+    padding: 0 12px;
+    display: flex;
+}
+
+.status--nopadding {
+    padding: 0;
+}
+
+.status__items {
+    margin-right: 12px;
+}
+
+.spinner-container {
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    right: 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    top: 0;
+    bottom: 0;
+    align-items: center;
+    background: #7575759e;
+}
+
 </style>
