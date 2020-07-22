@@ -50,8 +50,7 @@ export const test = {
         processData: (state) => {
             const processedQuestions = state.results.map(question => {
                 const correctOptions = question.choices.filter(choice => choice.isCorrect).map(op => op.id)
-                const correctSubmittedAnswers = question.submitted_answers.filter(subAn => correctOptions.includes(subAn.id))
-                const gotCorrect = correctOptions.length == correctSubmittedAnswers.length
+                const gotCorrect =correctOptions.includes(question.submitted_answer.id)
                 const answeredIn = (question.endAt - question.startAt) / 1000 // changes millseconds to seconds
                 return {...question, gotCorrect, answeredIn}
             })

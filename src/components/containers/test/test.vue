@@ -6,6 +6,9 @@
     <div class="content">
       <Navigator @start="start" v-if="!hasTestStarted && !loading"/>
       <div v-else>
+        <div class="mode__btn-container" v-if="!loading">
+          <button class="mode__btn" @click="togglePracticeMode">{{practice ? 'Test Mode' : 'Practice Mode'}}</button>
+        </div>
         <div v-if="!loading">
           <span>Time Remaining: </span>
           <span>{{timeRemained.h}} : {{timeRemained.m}} : {{timeRemained.s}}</span>
@@ -22,10 +25,21 @@
             <li class="question__answer" 
               v-for="choice in question.choices" 
               :key="choice.id">
-                <i v-if="!isSelected(choice)" class="far fa-dot-circle"></i>
-                <i v-else class="fas fa-dot-circle" :class="{'answer__text--active': isSelected(choice)}"></i>
-                <span @click="selectAnswer(choice)" class="answer__text" >{{choice.text}}</span>
+                <i v-if="!isSelected(choice)" class="far fa-dot-circle" @click="selectAnswer(choice)" ></i>
+                <i v-else 
+                  @click="selectAnswer(choice)" 
+                  class="fas fa-dot-circle" 
+                  :class="{'answer__text--correct': gotCorrect(choice.id) && practice, 'answer__text--wrong': !gotCorrect(choice.id) && practice}"></i>
+                <span 
+                  @click="selectAnswer(choice)" 
+                  class="answer__text" 
+                  :class="{'answer__text--correct': gotCorrect(choice.id) && practice, 'answer__text--wrong': !gotCorrect(choice.id) && isSelected(choice) && practice}">({{choice.id}}) {{choice.text}}</span>
               </li>
+          </ul>
+
+          <ul class="question__explanations" v-if="showExplanations && practice">
+            <li class="question__explanation question__explanation--red" :class="{'question__explanation--green': isCorrect(explanation)}"
+            v-for="explanation in question.explanations" :key="explanation" v-html="explanation"></li>
           </ul>
         </div>
         <div class="actions" v-if="!loading">
@@ -54,13 +68,15 @@ export default {
       question: {},
       submitted_questions: [],
       skipped_questions: [],
-      submitted_answers: [],
+      submitted_answer: {},
       testEndsIn: 0,
       timeLimit: 1.26e+7,
       timeRemained: {h: 0, m: 0, s: 0, mil: 0},
       isTimeOver: false,
       hasTestStarted: false,
-      loading: true
+      loading: true,
+      practice: false,
+      showExplanations: false
     }
   },
   components: {
@@ -75,7 +91,7 @@ export default {
       {headers: { 'Authorization': "Bearer " + token}}
     ).then(({data}) => {
       this.loading = false
-      this.questions = data.map((q, index) => ({...q, number: index + 1})).slice(0, 10)
+      this.questions = data.map((q, index) => ({...q, number: index + 1}))
       this.question = this.questions[0]
       this.$store.commit("setSubjectsPoints", this.questions)
     }).catch(err => {
@@ -119,7 +135,7 @@ export default {
       const now = new Date().getTime()
       this.submitted_questions.push({
         ...this.question, 
-        submitted_answers: this.submitted_answers,
+        submitted_answer: this.submitted_answer,
         endAt: now
       })
 
@@ -151,7 +167,8 @@ export default {
       this.$router.push('/test-results')
     },
     resetAnswers() {
-      this.submitted_answers = []
+      this.submitted_answer = {}
+      this.showExplanations = false
     },
     skip() {
       this.removeQuestion()
@@ -177,15 +194,27 @@ export default {
       })    
     },
     selectAnswer(answer) {
-      const index = this.submitted_answers.find(op => op.id == answer.id)
-      if(index) {
-        this.submitted_answers = this.submitted_answers.filter(an => an.id !== answer.id)
-      }else {
-        this.submitted_answers.push(answer)
+      if(this.practice) {
+        this.showExplanations = true
       }
+      this.submitted_answer = answer
+    },
+    isCorrect(explanation) {
+      const strongs = explanation.match(/<strong>(.*?)<\/strong>/gi) || []
+      const answerId = strongs.map(st => st.match(/\d+/g)[0] || null)
+      return this.question.choices.filter(ch => ch.isCorrect).map(ch => ch.id).includes(answerId[0])
     },
     isSelected(answer) {
-      return this.submitted_answers.find(an => an.id == answer.id)
+      return this.submitted_answer.id == answer.id
+    },
+    gotCorrect(answerId) {
+      return this.submitted_answer.id == answerId && this.submitted_answer.isCorrect
+    },
+    togglePracticeMode() {
+      this.practice = !this.practice
+      if(this.practice) {
+        this.showExplanations = true
+      }
     }
   },
   computed: {
@@ -230,6 +259,30 @@ export default {
   height: 30vh;
 }
 
+.mode__btn-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mode__btn {
+  border: none;
+  padding: 12px;
+  width: 120px;
+  background: #8d8df5;
+  border: 1px solid #8d8df5;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    background: white;
+    color: #8d8df5;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  }
+}
+
 .question__question {
   margin-top: 20px;
 }
@@ -243,15 +296,19 @@ export default {
 .answer__text {
   cursor: pointer;
   padding-left: 8px;
-  &:hover {
-    color: grey;
-    transition: 0.3s;
-  }
 }
 
 
-.answer__text--active {
+.answer__text--correct {
   color: #9adc9a;
+}
+
+.answer__text--wrong {
+  color: #f36c6c;
+}
+
+.fa-dot-circle {
+  cursor: pointer;
 }
 
 
@@ -338,6 +395,20 @@ export default {
   &:hover {
     color: #c5c56d;
   }
+}
+
+.question__explanation {
+  padding: 12px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.question__explanation--red {
+  background: #ef5e5e;
+}
+
+.question__explanation--green {
+  background: #60e460;
 }
 
 

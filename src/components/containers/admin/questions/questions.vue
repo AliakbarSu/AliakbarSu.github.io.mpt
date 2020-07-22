@@ -1,14 +1,19 @@
 <template>
-    <div>
+    <div class="questions__main">
       <h1 class="title">Questions Admin Dashboard</h1>
       <div v-if="loading" class="spinner-container">
           <Circle8/>
       </div>
       <div class="question__update">
             <div class="update" v-if="question.key">
-                <span class="question__id--update"><strong>ID: </strong>{{question.id}}</span>
+                <div class="question__heading">
+                    <span class="question__id--update"><strong>ID: </strong>{{question.id}}</span>
+                    <span class="question__id--number"><strong>Question: </strong>{{question.number}}</span>
+                </div>
                 <ckeditor :editor="editor" v-model="question.question" :config="editorConfig"></ckeditor>
-                <ckeditor v-for="choice in question.choices" v-model="choice.text" :key="choice.id" :editor="editor" :config="editorConfig"></ckeditor>
+                <div v-for="choice in question.choices" :key="choice.id" :class="{'editor--green-borders': choice.isCorrect}">
+                    <ckeditor v-model="choice.text" :editor="editor" :config="editorConfig"></ckeditor>
+                </div>
                 <div v-if="question.key"><Options :optionsProps="options" @optionSelected="selectOption"/></div>
                 <div class="status" v-if="question.key">
                     <p class="status__items">Grammer: {{question.grammerModified ? "Yes" : "No"}}</p>
@@ -23,9 +28,15 @@
                 </div>
             </div>
       </div>
+      <div class="warning__container" v-if="!questions.length && !loading">
+          <h1 class="warning__text">No question to display</h1>
+      </div>
       <div class="questions" v-if="questions">
             <div v-for="question in questions" :key="question.id" class="question" :class="{'question--active': isActive(question.key)}">
-                <span class="question__id"><strong>ID: </strong>{{question.id}}</span>
+                <div class="question__heading">
+                    <span class="question__id"><strong>ID: </strong>{{question.id}}</span>
+                    <span class="question__number"><strong>Question: </strong>{{question.number}}</span>
+                </div>
                 <p class="question__question" v-html="question.question"></p>
                 <div class="status status--nopadding">
                     <p class="status__items">Grammer: {{question.grammerModified ? "Yes" : "No"}}</p>
@@ -33,7 +44,7 @@
                     <p class="status__items">Choices: {{question.choicesModified ? "Yes" : "No"}}</p>
                 </div>
                 <div class="question__actions">
-                    <button class="actions__action" @click="edit(question.key)">Edit</button>
+                    <button class="actions__action" @click="edit($event, question.key)">Edit</button>
                     <button class="actions__action actions--yellow" @click="suspend(question.key)">{{question.active ? 'Suspend' : 'Unsuspend'}}</button>
                     <button class="actions__action actions--red" @click="deleteQuestion(question.key)">Delete</button>
                 </div>
@@ -58,19 +69,31 @@ export default {
             currentLocation: 0,
             options: ["Context", "Choices", "Grammer"],
             selectedOptions: [],
-            loading: false
+            loading: false,
+            el: null
         }
     },
     async created() {
-        const questionsDoc = await firestore.db.collection("modifiedQuestions").get()
-        const questionsArray = []
-        questionsDoc.forEach(snapshot => {
-            questionsArray.push({...snapshot.data(), key: snapshot.id})
-        })
-        this.$store.commit("setQuestions", questionsArray.slice(0, 10))
-
-        this.questionsArray = questionsArray
-        return Promise.resolve()
+        this.loading = true
+        try {
+            const questionsDoc = await firestore.db.collection("modifiedQuestions").get()
+            const questionsArray = []
+            questionsDoc.forEach(snapshot => {
+                questionsArray.push({...snapshot.data(), key: snapshot.id})
+            })
+            this.questionsArray = questionsArray.map((q, index) => ({...q, number: index + 1}))
+            this.loading = false
+            return Promise.resolve()
+        }catch(err) {
+            console.log(err)
+            this.$swal.fire(
+                'Error Occured',
+                'Failed to fetch questions!',
+                'error'
+            ); 
+            this.loading = false
+        }
+        
     },
     components: {
         Options,
@@ -80,7 +103,7 @@ export default {
         selectOption(options) {
             this.selectedOptions = options
         },
-        edit(key) {
+        edit(event, key) {
             if(this.isEditing) {
                 this.$swal({
                     title: 'Are you sure?',
@@ -91,11 +114,11 @@ export default {
                     cancelButtonText: 'No, keep changes'
                 }).then(({value}) => {
                     if(value) {
-                        this.proceedWithEdit(key)
+                        this.proceedWithEdit(event, key)
                     }
                 })    
             }else {
-                this.proceedWithEdit(key)
+                this.proceedWithEdit(event, key)
             }
         },
         suspend(key) {
@@ -184,9 +207,9 @@ export default {
         toggleEditing() {
             this.isEditing = true
         },
-        proceedWithEdit(key) {
+        proceedWithEdit(event, key) {
             this.question = this.questions.find(q => q.key == key)
-            this.currentLocation = window.scrollY + 550
+            this.el = event.target
             this.scrollToTop()
         },
         scrollToTop() {
@@ -197,11 +220,7 @@ export default {
             })
         },
         returnBack() {
-            window.scroll({
-                top: this.currentLocation,
-                left: 0,
-                behavior: 'smooth'
-            })
+            this.el.scrollIntoView({ behavior: 'smooth', block: "center" })
         },
         isActive(key) {
             return key == this.question.key
@@ -217,6 +236,10 @@ export default {
 
 <style scoped lang="scss">
 
+
+.questions__main {
+    font-family: sans-serif;
+}
 
 .title {
     width: 100%;
@@ -421,6 +444,27 @@ export default {
     bottom: 0;
     align-items: center;
     background: #7575759e;
+}
+
+.editor--green-borders {
+    border: 4px solid #56f156;
+}
+
+
+.question__heading {
+    display: flex;
+    justify-content: space-between;
+}
+
+.warning__container {
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.warning__text {
+    font-size: 18px;
 }
 
 </style>

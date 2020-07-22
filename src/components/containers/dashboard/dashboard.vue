@@ -5,6 +5,7 @@
         <li class="nav__item"><router-link to="/" tag="a">Dashboard</router-link></li>
         <li class="nav__item"><router-link to="/details" tag="a">Details</router-link></li>
         <li class="nav__item"><router-link to="/payments" tag="a">Payments</router-link></li>
+        <li class="nav__item"><router-link to="/admin" tag="a">Admin</router-link></li>
         <li class="nav__item"><a href="" @click="logout">Logout</a></li>
       </ul>
       <div class="nav__button">
