@@ -9,7 +9,7 @@
         <div class="mode__btn-container" v-if="!loading">
           <button class="mode__btn" @click="togglePracticeMode">{{practice ? 'Test Mode' : 'Practice Mode'}}</button>
         </div>
-        <div v-if="!loading">
+        <div v-if="!loading && !practice">
           <span>Time Remaining: </span>
           <span>{{timeRemained.h}} : {{timeRemained.m}} : {{timeRemained.s}}</span>
           <ProgressBar :progress="timeProgress"/>
@@ -44,8 +44,8 @@
         </div>
         <div class="actions" v-if="!loading">
           <button class="actions__action" @click="next">Next</button>
-          <button class="actions__action actions--yellow" @click="skip">Flag</button>
-          <button class="actions__action actions--red" @click="endTest">End test</button>
+          <button v-if="!practice" class="actions__action actions--yellow" @click="skip">Flag</button>
+          <button v-if="!practice" class="actions__action actions--red" @click="endTest">End test</button>
         </div>
       </div>
     </div>
@@ -70,6 +70,7 @@ export default {
       skipped_questions: [],
       submitted_answer: {},
       testEndsIn: 0,
+      interval: null,
       timeLimit: 1.26e+7,
       timeRemained: {h: 0, m: 0, s: 0, mil: 0},
       isTimeOver: false,
@@ -104,9 +105,20 @@ export default {
   },
   methods: {
     start() {
+      if(!this.practice) {
+        this.setTimer()
+      }
+      const now = new Date().getTime(); 
+      this.$store.commit("setTestStartTime", now)
+      this.question = {...this.questions[0], startAt: now}
+    },
+    setTimer() {
+      if(this.interval) {
+        clearInterval(this.interval)
+      }
       this.hasTestStarted = true
       this.testEndsIn = this.timeLimit + new Date().getTime()
-      var x = setInterval(() => {
+      this.interval = setInterval(() => {
         const now = new Date().getTime()
         const t = this.testEndsIn - now
         this.timeRemained.h = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60))
@@ -115,20 +127,19 @@ export default {
         this.timeRemained.mil = t
         //1.2528e+7
         if (t < 0) { 
-          clearInterval(x)
-          this.isTimeOver = true
-          this.$swal.fire(
-            'Time Over',
-            'Your time is over!',
-            'error'
-          ).then(() => {
-            this.calculateResults()
-          })
+          clearInterval(this.interval)
+          if(!this.practice) {
+            this.isTimeOver = true
+            this.$swal.fire(
+              'Time Over',
+              'Your time is over!',
+              'error'
+            ).then(() => {
+              this.calculateResults()
+            })
+          }
         } 
       }, 100)
-      const now = new Date().getTime(); 
-      this.$store.commit("setTestStartTime", now)
-      this.question = {...this.questions[0], startAt: now}
     },
     next() {
       this.removeQuestion()
@@ -163,6 +174,16 @@ export default {
       this.skipped_questions = []
     },
     calculateResults() {
+      if(this.practice) {
+        this.$swal.fire(
+          'Practice Is Over',
+          'You practiced all the questions!',
+          'success'
+        ).then(() => {
+          this.$router.push('/')
+        })
+        return
+      }
       this.$store.dispatch("setResults", this.submitted_questions)
       this.$router.push('/test-results')
     },
@@ -214,6 +235,8 @@ export default {
       this.practice = !this.practice
       if(this.practice) {
         this.showExplanations = true
+      }else {
+        this.setTimer()
       }
     }
   },
