@@ -19,7 +19,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scopped>
+<style lang="scss" scoped>
 
 .navigator {
     text-align: center;

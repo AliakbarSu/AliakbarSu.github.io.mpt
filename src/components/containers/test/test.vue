@@ -254,7 +254,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scopped>
+<style lang="scss" scoped>
 
 .test {
   height: 100vh;

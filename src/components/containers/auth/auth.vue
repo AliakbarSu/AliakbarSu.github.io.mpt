@@ -42,7 +42,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scopped>
+<style lang="scss" scoped>
 
 
 .auth {

@@ -12,7 +12,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scopped>
+<style lang="scss" scoped>
 
 .content {
   padding: 12px;

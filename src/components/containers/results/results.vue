@@ -103,7 +103,7 @@ export default {
     if(!this.$store.getters.getResults.length) {
       return this.$router.push("/")
     }
-    if(this.getOverallScore >= 250) {
+    if(this.overallScore >= 250) {
       this.passed = true
       this.$store.dispatch("updateTestsStatus", "passed")
       this.$swal.fire(
@@ -217,7 +217,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scopped>
+<style lang="scss" scoped>
 .content {
   padding: 12px;
   @media(min-width: 1200px) {

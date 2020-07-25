@@ -69,7 +69,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scopped>
+<style lang="scss" scoped>
 .card {
     height: 100%;
     position: relative;

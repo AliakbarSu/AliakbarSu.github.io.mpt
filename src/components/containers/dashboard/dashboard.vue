@@ -87,7 +87,6 @@ export default {
 .dashboard {
   height: 100vh;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-items: center;
   font-family: 'Roboto', sans-serif;
@@ -96,11 +95,12 @@ export default {
 
 .content {
   padding: 12px;
+  overflow-y: scroll;
   width: 85%;
-  @media(min-width: 1200px) {
-    max-width: 1200px;
-    margin: auto;
-  }
+  height: 100vh;
+  // @media(min-width: 1200px) {
+  //   max-width: 1200px;
+  // }
 }
 
 .tiles__container {
@@ -160,6 +160,8 @@ export default {
   border: 1px solid #e6e6e6;
   border-radius: 5px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  max-height: 370px;
+  overflow-y: scroll;
 }
 
 .history__title {
@@ -203,7 +205,7 @@ td {
 }
 
 .side__nav {
-  width: 15%;
+  width: 200px;
   height: 100%;
   background: #f7f7f7;
   position: relative;
@@ -234,8 +236,7 @@ td {
 .nav__button {
   width: 100%;
   text-align: center;
-  position: absolute;
-  bottom: 40%;
+  padding-top: 15px;
 }
 
 .nav__btn {
