@@ -1,5 +1,6 @@
 <template>
   <div class="test">
+
     <div v-if="loading" class="spinner__container">
       <Circle8></Circle8>
     </div>
@@ -60,6 +61,7 @@ import axios from 'axios'
 import firebase from '../../../../firebase'
 import Circle8 from 'vue-loading-spinner/src/components/Circle8'
 import ProgressBar from '../../UI/progress-bar/progressBar'
+
 
 export default {
   data() {

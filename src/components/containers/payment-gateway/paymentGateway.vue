@@ -1,5 +1,29 @@
 <template>
-  <div class="payment">
+
+<v-container
+      class="grey lighten-5 mb-6"
+    >
+    <v-row>
+        <v-col>
+            <h1>Your Billing Summary</h1>
+        </v-col>
+    </v-row>
+    <v-row>
+        <v-col>
+           <p><span>Item: </span>Australian Medical Test</p>
+        </v-col>
+        <v-col>
+           <p><span>Price: </span>$25 USD</p>
+        </v-col>
+    </v-row>
+    <v-row>
+        <v-col>
+           <Card :amount="amount" @pay="payWithNewCard"/>
+        </v-col>
+    </v-row>
+
+    </v-container>
+  <!-- <div class="payment">
         <div class="content">
           <div class="content__left">
             <Card :amount="amount" @pay="payWithNewCard"/>
@@ -32,14 +56,14 @@
             </div>
         </div>
       </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
 import Card from './components/card/card'
 import axios from 'axios'
 import firebase from '../../../../firebase'
-import Jumper from 'vue-loading-spinner/src/components/Jumper'
+// import Jumper from 'vue-loading-spinner/src/components/Jumper'
 import firestore from '../../../../firebase'
 
 export default {
@@ -67,7 +91,7 @@ export default {
     },
     components: {
         Card,
-        Jumper
+        // Jumper
     },
     computed: {
         hasCardOnFile() {
@@ -79,14 +103,11 @@ export default {
         }
     },
     methods: {
-        async payWithNewCard(result) {
-            const url = "https://us-central1-acm-test-e80ed.cloudfunctions.net/app/payWithToken"
-            const token = await firebase.auth.currentUser.getIdToken()
+        payWithNewCard(result) {
             const cardToken = result.token.id;
-            axios.post(url, {token: cardToken}, {headers: {'Authorization': "Bearer " + token }}).then(() => {
-                this.$router.push("/test")
-            }).catch(err => {
-                console.log(err)
+            this.$store.dispatch("payForTest", cardToken).then(res => {
+                console.log(res)
+                this.$router.push("/")
             })
         },
         async payWithDefaultCard() {

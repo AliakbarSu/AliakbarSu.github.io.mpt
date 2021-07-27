@@ -1,21 +1,31 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Dashboard from '../components/containers/dashboard/dashboard.vue'
 import Results from '../components/containers/results/results.vue'
 import Auth from '../components/containers/auth/auth'
 import Checkout from '../components/containers/payment-gateway/paymentGateway.vue'
 import Questions from '../components/containers/admin/questions/questions.vue'
+import Account from "../components/containers/account/account.vue"
+import Home from '../components/containers/home/index.vue'
+import SelectTest from '../components/containers/test/components/selectTest/selectTest.vue'
 // import { autoLogin } from "../services/auth"
 import { store } from '../store/store'
-import firebase from '../../firebase'
+// import firebase from '../../firebase'
 
-async function guardMyroute(to, from, next) {
-  store.dispatch("autoLogin")
-  if(await firebase.firebase.getCurrentUser()) {
+// async function guardMyroute(to, from, next) {
+//   store.dispatch("autoLogin")
+//   if(await firebase.firebase.getCurrentUser()) {
+//     next()
+//   }else {
+//     next("/auth")
+//   }
+// }
+
+const ifNotAuthenticated = (to, from, next) => {
+  if (!store.getters.isAuthenticated) {
     next()
-  }else {
-    next("/auth")
+    return
   }
+  next('/')
 }
 
 // async function notAuthenticatedOnly(to, from, next) {
@@ -33,14 +43,20 @@ Vue.use(VueRouter)
   const routes = [
   {
     path: '/',
-    name: 'Dashboard',
-    beforeEnter: guardMyroute,
-    component: Dashboard
+    name: 'Home',
+    // beforeEnter: ifNotAuthenticated,
+    component: Home
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    // beforeEnter: ifNotAuthenticated,
+    component: Account
   },
   {
     path: '/test-results',
     name: 'Results Summary',
-    beforeEnter: guardMyroute,
+    beforeEnter: ifNotAuthenticated,
     component: Results
   },
   {
@@ -52,7 +68,7 @@ Vue.use(VueRouter)
   {
     path: '/checkout',
     name: 'Checkout',
-    beforeEnter: guardMyroute,
+    beforeEnter: ifNotAuthenticated,
     component: Checkout
   },
   {
@@ -61,9 +77,14 @@ Vue.use(VueRouter)
     component: Questions
   },
   {
+    path: '/tests',
+    name: 'Select Test',
+    component: SelectTest
+  },
+  {
     path: '/test',
     name: 'Test',
-    beforeEnter: guardMyroute,
+    beforeEnter: ifNotAuthenticated,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.

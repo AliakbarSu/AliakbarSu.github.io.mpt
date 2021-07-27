@@ -41,6 +41,9 @@ export const test = {
         setResults({commit, dispatch}, results) {
             commit("setResults", results)
             dispatch("updateTestsStatus")
+        },
+        payForTest() {
+            return Promise.resolve("paid successfully!")
         }
     },
     getters: {

@@ -31,11 +31,13 @@ export default {
         submit(event) {
             event.preventDefault()
             if(this.login) {
-                this.$store.dispatch("login", this.authData)
-                this.$store.dispatch("setRedirect", "/")
+                this.$store.dispatch("authRequest", this.authData).then(() => {
+                    this.$router.push("/")
+                })
             }else {
-                this.$store.dispatch("signup", this.authData)
-                this.$store.dispatch("setRedirect", "/")
+                this.$store.dispatch("authRequestSignup", this.authData).then(() => {
+                    this.$router.push("/")
+                })
             }
         }
     }
