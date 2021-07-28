@@ -6,11 +6,11 @@
     <v-card-text>
       <div>Test Type</div>
       <p class="text-h4 text--primary">
-        AMC Practice Test
+        {{productDetails.name}}
       </p>
       <p>{{duration}} Minutes</p>
       <div class="text--primary">
-        Australian Medical Count practice test consists of 150 questions
+        {{productDetails.description}}
       </div>
     </v-card-text>
     <v-card-actions>
@@ -27,7 +27,7 @@
 
 <script>
 export default {
-    props: ["duration"],
+    props: ["duration", "productDetails"],
     methods: {
         takeTest() {
             this.$emit("takeTest")

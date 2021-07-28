@@ -14,14 +14,8 @@
     </v-row>
 
       <v-row>
-        <v-col>
-          <Card @takeTest="goToCheckout" :duration="40"/>
-        </v-col>
-        <v-col>
-          <Card @takeTest="goToCheckout" :duration="60"/>
-        </v-col>
-        <v-col>
-          <Card @takeTest="goToCheckout" :duration="80"/>
+        <v-col v-for="product in products" :key="product.id">
+          <Card @takeTest="goToCheckout(product.id)" :duration="40" :productDetails="product" />
         </v-col>
       </v-row>
     </v-container>
@@ -31,12 +25,20 @@
 import Card from "../UI/card/card.vue"
 export default {
     methods: {
-        goToCheckout() {
-            this.$router.push("/checkout")
+        goToCheckout(testId) {
+            this.$router.push({name: "Checkout", params: { testId: testId }})
         }
     },
     components: {
         Card
+    },
+    computed: {
+      products() {
+        return this.$store.getters.getProducts
+      }
+    },
+    created() {
+      this.$store.dispatch("fetchProducts")
     }
 }
 </script>

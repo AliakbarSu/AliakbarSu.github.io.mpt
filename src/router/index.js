@@ -21,11 +21,21 @@ import { store } from '../store/store'
 // }
 
 const ifNotAuthenticated = (to, from, next) => {
+  store.dispatch('checkAuth')
   if (!store.getters.isAuthenticated) {
     next()
     return
   }
   next('/')
+}
+
+const ifAuthenticated = (to, from, next) => {
+  store.dispatch('checkAuth')
+  if (store.getters.isAuthenticated) {
+    next()
+    return
+  }
+  next('/auth')
 }
 
 // async function notAuthenticatedOnly(to, from, next) {
@@ -62,13 +72,13 @@ Vue.use(VueRouter)
   {
     path: '/auth',
     name: 'Auth',
-    // beforeEnter: notAuthenticatedOnly,
+    beforeEnter: ifNotAuthenticated,
     component: Auth
   },
   {
     path: '/checkout',
     name: 'Checkout',
-    beforeEnter: ifNotAuthenticated,
+    beforeEnter: ifAuthenticated,
     component: Checkout
   },
   {
@@ -84,7 +94,7 @@ Vue.use(VueRouter)
   {
     path: '/test',
     name: 'Test',
-    beforeEnter: ifNotAuthenticated,
+    beforeEnter: ifAuthenticated,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
