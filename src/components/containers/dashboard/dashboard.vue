@@ -2,23 +2,10 @@
 <v-container
       class="grey lighten-5 mb-6"
     >
-    <v-row>
-        <v-col>
-            <h1>This is the test page</h1>
-        </v-col>
-    </v-row>
-    <v-row>
-        <v-col>
+ 
             <Tabs/>
             <p>You can select from one of the following test types to proceed</p>
-        </v-col>
-    </v-row>
-
-      <v-row>
-        <v-col v-for="product in userTests" :key="product.id">
-          <Card @takeTest="takeTest(product.id)" :duration="40" :productDetails="product" />
-        </v-col>
-      </v-row>
+      <BookedTests :tests="userTests" />
     </v-container>
   <!-- <div class="dashboard">
     <nav class="side__nav">
@@ -72,9 +59,8 @@
 </template>
 
 <script>
-
-import Card from "../test/components/UI/card/card.vue"
 import Tabs from './components/tabs/tabs.vue'
+import BookedTests from './components/bookedTests/bookedTests.vue'
 
 export default {
   mounted() {
@@ -104,8 +90,8 @@ export default {
     }
   },
   components: {
-    Card,
-    Tabs
+    Tabs,
+    BookedTests
   },
   computed: {
     totalTests() {
