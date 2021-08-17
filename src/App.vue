@@ -72,13 +72,13 @@
       <router-view/>
     </v-main>
 
-  <Footer/>
+  <!-- <Footer/> -->
 </v-app>
 
 </template>
 
 <script>
-import Footer from "./components/UI/footer/footer.vue"
+// import Footer from "./components/UI/footer/footer.vue"
 import axios from 'axios'
 
 export default {
@@ -96,7 +96,7 @@ export default {
   });
   },
   components: {
-    Footer
+    // Footer
   },
   data: () => ({
     drawer: false,

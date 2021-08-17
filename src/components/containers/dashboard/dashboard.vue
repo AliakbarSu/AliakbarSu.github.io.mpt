@@ -9,6 +9,7 @@
     </v-row>
     <v-row>
         <v-col>
+            <Tabs/>
             <p>You can select from one of the following test types to proceed</p>
         </v-col>
     </v-row>
@@ -73,6 +74,7 @@
 <script>
 
 import Card from "../test/components/UI/card/card.vue"
+import Tabs from './components/tabs/tabs.vue'
 
 export default {
   mounted() {
@@ -102,7 +104,8 @@ export default {
     }
   },
   components: {
-    Card
+    Card,
+    Tabs
   },
   computed: {
     totalTests() {

@@ -96,7 +96,7 @@ export default {
         
     },
     components: {
-        Options,
+        // Options,
         Circle8
     },
     methods: {

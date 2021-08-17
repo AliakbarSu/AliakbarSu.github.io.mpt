@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 // import { auth } from './auth'
 // import { user } from './user'
-import { test } from './test'
-import { admin } from './admin'
+// import { test } from './test'
+//import { admin } from './admin'
 // import { getInstance } from '../auth/index'
 // const authService = getInstance();
 
@@ -18,14 +18,15 @@ export const store = new Vuex.Store({
   modules: {
     // auth: auth,
     // user: user,
-    test: test,
-    admin: admin
+    // test: test,
+    //admin: admin
   },
   state: {
     token: '',
     status: '',
     redirect: "/",
     currentTest: [],
+    testResult: {},
     products: [],
     user: {
       tests: []
@@ -59,6 +60,9 @@ export const store = new Vuex.Store({
     },
     setCurrentTest: (state, test) => {
       state.currentTest = test
+    },
+    setTestResult: (state, result) => {
+      state.testResult = result
     }
   },
   actions: {
@@ -124,12 +128,21 @@ export const store = new Vuex.Store({
         return JSON.parse(res.data.body)
       }).catch(err => console.log(err))
     },
-    submitTest: (_, data) => {
-      return axios.post(API_URL + "/get_test_result", data)
+    submitTest: ({commit}, data) => {
+      const deconstructed_data = data.submitted_answers.map(q => ({
+        questionId: q.id, 
+        submitted_answer: q.submitted_answer.id,
+        startAt: q.startAt,
+        endAt: q.endAt
+      }))
+      const dataToPost = {
+        submitted_answers: deconstructed_data,
+        test_start_time: data.testStartTime
+      }
+      return axios.post(API_URL + "/get_test_result", dataToPost)
       .then(res => {
-        // commit("setCurrentTest", JSON.parse(res.data.body))
-        console.log(res.data.body)
-        return
+        commit("setTestResult", res.data)
+        return res.data
       }).catch(err => console.log(err))
     }
   },
@@ -138,6 +151,7 @@ export const store = new Vuex.Store({
     authStatus: state => state.status,
     getProducts: state => state.products,
     userTests: state => state.user.tests,
-    getCurrentTest: state => state.currentTest
+    getCurrentTest: state => state.currentTest,
+    getTestResult: state => state.testResult
   }
 })

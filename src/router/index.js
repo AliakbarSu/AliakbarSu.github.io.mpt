@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Results from '../components/containers/results/results.vue'
 import Checkout from '../components/containers/payment-gateway/paymentGateway.vue'
-import Questions from '../components/containers/admin/questions/questions.vue'
+// import Questions from '../components/containers/admin/questions/questions.vue'
 import Account from "../components/containers/account/account.vue"
 import Home from '../components/containers/home/index.vue'
 import SelectTest from '../components/containers/test/components/selectTest/selectTest.vue'
@@ -70,11 +70,11 @@ Vue.use(VueRouter)
     beforeEnter: authGuard,
     component: Checkout
   },
-  {
-    path: '/admin',
-    name: 'Admin',
-    component: Questions
-  },
+  // {
+  //   path: '/admin',
+  //   name: 'Admin',
+  //   component: Questions
+  // },
   {
     path: '/tests',
     name: 'Select Test',

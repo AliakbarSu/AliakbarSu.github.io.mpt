@@ -69,7 +69,8 @@ export default {
       timeRemained: {h: 0, m: 0, s: 0, mil: 0},
       isTimeOver: false,
       hasTestStarted: false,
-      loading: true
+      loading: true,
+      testStartTime: 0
     }
   },
   components: {
@@ -88,6 +89,7 @@ export default {
     start() {
       this.setTimer()
       const now = new Date().getTime(); 
+      this.testStartTime = now
       this.$store.commit("setTestStartTime", now)
       this.question = {...this.questions[0], startAt: now}
     },
@@ -152,8 +154,13 @@ export default {
       this.skipped_questions = []
     },
     calculateResults() {
-      this.$store.dispatch("submitTest", this.submitted_questions)
-      // this.$router.push('/test-results')
+      const dataToSubmit = {
+        submitted_answers: this.submitted_questions,
+        testStartTime: this.testStartTime
+      }
+      this.$store.dispatch("submitTest", dataToSubmit).then(() => {
+        this.$router.push('/test-results')
+      })
     },
     resetAnswers() {
       this.submitted_answer = {}

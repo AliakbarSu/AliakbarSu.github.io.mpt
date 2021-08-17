@@ -27,7 +27,7 @@
     </div>
     <div class="sections">
       <p class="graph__title">Accuracy Accross Questions</p>
-      <Line-graph :data="accuracyOverTime" :options="options"/>
+      <!-- <Line-graph :data="accuracyOverTime" :options="options"/> -->
     </div>
   </div>
   <p>Your Timing</p>
@@ -100,26 +100,26 @@ export default {
     }
   },
   mounted() {
-    if(!this.$store.getters.getResults.length) {
-      return this.$router.push("/")
-    }
-    if(this.overallScore >= 250) {
-      this.passed = true
-      this.$store.dispatch("updateTestsStatus", "passed")
-      this.$swal.fire(
-        'You Passed',
-        'Congratulations! you passed the test',
-        'success'
-      )
-    }else {
-      this.passed = false
-      this.$store.dispatch("updateTestsStatus", "failed")
-      this.$swal.fire(
-        'You Failed',
-        'Unfortunately! you failed the test',
-        'error'
-      )
-    }
+    // if(!this.$store.getters.getResults.length) {
+    //   return this.$router.push("/")
+    // }
+    // if(this.overallScore >= 250) {
+    //   this.passed = true
+    //   this.$store.dispatch("updateTestsStatus", "passed")
+    //   this.$swal.fire(
+    //     'You Passed',
+    //     'Congratulations! you passed the test',
+    //     'success'
+    //   )
+    // }else {
+    //   this.passed = false
+    //   this.$store.dispatch("updateTestsStatus", "failed")
+    //   this.$swal.fire(
+    //     'You Failed',
+    //     'Unfortunately! you failed the test',
+    //     'error'
+    //   )
+    // }
   },
   components: {
     Bar,
@@ -128,16 +128,16 @@ export default {
   },
   methods: {
     navigateToDashboard() {
-      this.$router.push("/")
+      this.$router.push("/dashboard")
     }
   },
   computed: {
     sectionsCorrectScores() {
       return {
-        labels: this.$store.getters.getCategoriesResults.map(section => section.section),
+        labels: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.section),
         datasets: [{
               label: '# of Votes',
-              data: this.$store.getters.getCategoriesResults.map(section => section.correct),
+              data: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.correct),
               backgroundColor: backgroundColors,
               borderColor: borderColors,
               borderWidth: 1
@@ -146,10 +146,10 @@ export default {
     },
     sectionsIncorrectScores() {
       return {
-        labels: this.$store.getters.getCategoriesResults.map(section => section.section),
+        labels: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.section),
         datasets: [{
               label: '# of Votes',
-              data: this.$store.getters.getCategoriesResults.map(section => section.incorrect),
+              data: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.incorrect),
               backgroundColor: backgroundColors,
               borderColor: borderColors,
               borderWidth: 1
@@ -158,10 +158,10 @@ export default {
     },
     averageCategoryTiming() {
       return {
-        labels: this.$store.getters.getCategoriesResults.map(section => section.section),
+        labels: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.section),
         datasets: [{
               label: 'your average time spent on questions of specific category',
-              data: this.$store.getters.getCategoriesResults.map(section => section.averageAnsweringTime),
+              data: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.averageAnsweringTime),
               backgroundColor: backgroundColors,
               borderColor: borderColors,
               borderWidth: 1
@@ -169,20 +169,20 @@ export default {
       }
     },
     overallScore() {
-      return this.$store.getters.getOverallScore.score
+      return this.$store.getters.getTestResult.overallScore.score
     },
     correct() {
-      return this.$store.getters.getOverallScore.correct
+      return this.$store.getters.getTestResult.overallScore.correct
     },
     incorrect() {
-      return this.$store.getters.getOverallScore.incorrect
+      return this.$store.getters.getTestResult.overallScore.incorrect
     },
     accuracyOverTime() {
       return {
-        labels: this.$store.getters.getAccuracyOverTime.map(qa => qa.time),
+        labels: this.$store.getters.getTestResult.accuracy.map(qa => qa.time),
         datasets: [{
               label: 'your accuracy over the course of the test',
-              data: this.$store.getters.getAccuracyOverTime.map(qa => qa.count),
+              data: this.$store.getters.getTestResult.accuracy.map(qa => qa.count),
               backgroundColor: backgroundColors,
               borderColor: borderColors,
               borderWidth: 3
@@ -191,10 +191,10 @@ export default {
     },
     speedOverTime() {
       return {
-        labels: this.$store.getters.getSpeedOverTime.map(qa => qa.time + " minutes"),
+        labels: this.$store.getters.getTestResult.speed.map(qa => qa.time + " minutes"),
         datasets: [{
               label: 'time spent on questions at each time interval',
-              data: this.$store.getters.getSpeedOverTime.map(qa => qa.answeredIn),
+              data: this.$store.getters.getTestResult.speed.map(qa => qa.answeredIn),
               backgroundColor: backgroundColors,
               borderColor: borderColors,
               borderWidth: 1
@@ -203,10 +203,10 @@ export default {
     },
     categoriesScores() {
       return {
-        labels: this.$store.getters.getCategoriesResults.map(qa => qa.section),
+        labels: this.$store.getters.getTestResult.categoryBasedScore.map(qa => qa.section),
         datasets: [{
               label: 'your total score at each category',
-              data: this.$store.getters.getCategoriesResults.map(qa => qa.scorePercentage),
+              data: this.$store.getters.getTestResult.categoryBasedScore.map(qa => qa.percentage),
               backgroundColor: backgroundColors,
               borderColor: borderColors,
               borderWidth: 1
