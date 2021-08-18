@@ -21,6 +21,11 @@ export default {
     props: ['tests'],
     components: {
         Card
+    },
+    methods: {
+        takeTest(testId) {
+            this.$emit('takeTest', testId)
+        }
     }
 }
 </script>

@@ -1,12 +1,10 @@
 <template>
-<v-container
-      class="grey lighten-5 mb-6"
-    >
+  <v-container class="grey lighten-5 mb-6" >
  
-            <Tabs/>
-            <p>You can select from one of the following test types to proceed</p>
-      <BookedTests :tests="userTests" />
-    </v-container>
+    <Tabs v-on:tabClicked="activateTab"/>
+    <v-divider style="margin-top: 15px; margin-bottom: 15px;"></v-divider>
+    <BookedTests v-on:takeTest="takeTest" v-if="isTabActive('bookedTests')" :tests="userTests" />
+  </v-container>
   <!-- <div class="dashboard">
     <nav class="side__nav">
       <ul class="navbar">
@@ -67,6 +65,13 @@ export default {
     const userId = this.$auth.user.sub.split("|")[1]
     this.$store.dispatch('fetchTests', userId)
   },
+  data() {
+    return {
+      tabs: [
+        {name: 'bookedTests', active: true}, 
+        {name: 'testsTaken', active: false}]
+    }
+  },
   methods: {
     takeTest(prodId) {
       const testId = prodId
@@ -87,6 +92,18 @@ export default {
     },
     isFail(status) {
       return status.toLowerCase() == "failed"
+    },
+    activateTab(clickedTab) {
+      this.tabs = this.tabs.map(tb => {
+        if(tb.name.toLowerCase() == clickedTab.toLowerCase()) {
+          return {...tb, active: true}
+        }
+        return {...tb, active: false}
+      })
+    },
+    isTabActive(tabValue) {
+      const activeTab = this.tabs.find(tb => tb.name.toLowerCase() == tabValue.toLowerCase())
+      return activeTab.active
     }
   },
   components: {

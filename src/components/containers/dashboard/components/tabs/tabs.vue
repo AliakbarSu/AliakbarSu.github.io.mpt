@@ -1,21 +1,7 @@
 <template>
-  <v-tabs
-    fixed-tabs
-    background-color="indigo"
-    dark
-  >
-    <v-tab>
-      Option
-    </v-tab>
-    <v-tab>
-      Another Selection
-    </v-tab>
-    <v-tab>
-      Items
-    </v-tab>
-    <v-tab>
-      Another Screen
-    </v-tab>
+  <v-tabs fixed-tabs background-color="deep-purple" dark>
+    <v-tab @click="tabClicked('bookedTests')">Booked Tests</v-tab>
+    <v-tab @click="tabClicked('testsTaken')">Tests Taken</v-tab>
   </v-tabs>
 </template>
 
@@ -30,6 +16,11 @@
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       }
     },
+    methods: {
+      tabClicked(clickedItem) {
+        this.$emit('tabClicked', clickedItem)
+      }
+    }
   }
 </script>
 
