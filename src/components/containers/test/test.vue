@@ -24,7 +24,8 @@
               <img :src="question.media[0]" class="content__img" />
             </div>
             <!-- <CircularTimer/> -->
-            <ul class="question__answers">
+            <Options :select="selectAnswer" :options="question.options" />
+            <!-- <ul class="question__answers">
               <li
                 class="question__answer"
                 v-for="choice in question.options"
@@ -44,7 +45,7 @@
                   >({{ choice.id }}) {{ choice.text }}</span
                 >
               </li>
-            </ul>
+            </ul> -->
           </div>
           <div class="actions" v-if="!loading">
             <button class="actions__action" @click="next">Next</button>
@@ -69,6 +70,7 @@ import Instructions from './components/instructions/instructions.vue'
 import ProgressCircular from '../../UI/progress-circular/progressCircular.vue'
 import TimeProgressBar from './components/UI/time-progress-bar/timeProgressBar.vue'
 import Question from './components/UI/question/question.vue'
+import Options from './components/UI/options/options.vue'
 
 export default {
   data() {
@@ -93,7 +95,8 @@ export default {
     // Circle8,
     ProgressCircular,
     TimeProgressBar,
-    Question
+    Question,
+    Options
   },
   mounted() {
     this.questions = questions
