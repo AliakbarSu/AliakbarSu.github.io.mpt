@@ -14,8 +14,6 @@
             <TimeProgressBar :timeElapsed="timeProgress" />
           </div>
           <div class="question" v-if="!loading">
-            <!-- <span>Question: {{ question.number }}</span>
-            <p class="question__question" v-html="question.title"></p> -->
             <Question :question="question" />
             <div
               v-if="question.images && question.media.length"
@@ -25,29 +23,14 @@
             </div>
             <!-- <CircularTimer/> -->
             <Options :select="selectAnswer" :options="question.options" />
-            <!-- <ul class="question__answers">
-              <li
-                class="question__answer"
-                v-for="choice in question.options"
-                :key="choice.id"
-              >
-                <i
-                  v-if="!isSelected(choice)"
-                  class="far fa-dot-circle"
-                  @click="selectAnswer(choice)"
-                ></i>
-                <i
-                  v-else
-                  @click="selectAnswer(choice)"
-                  class="fas fa-dot-circle"
-                ></i>
-                <span @click="selectAnswer(choice)" class="answer__text"
-                  >({{ choice.id }}) {{ choice.text }}</span
-                >
-              </li>
-            </ul> -->
           </div>
-          <div class="actions" v-if="!loading">
+          <QuestionControls
+            @next="next"
+            @skip="skip"
+            @end="endTest"
+            v-if="!loading"
+          />
+          <!-- <div class="actions" >
             <button class="actions__action" @click="next">Next</button>
             <button class="actions__action actions--yellow" @click="skip">
               Flag
@@ -55,7 +38,7 @@
             <button class="actions__action actions--red" @click="endTest">
               End test
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -71,6 +54,7 @@ import ProgressCircular from '../../UI/progress-circular/progressCircular.vue'
 import TimeProgressBar from './components/UI/time-progress-bar/timeProgressBar.vue'
 import Question from './components/UI/question/question.vue'
 import Options from './components/UI/options/options.vue'
+import QuestionControls from './components/UI/question-controls/questionControls.vue'
 
 export default {
   data() {
@@ -96,7 +80,8 @@ export default {
     ProgressCircular,
     TimeProgressBar,
     Question,
-    Options
+    Options,
+    QuestionControls
   },
   mounted() {
     this.questions = questions
