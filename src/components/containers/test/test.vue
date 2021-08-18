@@ -14,8 +14,9 @@
             <TimeProgressBar :timeElapsed="timeProgress" />
           </div>
           <div class="question" v-if="!loading">
-            <span>Question: {{ question.number }}</span>
-            <p class="question__question" v-html="question.title"></p>
+            <!-- <span>Question: {{ question.number }}</span>
+            <p class="question__question" v-html="question.title"></p> -->
+            <Question :question="question" />
             <div
               v-if="question.images && question.media.length"
               class="content__thumbnail"
@@ -67,6 +68,7 @@ import Instructions from './components/instructions/instructions.vue'
 // import Circle8 from 'vue-loading-spinner/src/components/Circle8'
 import ProgressCircular from '../../UI/progress-circular/progressCircular.vue'
 import TimeProgressBar from './components/UI/time-progress-bar/timeProgressBar.vue'
+import Question from './components/UI/question/question.vue'
 
 export default {
   data() {
@@ -90,7 +92,8 @@ export default {
     Instructions,
     // Circle8,
     ProgressCircular,
-    TimeProgressBar
+    TimeProgressBar,
+    Question
   },
   mounted() {
     this.questions = questions
