@@ -11,7 +11,7 @@
               >{{ timeRemained.h }} : {{ timeRemained.m }} :
               {{ timeRemained.s }}</span
             >
-            <ProgressBar :progress="timeProgress" />
+            <TimeProgressBar :timeElapsed="timeProgress" />
           </div>
           <div class="question" v-if="!loading">
             <span>Question: {{ question.number }}</span>
@@ -65,8 +65,8 @@
 import { questions } from '../../../dummyData'
 import Instructions from './components/instructions/instructions.vue'
 // import Circle8 from 'vue-loading-spinner/src/components/Circle8'
-import ProgressBar from '../../UI/progress-bar/progressBar'
 import ProgressCircular from '../../UI/progress-circular/progressCircular.vue'
+import TimeProgressBar from './components/UI/time-progress-bar/timeProgressBar.vue'
 
 export default {
   data() {
@@ -89,8 +89,8 @@ export default {
   components: {
     Instructions,
     // Circle8,
-    ProgressBar,
-    ProgressCircular
+    ProgressCircular,
+    TimeProgressBar
   },
   mounted() {
     this.questions = questions
@@ -105,8 +105,6 @@ export default {
     start() {
       this.setTimer()
       const now = new Date().getTime()
-      this.testStartTime = now
-      this.$store.commit('setTestStartTime', now)
       this.question = { ...this.questions[0], startAt: now }
     },
     setTimer() {
