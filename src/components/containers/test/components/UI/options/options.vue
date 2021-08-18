@@ -9,16 +9,12 @@
         :key="option.id"
       >
         <template>
-          <v-list-item-action>
-            <v-checkbox :input-value="isActive(option.id)"></v-checkbox>
-          </v-list-item-action>
-
+          <v-chip class="ma-2" :color="isActive(option.id) ? 'green' : ''">{{
+            option.alpha
+          }}</v-chip>
           <v-list-item-content>
-            <v-list-item-title
-              ><v-chip class="ma-2">{{ option.alpha }}</v-chip> -
-              {{ option.text }}</v-list-item-title
-            >
-            <v-list-item-subtitle></v-list-item-subtitle>
+            <v-list-item-title>{{ option.text }}</v-list-item-title>
+            <!-- <v-list-item-subtitle></v-list-item-subtitle> -->
           </v-list-item-content>
         </template>
       </v-list-item>

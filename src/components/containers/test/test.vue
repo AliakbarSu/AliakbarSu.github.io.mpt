@@ -1,45 +1,35 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <div class="test">
       <ProgressCircular v-if="loading" />
-      <div class="content">
-        <Instructions @start="start" v-if="!hasTestStarted && !loading" />
-        <div v-else>
-          <div v-if="!loading">
-            <span>Time Remaining: </span>
-            <span
-              >{{ timeRemained.h }} : {{ timeRemained.m }} :
-              {{ timeRemained.s }}</span
-            >
-            <TimeProgressBar :timeElapsed="timeProgress" />
-          </div>
-          <div class="question" v-if="!loading">
-            <Question :question="question" />
-            <div
-              v-if="question.images && question.media.length"
-              class="content__thumbnail"
-            >
-              <img :src="question.media[0]" class="content__img" />
-            </div>
-            <!-- <CircularTimer/> -->
-            <Options :select="selectAnswer" :options="question.options" />
-          </div>
-          <QuestionControls
-            @next="next"
-            @skip="skip"
-            @end="endTest"
-            v-if="!loading"
-          />
-          <!-- <div class="actions" >
-            <button class="actions__action" @click="next">Next</button>
-            <button class="actions__action actions--yellow" @click="skip">
-              Flag
-            </button>
-            <button class="actions__action actions--red" @click="endTest">
-              End test
-            </button>
-          </div> -->
+
+      <Instructions @start="start" v-if="!hasTestStarted && !loading" />
+      <div class="content" v-else>
+        <div v-if="!loading">
+          <span>Time Remaining: </span>
+          <span
+            >{{ timeRemained.h }} : {{ timeRemained.m }} :
+            {{ timeRemained.s }}</span
+          >
+          <TimeProgressBar :timeElapsed="timeProgress" />
         </div>
+        <div class="question" v-if="!loading">
+          <Question :question="question" />
+          <div
+            v-if="question.images && question.media.length"
+            class="content__thumbnail"
+          >
+            <img :src="question.media[0]" class="content__img" />
+          </div>
+          <!-- <CircularTimer/> -->
+          <Options @select="selectAnswer" :options="question.options" />
+        </div>
+        <QuestionControls
+          @next="next"
+          @skip="skip"
+          @end="endTest"
+          v-if="!loading"
+        />
       </div>
     </div>
   </v-container>
@@ -126,6 +116,9 @@ export default {
       }, 100)
     },
     next() {
+      if (!this.submitted_answer.id) {
+        return alert('Please select an answer first')
+      }
       this.removeQuestion()
       const now = new Date().getTime()
       this.submitted_questions.push({
@@ -228,20 +221,18 @@ export default {
 
 <style lang="scss" scoped>
 .test {
-  height: 100vh;
+  // height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  font-family: 'Roboto', sans-serif;
 }
 
 .content {
-  padding: 12px;
-  text-align: left;
-  @media (min-width: 1200px) {
-    width: 1200px;
-    margin: auto;
-  }
-  font-family: 'Roboto', sans-serif;
+  width: 100%;
 }
 
 .content__thumbnail {

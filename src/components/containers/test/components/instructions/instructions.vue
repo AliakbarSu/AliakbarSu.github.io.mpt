@@ -37,6 +37,7 @@ export default {
 <style lang="scss" scoped>
 .navigator {
   text-align: center;
+  margin-top: 20%;
 }
 
 .navigator__text {
