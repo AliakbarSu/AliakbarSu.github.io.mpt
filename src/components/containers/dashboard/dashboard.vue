@@ -1,9 +1,13 @@
 <template>
-  <v-container class="grey lighten-5 mb-6" >
- 
-    <Tabs v-on:tabClicked="activateTab"/>
-    <v-divider style="margin-top: 15px; margin-bottom: 15px;"></v-divider>
-    <BookedTests v-on:takeTest="takeTest" v-if="isTabActive('bookedTests')" :tests="userTests" />
+  <v-container class="grey lighten-5 mb-6">
+    <Tabs v-on:tabClicked="activateTab" />
+    <v-divider style="margin-top: 15px; margin-bottom: 15px"></v-divider>
+    <BookedTests
+      v-on:takeTest="takeTest"
+      v-if="isTabActive('bookedTests')"
+      :tests="userTests"
+    />
+    <TestHistory v-if="isTabActive('testHistory')" />
   </v-container>
   <!-- <div class="dashboard">
     <nav class="side__nav">
@@ -59,31 +63,36 @@
 <script>
 import Tabs from './components/tabs/tabs.vue'
 import BookedTests from './components/bookedTests/bookedTests.vue'
+import TestHistory from './components/UI/test-history/test-history.vue'
 
 export default {
   mounted() {
-    const userId = this.$auth.user.sub.split("|")[1]
+    const userId = this.$auth.user.sub.split('|')[1]
     this.$store.dispatch('fetchTests', userId)
   },
   data() {
     return {
       tabs: [
-        {name: 'bookedTests', active: true}, 
-        {name: 'testsTaken', active: false}]
+        { name: 'bookedTests', active: true },
+        { name: 'testHistory', active: false }
+      ]
     }
   },
   methods: {
     takeTest(prodId) {
       const testId = prodId
-      const userId = this.$auth.user.sub.split("|")[1]
-      this.$store.dispatch("loadTest", {userId, testId}).then(() => {
-        this.$router.push("/test")
-      }).catch(err => {
-        console.log("failed to load the test", err)
-      })
+      const userId = this.$auth.user.sub.split('|')[1]
+      this.$store
+        .dispatch('loadTest', { userId, testId })
+        .then(() => {
+          this.$router.push('/test')
+        })
+        .catch((err) => {
+          console.log('failed to load the test', err)
+        })
     },
     logout() {
-      this.$store.dispatch("logout")
+      this.$store.dispatch('logout')
     },
     getDate(dateToParse) {
       var time = new Date(dateToParse)
@@ -91,24 +100,27 @@ export default {
       return date.toString()
     },
     isFail(status) {
-      return status.toLowerCase() == "failed"
+      return status.toLowerCase() == 'failed'
     },
     activateTab(clickedTab) {
-      this.tabs = this.tabs.map(tb => {
-        if(tb.name.toLowerCase() == clickedTab.toLowerCase()) {
-          return {...tb, active: true}
+      this.tabs = this.tabs.map((tb) => {
+        if (tb.name.toLowerCase() == clickedTab.toLowerCase()) {
+          return { ...tb, active: true }
         }
-        return {...tb, active: false}
+        return { ...tb, active: false }
       })
     },
     isTabActive(tabValue) {
-      const activeTab = this.tabs.find(tb => tb.name.toLowerCase() == tabValue.toLowerCase())
+      const activeTab = this.tabs.find(
+        (tb) => tb.name.toLowerCase() == tabValue.toLowerCase()
+      )
       return activeTab.active
     }
   },
   components: {
     Tabs,
-    BookedTests
+    BookedTests,
+    TestHistory
   },
   computed: {
     totalTests() {
@@ -131,7 +143,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .dashboard {
   height: 100vh;
   display: flex;
@@ -139,7 +150,6 @@ export default {
   justify-items: center;
   font-family: 'Roboto', sans-serif;
 }
-
 
 .content {
   padding: 12px;
@@ -169,7 +179,7 @@ export default {
   align-items: center;
   justify-content: center;
   color: white;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .tiles--orange {
@@ -183,7 +193,6 @@ export default {
 .tiles--red {
   background-color: #ff3434;
 }
-
 
 .tiles__heading {
   font-size: 1.5em;
@@ -201,13 +210,12 @@ export default {
   padding: 12px;
 }
 
-
 .history {
   padding: 20px;
   margin-top: 10%;
   border: 1px solid #e6e6e6;
   border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   max-height: 370px;
   overflow-y: scroll;
 }
@@ -249,7 +257,7 @@ td {
   color: white;
   border-radius: 5px;
   cursor: pointer;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .side__nav {
@@ -304,5 +312,4 @@ td {
     transition: 0.3s;
   }
 }
-
 </style>
