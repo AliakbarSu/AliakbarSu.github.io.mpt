@@ -6,7 +6,7 @@
       <Circle8></Circle8>
     </div>
     <div class="content">
-      <Navigator @start="start" v-if="!hasTestStarted && !loading"/>
+      <Instructions @start="start" v-if="!hasTestStarted && !loading"/>
       <div v-else>
         <div v-if="!loading">
           <span>Time Remaining: </span>
@@ -50,7 +50,7 @@
 <script>
 // import CircularTimer from '../../UI/circular-timer/circular-timer'
 import { questions } from '../../../dummyData'
-import Navigator from './components/navigator/navigator'
+import Instructions from './components/instructions/instructions.vue'
 import Circle8 from 'vue-loading-spinner/src/components/Circle8'
 import ProgressBar from '../../UI/progress-bar/progressBar'
 
@@ -74,7 +74,7 @@ export default {
     }
   },
   components: {
-    Navigator,
+    Instructions,
     Circle8,
     ProgressBar
   },
@@ -83,7 +83,6 @@ export default {
     this.loading = false
     this.questions = this.$store.getters.getCurrentTest.map((q, index) => ({...q, number: index + 1}))
     this.question = this.questions[0]
-    this.$store.commit("setSubjectsPoints", this.questions)
   },
   methods: {
     start() {
