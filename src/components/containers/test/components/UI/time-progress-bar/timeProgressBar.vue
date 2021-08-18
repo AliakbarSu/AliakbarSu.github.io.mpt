@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-progress-linear
-      v-model="time"
-      color="amber"
+      v-model="timeElapsed"
+      :color="barColor"
       height="35"
     ></v-progress-linear>
   </div>
@@ -10,8 +10,17 @@
 
 <script>
 export default {
-  data: () => ({
-    time: 78
-  })
+  props: ['timeElapsed'],
+  computed: {
+    barColor() {
+      if (this.timeElapsed > 50) {
+        return 'green'
+      } else if (this.timeElapsed > 30) {
+        return 'amber'
+      } else {
+        return 'red'
+      }
+    }
+  }
 }
 </script>
