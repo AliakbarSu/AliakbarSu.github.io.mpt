@@ -1,49 +1,62 @@
 <template>
-<v-container>
-  <div class="test">
-
-    <div v-if="loading" class="spinner__container">
-      <Circle8></Circle8>
-    </div>
-    <div class="content">
-      <Instructions @start="start" v-if="!hasTestStarted && !loading"/>
-      <div v-else>
-        <div v-if="!loading">
-          <span>Time Remaining: </span>
-          <span>{{timeRemained.h}} : {{timeRemained.m}} : {{timeRemained.s}}</span>
-          <ProgressBar :progress="timeProgress"/>
-        </div>
-        <div class="question" v-if="!loading">
-          <span>Question: {{question.number}}</span>
-          <p class="question__question" v-html="question.title"></p>
-          <div v-if="question.images && question.media.length" class="content__thumbnail">
-            <img :src="question.media[0]" class="content__img">
+  <v-container>
+    <div class="test">
+      <ProgressCircular v-if="loading" />
+      <div class="content">
+        <Instructions @start="start" v-if="!hasTestStarted && !loading" />
+        <div v-else>
+          <div v-if="!loading">
+            <span>Time Remaining: </span>
+            <span
+              >{{ timeRemained.h }} : {{ timeRemained.m }} :
+              {{ timeRemained.s }}</span
+            >
+            <ProgressBar :progress="timeProgress" />
           </div>
-          <!-- <CircularTimer/> -->
-          <ul class="question__answers">
-            <li class="question__answer" 
-              v-for="choice in question.options" 
-              :key="choice.id">
-                <i v-if="!isSelected(choice)" class="far fa-dot-circle" @click="selectAnswer(choice)" ></i>
-                <i v-else 
-                  @click="selectAnswer(choice)" 
-                  class="fas fa-dot-circle" 
+          <div class="question" v-if="!loading">
+            <span>Question: {{ question.number }}</span>
+            <p class="question__question" v-html="question.title"></p>
+            <div
+              v-if="question.images && question.media.length"
+              class="content__thumbnail"
+            >
+              <img :src="question.media[0]" class="content__img" />
+            </div>
+            <!-- <CircularTimer/> -->
+            <ul class="question__answers">
+              <li
+                class="question__answer"
+                v-for="choice in question.options"
+                :key="choice.id"
+              >
+                <i
+                  v-if="!isSelected(choice)"
+                  class="far fa-dot-circle"
+                  @click="selectAnswer(choice)"
                 ></i>
-                <span 
-                  @click="selectAnswer(choice)" 
-                  class="answer__text" 
-                >({{choice.id}}) {{choice.text}}</span>
+                <i
+                  v-else
+                  @click="selectAnswer(choice)"
+                  class="fas fa-dot-circle"
+                ></i>
+                <span @click="selectAnswer(choice)" class="answer__text"
+                  >({{ choice.id }}) {{ choice.text }}</span
+                >
               </li>
-          </ul>
-        </div>
-        <div class="actions" v-if="!loading">
-          <button class="actions__action" @click="next">Next</button>
-          <button class="actions__action actions--yellow" @click="skip">Flag</button>
-          <button class="actions__action actions--red" @click="endTest">End test</button>
+            </ul>
+          </div>
+          <div class="actions" v-if="!loading">
+            <button class="actions__action" @click="next">Next</button>
+            <button class="actions__action actions--yellow" @click="skip">
+              Flag
+            </button>
+            <button class="actions__action actions--red" @click="endTest">
+              End test
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </v-container>
 </template>
 
@@ -51,9 +64,9 @@
 // import CircularTimer from '../../UI/circular-timer/circular-timer'
 import { questions } from '../../../dummyData'
 import Instructions from './components/instructions/instructions.vue'
-import Circle8 from 'vue-loading-spinner/src/components/Circle8'
+// import Circle8 from 'vue-loading-spinner/src/components/Circle8'
 import ProgressBar from '../../UI/progress-bar/progressBar'
-
+import ProgressCircular from '../../UI/progress-circular/progressCircular.vue'
 
 export default {
   data() {
@@ -65,8 +78,8 @@ export default {
       submitted_answer: {},
       testEndsIn: 0,
       interval: null,
-      timeLimit: 1.26e+7,
-      timeRemained: {h: 0, m: 0, s: 0, mil: 0},
+      timeLimit: 1.26e7,
+      timeRemained: { h: 0, m: 0, s: 0, mil: 0 },
       isTimeOver: false,
       hasTestStarted: false,
       loading: true,
@@ -75,25 +88,29 @@ export default {
   },
   components: {
     Instructions,
-    Circle8,
-    ProgressBar
+    // Circle8,
+    ProgressBar,
+    ProgressCircular
   },
   mounted() {
     this.questions = questions
     this.loading = false
-    this.questions = this.$store.getters.getCurrentTest.map((q, index) => ({...q, number: index + 1}))
+    this.questions = this.$store.getters.getCurrentTest.map((q, index) => ({
+      ...q,
+      number: index + 1
+    }))
     this.question = this.questions[0]
   },
   methods: {
     start() {
       this.setTimer()
-      const now = new Date().getTime(); 
+      const now = new Date().getTime()
       this.testStartTime = now
-      this.$store.commit("setTestStartTime", now)
-      this.question = {...this.questions[0], startAt: now}
+      this.$store.commit('setTestStartTime', now)
+      this.question = { ...this.questions[0], startAt: now }
     },
     setTimer() {
-      if(this.interval) {
+      if (this.interval) {
         clearInterval(this.interval)
       }
       this.hasTestStarted = true
@@ -101,52 +118,55 @@ export default {
       this.interval = setInterval(() => {
         const now = new Date().getTime()
         const t = this.testEndsIn - now
-        this.timeRemained.h = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60))
+        this.timeRemained.h = Math.floor(
+          (t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        )
         this.timeRemained.m = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60))
         this.timeRemained.s = Math.floor((t % (1000 * 60)) / 1000)
         this.timeRemained.mil = t
         //1.2528e+7
-        if (t < 0) { 
+        if (t < 0) {
           clearInterval(this.interval)
           this.isTimeOver = true
-          this.$swal.fire(
-            'Time Over',
-            'Your time is over!',
-            'error'
-          ).then(() => {
-            this.calculateResults()
-          })
-          
-        } 
+          this.$swal
+            .fire('Time Over', 'Your time is over!', 'error')
+            .then(() => {
+              this.calculateResults()
+            })
+        }
       }, 100)
     },
     next() {
       this.removeQuestion()
       const now = new Date().getTime()
       this.submitted_questions.push({
-        ...this.question, 
+        ...this.question,
         submitted_answer: this.submitted_answer,
         endAt: now
       })
 
       this.resetAnswers()
 
-
-      if(this.isTestOver) {
+      if (this.isTestOver) {
         this.calculateResults()
-      }else if(this.isLastQuestion) {
+      } else if (this.isLastQuestion) {
         this.applySkippedQuestions()
       }
 
       this.setNextQuestion()
     },
     removeQuestion() {
-      this.questions = this.questions.filter(q => q.id !== this.question.id)
+      this.questions = this.questions.filter((q) => q.id !== this.question.id)
     },
     setNextQuestion() {
       const now = new Date().getTime()
-      const currentIndex = this.questions.findIndex(q => q.id == this.questions.id)
-      this.question = currentIndex == this.questions.length - 1 ? this.question : {...this.questions[currentIndex + 1], startAt: now}
+      const currentIndex = this.questions.findIndex(
+        (q) => q.id == this.questions.id
+      )
+      this.question =
+        currentIndex == this.questions.length - 1
+          ? this.question
+          : { ...this.questions[currentIndex + 1], startAt: now }
     },
     applySkippedQuestions() {
       this.questions = this.skipped_questions
@@ -157,7 +177,7 @@ export default {
         submitted_answers: this.submitted_questions,
         testStartTime: this.testStartTime
       }
-      this.$store.dispatch("submitTest", dataToSubmit).then(() => {
+      this.$store.dispatch('submitTest', dataToSubmit).then(() => {
         this.$router.push('/test-results')
       })
     },
@@ -167,8 +187,11 @@ export default {
     },
     skip() {
       this.removeQuestion()
-      this.skipped_questions = [...this.skipped_questions.filter(sq => sq.id !== this.question.id), this.question]
-      if(this.isLastQuestion) {
+      this.skipped_questions = [
+        ...this.skipped_questions.filter((sq) => sq.id !== this.question.id),
+        this.question
+      ]
+      if (this.isLastQuestion) {
         this.applySkippedQuestions()
       }
       this.resetAnswers()
@@ -182,45 +205,50 @@ export default {
         showCancelButton: true,
         confirmButtonText: 'Yes, end test!',
         cancelButtonText: 'No, continue'
-      }).then(({value}) => {
-        if(value) {
+      }).then(({ value }) => {
+        if (value) {
           this.calculateResults()
         }
-      })    
+      })
     },
     selectAnswer(answer) {
       this.submitted_answer = answer
     },
     isSelected(answer) {
       return this.submitted_answer.id == answer.id
-    },
+    }
   },
   computed: {
     isTestOver() {
-      return (this.questions.length == 0 && this.skipped_questions.length == 0 )|| this.isTimeOver
+      return (
+        (this.questions.length == 0 && this.skipped_questions.length == 0) ||
+        this.isTimeOver
+      )
     },
     isLastQuestion() {
       return this.questions.length === 0
     },
     timeProgress() {
-      return 100 - (((this.timeLimit - this.timeRemained.mil) / this.timeLimit) * 100)
+      return (
+        100 - ((this.timeLimit - this.timeRemained.mil) / this.timeLimit) * 100
+      )
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .test {
   height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .content {
   padding: 12px;
   text-align: left;
-  @media(min-width: 1200px) {
+  @media (min-width: 1200px) {
     width: 1200px;
     margin: auto;
   }
@@ -257,7 +285,8 @@ export default {
   &:hover {
     background: white;
     color: #8d8df5;
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+      0 17px 50px 0 rgba(0, 0, 0, 0.19);
   }
 }
 
@@ -269,13 +298,10 @@ export default {
   padding: 5px;
 }
 
-
-
 .answer__text {
   cursor: pointer;
   padding-left: 8px;
 }
-
 
 .answer__text--correct {
   color: #9adc9a;
@@ -288,7 +314,6 @@ export default {
 .fa-dot-circle {
   cursor: pointer;
 }
-
 
 .question__answers {
   border-top: 1px solid #e6e6e6;
@@ -310,23 +335,23 @@ export default {
   background: #70bf70;
   border: 1px solid #70bf70;
   color: white;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   outline: none;
   &:hover {
     cursor: pointer;
     transition: 0.3s;
     background: white;
     color: #70bf70;
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+      0 17px 50px 0 rgba(0, 0, 0, 0.19);
   }
   &:active {
     outline: none;
   }
 }
 
-
 .actions__action:after {
-  content: "";
+  content: '';
   background: #f1f1f1;
   display: block;
   position: absolute;
@@ -335,14 +360,14 @@ export default {
   margin-left: -20px !important;
   margin-top: -120%;
   opacity: 0;
-  transition: all 0.8s
+  transition: all 0.8s;
 }
 
 .actions__action:active:after {
   padding: 0;
   margin: 0;
   opacity: 1;
-  transition: 0s
+  transition: 0s;
 }
 
 .spinner__container {
@@ -366,7 +391,6 @@ export default {
   }
 }
 
-
 .actions--yellow {
   background: #c5c56d;
   border: 1px solid #c5c56d;
@@ -388,6 +412,4 @@ export default {
 .question__explanation--green {
   background: #60e460;
 }
-
-
 </style>
