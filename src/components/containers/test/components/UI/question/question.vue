@@ -1,9 +1,6 @@
 <template>
   <div>
-    <v-banner icon="$mdiAccount">
-      <p>{{ question.number }}</p>
-    </v-banner>
-
+    <p class="text-caption">Question Number: {{ question.number }}</p>
     <p v-html="question.title" class="font-weight-regular">fsf</p>
   </div>
 </template>

@@ -3,7 +3,7 @@
     <v-progress-linear
       v-model="time"
       color="amber"
-      height="25"
+      height="35"
     ></v-progress-linear>
   </div>
 </template>

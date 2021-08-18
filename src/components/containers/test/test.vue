@@ -5,12 +5,13 @@
 
       <Instructions @start="start" v-if="!hasTestStarted && !loading" />
       <div class="content" v-else>
-        <div v-if="!loading">
-          <span>Time Remaining: </span>
+        <div class="time-container" v-if="!loading">
+          <!-- <span>Time Remaining: </span>
           <span
             >{{ timeRemained.h }} : {{ timeRemained.m }} :
             {{ timeRemained.s }}</span
-          >
+          > -->
+          <TimeDisplay :time="timeRemained" />
           <TimeProgressBar :timeElapsed="timeProgress" />
         </div>
         <div class="question" v-if="!loading">
@@ -45,6 +46,7 @@ import TimeProgressBar from './components/UI/time-progress-bar/timeProgressBar.v
 import Question from './components/UI/question/question.vue'
 import Options from './components/UI/options/options.vue'
 import QuestionControls from './components/UI/question-controls/questionControls.vue'
+import TimeDisplay from './components/UI/time-display/time-display.vue'
 
 export default {
   data() {
@@ -71,7 +73,8 @@ export default {
     TimeProgressBar,
     Question,
     Options,
-    QuestionControls
+    QuestionControls,
+    TimeDisplay
   },
   mounted() {
     this.questions = questions
@@ -220,6 +223,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.time-container {
+  margin: 25px 0;
+}
+
 .test {
   // height: 100vh;
   display: flex;
