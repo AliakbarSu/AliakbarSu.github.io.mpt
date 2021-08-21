@@ -11,7 +11,7 @@
         large
       >
         <template v-slot:opposite>
-          <span>{{ test.results.timestamps }}</span>
+          <span>{{ displayCorrectDate(test.results.timestamps) }}</span>
         </template>
         <v-card class="elevation-2">
           <v-card-title class="text-h5">{{ test.name }}</v-card-title>
@@ -25,11 +25,18 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   props: ['history'],
   computed: {
     isAnyHistory() {
       return this.history.length > 0
+    }
+  },
+  methods: {
+    displayCorrectDate(dateToParse) {
+      const date = new Date(dateToParse)
+      return moment(date).format('Do MMMM YYYY, h:mm a')
     }
   }
 }
