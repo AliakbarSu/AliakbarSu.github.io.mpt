@@ -1,26 +1,41 @@
-
+<template>
+  <apexchart
+    type="pie"
+    width="380"
+    :options="chartOptions"
+    :series="chartData"
+  ></apexchart>
+</template>
 
 <script>
-import { Pie } from 'vue-chartjs'
-
 export default {
-  extends: Pie,
-  props: ["data", "options"],
-  mounted () {
-    this.renderChart(this.data, this.options)
+  props: ['data', 'labels'],
+  computed: {
+    chartOptions() {
+      return {
+        chart: {
+          width: 380,
+          type: 'pie'
+        },
+        labels: this.labels,
+        responsive: [
+          // {
+          //   breakpoint: 480,
+          //   options: {
+          //     chart: {
+          //       width: 200
+          //     },
+          //     legend: {
+          //       position: 'bottom'
+          //     }
+          //   }
+          // }
+        ]
+      }
+    },
+    chartData() {
+      return this.data
+    }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-.content {
-  padding: 12px;
-  @media(min-width: 1200px) {
-    width: 1200px;
-    margin: auto;
-  }
-  font-family: 'Roboto', sans-serif;
-}
-
-</style>

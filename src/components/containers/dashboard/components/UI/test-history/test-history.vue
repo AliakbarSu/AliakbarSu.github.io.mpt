@@ -15,6 +15,7 @@
         </template>
         <v-hover v-slot="{ hover }">
           <v-card
+            @click="showTestResults(test.results)"
             class="elevation-2"
             :elevation="hover ? 12 : 2"
             :class="{ 'on-hover': hover }"
@@ -43,6 +44,10 @@ export default {
     displayCorrectDate(dateToParse) {
       const date = new Date(dateToParse)
       return moment(date).format('Do MMMM YYYY, h:mm a')
+    },
+    showTestResults(results) {
+      this.$store.commit('setTestResult', results)
+      this.$router.push('/test-results')
     }
   }
 }

@@ -8,29 +8,34 @@ import CKEditor from '@ckeditor/ckeditor5-vue'
 import vuetify from './plugins/vuetify'
 
 // Import the plugin here
-import { Auth0Plugin } from "./auth";
-import { domain, clientId } from "../auth_config.json";
+import { Auth0Plugin } from './auth'
+import { domain, clientId } from '../auth_config.json'
 
 // Install the authentication plugin here
 Vue.use(Auth0Plugin, {
   domain,
   clientId,
-  onRedirectCallback: appState => {
+  onRedirectCallback: (appState) => {
     router.push(
       appState && appState.targetUrl
         ? appState.targetUrl
         : window.location.pathname
-    );
+    )
   }
-});
+})
 
-Vue.use( CKEditor )
+import VueApexCharts from 'vue-apexcharts'
+Vue.use(VueApexCharts)
+
+Vue.component('apexchart', VueApexCharts)
+
+Vue.use(CKEditor)
 Vue.config.productionTip = false
-Vue.use(VueSweetalert2);
+Vue.use(VueSweetalert2)
 
 new Vue({
   router,
-  render: h => h(App),
+  render: (h) => h(App),
   vuetify,
   store
 }).$mount('#app')

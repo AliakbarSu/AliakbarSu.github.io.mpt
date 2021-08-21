@@ -1,64 +1,75 @@
 <template>
-<div class="content">
-  <div class="alert" :class="{'alert--red': !passed}">
-    <p class="alert__text" v-if="passed">Congratulations you have passed the test</p>
-    <p class="alert__text" v-else>Unfortunately! you failed the test</p>
+  <div class="content">
+    <div class="alert" :class="{ 'alert--red': !passed }">
+      <p class="alert__text" v-if="passed">
+        Congratulations you have passed the test
+      </p>
+      <p class="alert__text" v-else>Unfortunately! you failed the test</p>
+    </div>
+    <p>Scores Breakdown</p>
+    <div class="results">
+      <div class="results__result">
+        <p class="result__title result__title--orange">Overall Score</p>
+        <span class="result__score">{{ overallScore }}</span>
+      </div>
+      <div class="results__result">
+        <p class="result__title result__title--green">Correct Questions</p>
+        <span class="result__score">{{ correct }}</span>
+      </div>
+      <div class="results__result">
+        <p class="result__title result__title--red">Incorrect Questions</p>
+        <span class="result__score">{{ incorrect }}</span>
+      </div>
+    </div>
+    <p>Score Graphs</p>
+    <div class="sections__wrapper">
+      <div class="sections">
+        <p class="graph__title">
+          Your Scores Percentage at Different Categories
+        </p>
+        <Bar :data="categoriesScores" :options="options" />
+      </div>
+      <div class="sections">
+        <p class="graph__title">Accuracy Accross Questions</p>
+        <!-- <Line-graph :data="accuracyOverTime" :options="options"/> -->
+      </div>
+    </div>
+    <p>Your Timing</p>
+    <div class="sections__wrapper">
+      <div class="sections">
+        <p class="graph__title">Average Time Taken at Each Category</p>
+        <Bar :data="averageCategoryTiming" :options="options" />
+      </div>
+      <div class="sections">
+        <p class="graph__title">Timing Performance Accross Questions</p>
+        <Line-graph :data="speedOverTime" :options="options" />
+      </div>
+    </div>
+    <p>Performance at Each Category</p>
+    <div class="sections__wrapper">
+      <div class="sections">
+        <p class="graph__title">Correct Answers</p>
+        <Pie
+          :data="sectionsCorrectScores.datasets"
+          :labels="sectionsCorrectScores.labels"
+        />
+      </div>
+      <div class="sections">
+        <p class="graph__title">Incorrect Answers</p>
+        <Pie
+          :data="sectionsIncorrectScores.datasets"
+          :labels="sectionsIncorrectScores.labels"
+        />
+      </div>
+    </div>
+    <div class="actions">
+      <button class="actions__buttons">Retake</button>
+      <button class="actions__buttons" @click="navigateToDashboard">
+        Go to dashboard
+      </button>
+      <button class="actions__buttons">Print results</button>
+    </div>
   </div>
-  <p>Scores Breakdown</p>
-  <div class="results">
-    <div class="results__result">
-      <p class="result__title result__title--orange">Overall Score</p>
-      <span class="result__score">{{overallScore}}</span>
-    </div>
-    <div class="results__result">
-      <p class="result__title result__title--green">Correct Questions</p>
-      <span class="result__score">{{correct}}</span>
-    </div>
-    <div class="results__result">
-      <p class="result__title result__title--red">Incorrect Questions</p>
-      <span class="result__score">{{incorrect}}</span>
-    </div>
-  </div>
-  <p>Score Graphs</p>
-  <div class="sections__wrapper">
-    <div class="sections">
-      <p class="graph__title">Your Scores Percentage at Different Categories</p>
-      <Bar :data="categoriesScores" :options="options"/>
-    </div>
-    <div class="sections">
-      <p class="graph__title">Accuracy Accross Questions</p>
-      <!-- <Line-graph :data="accuracyOverTime" :options="options"/> -->
-    </div>
-  </div>
-  <p>Your Timing</p>
-  <div class="sections__wrapper">
-    <div class="sections">
-      <p class="graph__title">Average Time Taken at Each Category</p>
-      <Bar :data="averageCategoryTiming" :options="options"/>
-    </div>
-    <div class="sections">
-      <p class="graph__title">Timing Performance Accross Questions</p>
-      <Line-graph :data="speedOverTime" :options="options"/>
-    </div>
-  </div>
-  <p>Performance at Each Category</p>
-  <div class="sections__wrapper">
-    <div class="sections">
-      <p class="graph__title">Correct Answers</p>
-      <Pie :data="sectionsCorrectScores" :options="options"/>
-    </div>
-    <div class="sections">
-      <p class="graph__title">Incorrect Answers</p>
-      <Pie :data="sectionsIncorrectScores" :options="options"/>
-    </div>
-  </div>
-  <div class="actions">
-    <button class="actions__buttons">Retake</button>
-    <button class="actions__buttons" @click="navigateToDashboard">Go to dashboard</button>
-    <button class="actions__buttons">Print results</button>
-  </div>
-</div>
-  
 </template>
 
 <script>
@@ -88,13 +99,15 @@ export default {
   data() {
     return {
       options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero: true
-                  }
-              }]
-          }
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
       },
       passed: false
     }
@@ -124,48 +137,50 @@ export default {
   components: {
     Bar,
     Pie,
-    "Line-graph": Line
+    'Line-graph': Line
   },
   methods: {
     navigateToDashboard() {
-      this.$router.push("/dashboard")
+      this.$router.push('/dashboard')
     }
   },
   computed: {
     sectionsCorrectScores() {
       return {
-        labels: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.section),
-        datasets: [{
-              label: '# of Votes',
-              data: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.correct),
-              backgroundColor: backgroundColors,
-              borderColor: borderColors,
-              borderWidth: 1
-          }]
+        labels: this.$store.getters.getTestResult.categoryBasedScore.map(
+          (section) => section.category
+        ),
+        datasets: this.$store.getters.getTestResult.categoryBasedScore.map(
+          (section) => section.correct
+        )
       }
     },
     sectionsIncorrectScores() {
       return {
-        labels: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.section),
-        datasets: [{
-              label: '# of Votes',
-              data: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.incorrect),
-              backgroundColor: backgroundColors,
-              borderColor: borderColors,
-              borderWidth: 1
-          }]
+        labels: this.$store.getters.getTestResult.categoryBasedScore.map(
+          (section) => section.category
+        ),
+        datasets: this.$store.getters.getTestResult.categoryBasedScore.map(
+          (section) => section.incorrect
+        )
       }
     },
     averageCategoryTiming() {
       return {
-        labels: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.section),
-        datasets: [{
-              label: 'your average time spent on questions of specific category',
-              data: this.$store.getters.getTestResult.categoryBasedScore.map(section => section.averageAnsweringTime),
-              backgroundColor: backgroundColors,
-              borderColor: borderColors,
-              borderWidth: 1
-          }]
+        labels: this.$store.getters.getTestResult.categoryBasedScore.map(
+          (section) => section.category
+        ),
+        datasets: [
+          {
+            label: 'your average time spent on questions of specific category',
+            data: this.$store.getters.getTestResult.categoryBasedScore.map(
+              (section) => section.averageAnsweringTime
+            ),
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 1
+          }
+        ]
       }
     },
     overallScore() {
@@ -179,38 +194,54 @@ export default {
     },
     accuracyOverTime() {
       return {
-        labels: this.$store.getters.getTestResult.accuracy.map(qa => qa.time),
-        datasets: [{
-              label: 'your accuracy over the course of the test',
-              data: this.$store.getters.getTestResult.accuracy.map(qa => qa.count),
-              backgroundColor: backgroundColors,
-              borderColor: borderColors,
-              borderWidth: 3
-          }]
+        labels: this.$store.getters.getTestResult.accuracy.map((qa) => qa.time),
+        datasets: [
+          {
+            label: 'your accuracy over the course of the test',
+            data: this.$store.getters.getTestResult.accuracy.map(
+              (qa) => qa.count
+            ),
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 3
+          }
+        ]
       }
     },
     speedOverTime() {
       return {
-        labels: this.$store.getters.getTestResult.speed.map(qa => qa.time + " minutes"),
-        datasets: [{
-              label: 'time spent on questions at each time interval',
-              data: this.$store.getters.getTestResult.speed.map(qa => qa.answeredIn),
-              backgroundColor: backgroundColors,
-              borderColor: borderColors,
-              borderWidth: 1
-          }]
+        labels: this.$store.getters.getTestResult.speed.map(
+          (qa) => qa.time + ' minutes'
+        ),
+        datasets: [
+          {
+            label: 'time spent on questions at each time interval',
+            data: this.$store.getters.getTestResult.speed.map(
+              (qa) => qa.answeredIn
+            ),
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 1
+          }
+        ]
       }
     },
     categoriesScores() {
       return {
-        labels: this.$store.getters.getTestResult.categoryBasedScore.map(qa => qa.section),
-        datasets: [{
-              label: 'your total score at each category',
-              data: this.$store.getters.getTestResult.categoryBasedScore.map(qa => qa.percentage),
-              backgroundColor: backgroundColors,
-              borderColor: borderColors,
-              borderWidth: 1
-          }]
+        labels: this.$store.getters.getTestResult.categoryBasedScore.map(
+          (qa) => qa.section
+        ),
+        datasets: [
+          {
+            label: 'your total score at each category',
+            data: this.$store.getters.getTestResult.categoryBasedScore.map(
+              (qa) => qa.percentage
+            ),
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 1
+          }
+        ]
       }
     }
   }
@@ -220,7 +251,7 @@ export default {
 <style lang="scss" scoped>
 .content {
   padding: 12px;
-  @media(min-width: 1200px) {
+  @media (min-width: 1200px) {
     width: 1200px;
     margin: auto;
   }
@@ -232,7 +263,7 @@ export default {
   border-radius: 5px;
   margin-bottom: 10px;
   padding: 8px 0;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .alert--red {
@@ -245,7 +276,6 @@ export default {
   font-size: 1em;
   margin: 0;
 }
-
 
 .results {
   border: 1px solid #ececec;
@@ -270,7 +300,7 @@ export default {
   color: white;
   width: 200px;
   text-align: center;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .result__score {
@@ -290,13 +320,11 @@ export default {
   background: #f9ae19;
 }
 
-
 .sections__wrapper {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
 }
-
 
 .sections {
   width: 48%;
@@ -308,7 +336,7 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .graph__title {
@@ -330,7 +358,7 @@ export default {
   border: 1px solid #5cbf5c;
   color: white;
   border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   &:hover {
     cursor: pointer;
     transition: 0.3s;
@@ -338,5 +366,4 @@ export default {
     background: white;
   }
 }
-
 </style>
