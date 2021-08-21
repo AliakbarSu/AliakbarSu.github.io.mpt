@@ -3,21 +3,20 @@
     <v-timeline-item color="purple lighten-2" fill-dot right>
       <v-card>
         <v-card-title class="purple lighten-2">
-          <v-icon dark size="42" class="mr-4"> mdi-magnify </v-icon>
+          <v-icon dark size="42" class="mr-4"> mdi-face-profile </v-icon>
           <h2 class="text-h4 white--text font-weight-light">
             Create an Account
           </h2>
         </v-card-title>
         <v-container>
           <v-row>
-            <v-col cols="12" md="10">
-              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune
-              scaevola imperdiet nec ut, sed euismod convenire principes at. Est
-              et nobis iisque percipit.
+            <v-col cols="12" md="12">
+              Creating an account allows you to save your tests and view the
+              results of the tests you have already taken.
             </v-col>
-            <v-col class="hidden-sm-and-down text-right" md="2">
+            <!-- <v-col class="hidden-sm-and-down text-right" md="2">
               <v-icon size="64"> mdi-calendar-text </v-icon>
-            </v-col>
+            </v-col> -->
           </v-row>
         </v-container>
       </v-card>
@@ -27,20 +26,19 @@
       <v-card>
         <v-card-title class="amber lighten-1 justify-end">
           <h2 class="text-h4 mr-4 white--text font-weight-light">
-            Select Your Test
+            Book Your Test
           </h2>
-          <v-icon dark size="42"> mdi-home-outline </v-icon>
+          <v-icon dark size="42">mdi-book</v-icon>
         </v-card-title>
         <v-container>
           <v-row>
-            <v-col cols="12" md="8">
-              Lorem ipsum dolor sit amet, no nam oblique veritus. Commune
-              scaevola imperdiet nec ut, sed euismod convenire principes at. Est
-              et nobis iisque percipit.
+            <v-col cols="12" md="12">
+              Book whatever test you want to take. At the moment only AMC tests
+              are availabel but we are working on bring on more tests.
             </v-col>
-            <v-col cols="12" md="4">
+            <!-- <v-col cols="12" md="4">
               Lorem ipsum dolor sit amet, no nam oblique veritus.
-            </v-col>
+            </v-col> -->
           </v-row>
         </v-container>
       </v-card>
@@ -49,15 +47,16 @@
     <v-timeline-item color="cyan lighten-1" fill-dot right>
       <v-card>
         <v-card-title class="cyan lighten-1">
-          <v-icon class="mr-4" dark size="42"> mdi-email-outline </v-icon>
+          <v-icon class="mr-4" dark size="42">mdi-credit-card-check</v-icon>
           <h2 class="text-h4 white--text font-weight-light">
-            Pay For the Test
+            Make the payment
           </h2>
         </v-card-title>
         <v-container>
           <v-row>
-            <v-col v-for="n in 3" :key="n" cols="12" md="4">
-              Lorem ipsum dolor sit amet, no nam oblique veritus no nam oblique.
+            <v-col cols="12" md="12">
+              Pay for your test using our secure checkout. We accept all major
+              credit cards.
             </v-col>
           </v-row>
         </v-container>

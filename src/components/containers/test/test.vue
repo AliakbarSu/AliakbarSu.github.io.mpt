@@ -160,7 +160,9 @@ export default {
     calculateResults() {
       const dataToSubmit = {
         submitted_answers: this.submitted_questions,
-        testStartTime: this.testStartTime
+        testStartTime: this.testStartTime,
+        testId: this.testId,
+        userId: this.$auth.user.sub.split('|')[1]
       }
       this.$store.dispatch('submitTest', dataToSubmit).then(() => {
         this.$router.push('/test-results')
@@ -217,6 +219,9 @@ export default {
       return (
         100 - ((this.timeLimit - this.timeRemained.mil) / this.timeLimit) * 100
       )
+    },
+    testId() {
+      return this.$store.getters.getTestId
     }
   }
 }

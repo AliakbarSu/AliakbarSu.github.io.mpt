@@ -7,7 +7,7 @@
       v-if="isTabActive('bookedTests')"
       :tests="userTests"
     />
-    <TestHistory v-if="isTabActive('testHistory')" />
+    <TestHistory :history="testHistory" v-if="isTabActive('testHistory')" />
   </v-container>
   <!-- <div class="dashboard">
     <nav class="side__nav">
@@ -69,6 +69,7 @@ export default {
   mounted() {
     const userId = this.$auth.user.sub.split('|')[1]
     this.$store.dispatch('fetchTests', userId)
+    this.$store.dispatch('fetchTestHistory', userId)
   },
   data() {
     return {
@@ -137,6 +138,9 @@ export default {
     },
     userTests() {
       return this.$store.getters.userTests
+    },
+    testHistory() {
+      return this.$store.getters.getTestHistory
     }
   }
 }

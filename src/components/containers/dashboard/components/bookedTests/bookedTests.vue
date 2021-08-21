@@ -1,31 +1,32 @@
 <template>
   <v-row>
     <v-col
-       v-for="product in tests" :key="product.id"
+      v-for="product in tests"
+      :key="product.id"
       class="d-flex child-flex"
       cols="4"
     >
-
-    <Card @takeTest="takeTest(product.id)" :duration="40" :productDetails="product" />
-
+      <Card
+        @takeTest="takeTest(product._id)"
+        :duration="40"
+        :productDetails="product"
+      />
     </v-col>
   </v-row>
 </template>
 
-
 <script>
-
-import Card from "../../../test/components/UI/card/card.vue"
+import Card from '../../../test/components/UI/card/card.vue'
 
 export default {
-    props: ['tests'],
-    components: {
-        Card
-    },
-    methods: {
-        takeTest(testId) {
-            this.$emit('takeTest', testId)
-        }
+  props: ['tests'],
+  components: {
+    Card
+  },
+  methods: {
+    takeTest(testId) {
+      this.$emit('takeTest', testId)
     }
+  }
 }
 </script>
