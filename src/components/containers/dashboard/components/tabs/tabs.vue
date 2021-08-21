@@ -1,8 +1,11 @@
 <template>
-  <v-tabs fixed-tabs background-color="deep-purple" dark>
-    <v-tab @click="tabClicked('bookedTests')">Booked Tests</v-tab>
-    <v-tab @click="tabClicked('testHistory')">Tests Taken</v-tab>
-  </v-tabs>
+  <v-card class="ma-4 mt-10 large-height">
+    <v-tabs color="deep-purple accent-2" right>
+      <v-tab @click="tabClicked('bookedTests')">Booked Tests</v-tab>
+      <v-tab @click="tabClicked('testHistory')">Tests Taken</v-tab>
+      <slot />
+    </v-tabs>
+  </v-card>
 </template>
 
 <script>
@@ -22,4 +25,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.large-height {
+  height: 80%;
+}
+</style>

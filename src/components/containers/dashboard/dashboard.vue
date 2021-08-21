@@ -1,63 +1,20 @@
 <template>
-  <v-container class="grey lighten-5 mb-6">
-    <Tabs v-on:tabClicked="activateTab" />
-    <v-divider style="margin-top: 15px; margin-bottom: 15px"></v-divider>
-    <BookedTests
-      v-on:takeTest="takeTest"
-      v-if="isTabActive('bookedTests')"
-      :tests="userTests"
-    />
-    <TestHistory :history="testHistory" v-if="isTabActive('testHistory')" />
-  </v-container>
-  <!-- <div class="dashboard">
-    <nav class="side__nav">
-      <ul class="navbar">
-        <li class="nav__item"><router-link to="/" tag="a">Dashboard</router-link></li>
-        <li class="nav__item"><router-link to="/details" tag="a">Details</router-link></li>
-        <li class="nav__item"><router-link to="/payments" tag="a">Payments</router-link></li>
-        <li class="nav__item"><router-link to="/admin" tag="a">Admin</router-link></li>
-        <li class="nav__item"><a href="" @click="logout">Logout</a></li>
-      </ul>
-      <div class="nav__button">
-        <router-link to="/checkout" class="nav__btn" tag="button">New Test</router-link>
-      </div>
-    </nav>
-    <div class="content">
-      <div class="right__content">
-        <div class="tiles__container">
-          <div class="tiles tiles--orange">
-            <p class="tiles__heading">Total Tests<p>
-            <p class="tiles__text">{{totalTests}}</p>
-          </div>
-          <div class="tiles tiles--green">
-            <p class="tiles__heading">Passed Tests<p>
-            <p class="tiles__text">{{passedTests}}</p>
-          </div>
-          <div class="tiles tiles--red">
-            <p class="tiles__heading">Failed Tests<p>
-            <p class="tiles__text">{{failedTests}}</p>
-          </div>
-        </div>
-        <div class="history">
-          <p class="history__title">Tests History</p>
-          <table class="history__table">
-            <tr>
-              <th>Type</th>
-              <th>Date</th>
-              <th>Result</th>
-              <th>Action</th>
-            </tr>
-            <tr v-for="test in testsHistory" :key="test.id">
-              <td>{{test.category}}</td>
-              <td>{{getDate(test.date)}}</td>
-              <td><span :class="{'text__green': !isFail(test.status), 'text__red': isFail(test.status)}">{{test.status}}</span></td>
-              <td><button class="view__btn">View</button></td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div> -->
+  <Tabs v-on:tabClicked="activateTab">
+    <v-tab-item>
+      <v-container>
+        <BookedTests
+          v-on:takeTest="takeTest"
+          v-if="isTabActive('bookedTests')"
+          :tests="userTests"
+        />
+      </v-container>
+    </v-tab-item>
+    <v-tab-item>
+      <v-container>
+        <TestHistory :history="testHistory" v-if="isTabActive('testHistory')" />
+      </v-container>
+    </v-tab-item>
+  </Tabs>
 </template>
 
 <script>
