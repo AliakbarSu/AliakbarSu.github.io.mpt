@@ -1,26 +1,62 @@
-
+<template>
+  <apexchart
+    type="line"
+    height="350"
+    :options="chartOptions"
+    :series="chartData"
+  ></apexchart>
+</template>
 
 <script>
-import { Line } from 'vue-chartjs'
-
 export default {
-  extends: Line,
-  props: ["data", "options"],
-  mounted () {
-    this.renderChart(this.data, this.options)
+  props: ['labels', 'data'],
+  computed: {
+    chartOptions() {
+      return {
+        chart: {
+          height: 350,
+          type: 'line',
+          zoom: {
+            enabled: false
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        legend: {
+          tooltipHoverFormatter: function (val, opts) {
+            return (
+              val +
+              ' - <strong>' +
+              opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] +
+              '</strong>'
+            )
+          }
+        },
+        markers: {
+          size: 0,
+          hover: {
+            sizeOffset: 6
+          }
+        },
+        xaxis: {
+          categories: this.labels
+        },
+        grid: {
+          borderColor: '#f1f1f1'
+        }
+      }
+    },
+    chartData() {
+      return [
+        {
+          name: 'Time Performance',
+          data: this.data
+        }
+      ]
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-
-.content {
-  padding: 12px;
-  @media(min-width: 1200px) {
-    width: 1200px;
-    margin: auto;
-  }
-  font-family: 'Roboto', sans-serif;
-}
-
-</style>
+<style lang="scss" scoped></style>

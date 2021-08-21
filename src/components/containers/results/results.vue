@@ -27,7 +27,10 @@
         <p class="graph__title">
           Your Scores Percentage at Different Categories
         </p>
-        <Bar :data="categoriesScores" :options="options" />
+        <Pie
+          :data="categoriesScores.datasets"
+          :labels="categoriesScores.labels"
+        />
       </div>
       <div class="sections">
         <p class="graph__title">Accuracy Accross Questions</p>
@@ -42,7 +45,10 @@
       </div>
       <div class="sections">
         <p class="graph__title">Timing Performance Accross Questions</p>
-        <Line-graph :data="speedOverTime" :options="options" />
+        <Line-graph
+          :data="speedOverTime.datasets"
+          :labels="speedOverTime.labels"
+        />
       </div>
     </div>
     <p>Performance at Each Category</p>
@@ -211,37 +217,21 @@ export default {
     speedOverTime() {
       return {
         labels: this.$store.getters.getTestResult.speed.map(
-          (qa) => qa.time + ' minutes'
+          (qa) => qa.time + ' mins'
         ),
-        datasets: [
-          {
-            label: 'time spent on questions at each time interval',
-            data: this.$store.getters.getTestResult.speed.map(
-              (qa) => qa.answeredIn
-            ),
-            backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1
-          }
-        ]
+        datasets: this.$store.getters.getTestResult.speed.map(
+          (qa) => qa.answeredIn
+        )
       }
     },
     categoriesScores() {
       return {
         labels: this.$store.getters.getTestResult.categoryBasedScore.map(
-          (qa) => qa.section
+          (qa) => qa.category
         ),
-        datasets: [
-          {
-            label: 'your total score at each category',
-            data: this.$store.getters.getTestResult.categoryBasedScore.map(
-              (qa) => qa.percentage
-            ),
-            backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1
-          }
-        ]
+        datasets: this.$store.getters.getTestResult.categoryBasedScore.map(
+          (qa) => qa.percentage
+        )
       }
     }
   }
