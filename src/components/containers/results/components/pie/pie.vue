@@ -9,10 +9,11 @@
 
 <script>
 export default {
-  props: ['data', 'labels'],
+  props: ['data', 'labels', 'options'],
   computed: {
     chartOptions() {
       return {
+        ...this.options,
         chart: {
           width: 380,
           type: 'pie'

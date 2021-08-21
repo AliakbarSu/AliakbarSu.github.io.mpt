@@ -1,85 +1,102 @@
 <template>
-  <div class="content">
-    <div class="alert" :class="{ 'alert--red': !passed }">
-      <p class="alert__text" v-if="passed">
-        Congratulations you have passed the test
-      </p>
-      <p class="alert__text" v-else>Unfortunately! you failed the test</p>
-    </div>
-    <p>Scores Breakdown</p>
-    <div class="results">
-      <div class="results__result">
-        <p class="result__title result__title--orange">Overall Score</p>
-        <span class="result__score">{{ overallScore }}</span>
+  <v-container class="pt-12">
+    <v-alert v-if="passed" outlined type="success" prominent text>
+      Congratulations you have passed the test.
+    </v-alert>
+    <v-alert v-if="!passed" outlined type="warning" prominent border="left">
+      We are sorry to let you know that you failed the test. Practice and try
+      again later.
+    </v-alert>
+
+    <v-container class="mt-5 elevation-1">
+      <p class="text-body1">Score Breakdown</p>
+      <div class="d-flex justify-space-around">
+        <div class="elevation-2 flex-grow-1 mx-2 pa-2 rounded-lg">
+          <p class="text-caption mb-0 text-grey lighten-2">Overall Score</p>
+          <span class="text-h6 text-grey darken-1">{{ overallScore }}</span>
+        </div>
+        <div class="elevation-2 flex-grow-1 mx-2 pa-2 rounded-lg">
+          <p class="text-caption mb-0 text-grey lighten-2">Correct Questions</p>
+          <span class="text-h6 text-grey darken-1">{{ correct }}</span>
+        </div>
+        <div class="elevation-2 flex-grow-1 mx-2 pa-2 rounded-lg">
+          <p class="text-caption mb-0 text-grey lighten-2">
+            Incorrect Questions
+          </p>
+          <span class="text-h6 text-grey darken-1">{{ incorrect }}</span>
+        </div>
       </div>
-      <div class="results__result">
-        <p class="result__title result__title--green">Correct Questions</p>
-        <span class="result__score">{{ correct }}</span>
+    </v-container>
+
+    <v-container class="elevation-1 mt-7 rounded-sm">
+      <p>Score Graphs</p>
+      <div class="sections__wrapper">
+        <div class="sections elevation-2">
+          <p class="text-caption">
+            Your Scores Percentage at Different Categories
+          </p>
+          <Pie
+            :data="categoriesScores.datasets"
+            :labels="categoriesScores.labels"
+          />
+        </div>
+        <div class="sections elevation-2">
+          <p class="text-caption">Accuracy Accross Questions</p>
+          <!-- <Line-graph :data="accuracyOverTime" :options="options"/> -->
+        </div>
       </div>
-      <div class="results__result">
-        <p class="result__title result__title--red">Incorrect Questions</p>
-        <span class="result__score">{{ incorrect }}</span>
+      <div class="sections__wrapper">
+        <div class="sections elevation-2">
+          <p class="text-caption">Average Time Taken at Each Category</p>
+          <Pie
+            :data="averageCategoryTiming.datasets"
+            :labels="averageCategoryTiming.labels"
+            :options="averageCategoryTiming.options"
+          />
+        </div>
+        <div class="sections elevation-2">
+          <p class="text-caption">Timing Performance Accross Questions</p>
+          <Line-graph
+            :data="speedOverTime.datasets"
+            :labels="speedOverTime.labels"
+          />
+        </div>
       </div>
-    </div>
-    <p>Score Graphs</p>
-    <div class="sections__wrapper">
-      <div class="sections">
-        <p class="graph__title">
-          Your Scores Percentage at Different Categories
-        </p>
-        <Pie
-          :data="categoriesScores.datasets"
-          :labels="categoriesScores.labels"
-        />
+      <div class="sections__wrapper">
+        <div class="sections elevation-2">
+          <p class="text-caption">Correct Answers</p>
+          <Pie
+            :data="sectionsCorrectScores.datasets"
+            :labels="sectionsCorrectScores.labels"
+            :options="sectionsIncorrectScores.options"
+          />
+        </div>
+        <div class="sections elevation-2">
+          <p class="text-caption">Incorrect Answers</p>
+          <Pie
+            :data="sectionsIncorrectScores.datasets"
+            :labels="sectionsIncorrectScores.labels"
+            :options="sectionsIncorrectScores.options"
+          />
+        </div>
       </div>
-      <div class="sections">
-        <p class="graph__title">Accuracy Accross Questions</p>
-        <!-- <Line-graph :data="accuracyOverTime" :options="options"/> -->
-      </div>
-    </div>
-    <p>Your Timing</p>
-    <div class="sections__wrapper">
-      <div class="sections">
-        <p class="graph__title">Average Time Taken at Each Category</p>
-        <Bar :data="averageCategoryTiming" :options="options" />
-      </div>
-      <div class="sections">
-        <p class="graph__title">Timing Performance Accross Questions</p>
-        <Line-graph
-          :data="speedOverTime.datasets"
-          :labels="speedOverTime.labels"
-        />
-      </div>
-    </div>
-    <p>Performance at Each Category</p>
-    <div class="sections__wrapper">
-      <div class="sections">
-        <p class="graph__title">Correct Answers</p>
-        <Pie
-          :data="sectionsCorrectScores.datasets"
-          :labels="sectionsCorrectScores.labels"
-        />
-      </div>
-      <div class="sections">
-        <p class="graph__title">Incorrect Answers</p>
-        <Pie
-          :data="sectionsIncorrectScores.datasets"
-          :labels="sectionsIncorrectScores.labels"
-        />
-      </div>
-    </div>
-    <div class="actions">
-      <button class="actions__buttons">Retake</button>
-      <button class="actions__buttons" @click="navigateToDashboard">
-        Go to dashboard
-      </button>
-      <button class="actions__buttons">Print results</button>
-    </div>
-  </div>
+    </v-container>
+
+    <v-container class="elevation-2 mt-7 mb-7 rounded-sm">
+      <v-btn class="ma-2" color="success" @click="navigateToDashboard"
+        >Go to Dashboard
+        <v-icon right dark>mdi-view-dashboard</v-icon>
+      </v-btn>
+      <v-btn color="blue-grey" @click="printResults" class="ma-2 white--text">
+        Print results
+        <v-icon right dark> mdi-cloud-print </v-icon>
+      </v-btn>
+    </v-container>
+  </v-container>
 </template>
 
 <script>
-import Bar from './components/bar/bar'
+// import Bar from './components/bar/bar'
 import Pie from './components/pie/pie'
 import Line from './components/line/line'
 
@@ -141,13 +158,16 @@ export default {
     // }
   },
   components: {
-    Bar,
+    // Bar,
     Pie,
     'Line-graph': Line
   },
   methods: {
     navigateToDashboard() {
       this.$router.push('/dashboard')
+    },
+    printResults() {
+      window.print()
     }
   },
   computed: {
@@ -168,7 +188,14 @@ export default {
         ),
         datasets: this.$store.getters.getTestResult.categoryBasedScore.map(
           (section) => section.incorrect
-        )
+        ),
+        options: {
+          dataLabels: {
+            formatter: function (val, opts) {
+              return opts.w.config.series[opts.seriesIndex] + ' Questions'
+            }
+          }
+        }
       }
     },
     averageCategoryTiming() {
@@ -176,17 +203,16 @@ export default {
         labels: this.$store.getters.getTestResult.categoryBasedScore.map(
           (section) => section.category
         ),
-        datasets: [
-          {
-            label: 'your average time spent on questions of specific category',
-            data: this.$store.getters.getTestResult.categoryBasedScore.map(
-              (section) => section.averageAnsweringTime
-            ),
-            backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1
+        datasets: this.$store.getters.getTestResult.categoryBasedScore.map(
+          (section) => section.averageAnsweringTime
+        ),
+        options: {
+          dataLabels: {
+            formatter: function (val, opts) {
+              return opts.w.config.series[opts.seriesIndex] + ' Minutes'
+            }
           }
-        ]
+        }
       }
     },
     overallScore() {
@@ -318,7 +344,7 @@ export default {
 
 .sections {
   width: 48%;
-  background: #efefef;
+  // background: #efefef;
   border-radius: 5px;
   padding: 12px;
   display: flex;
@@ -326,7 +352,6 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .graph__title {
