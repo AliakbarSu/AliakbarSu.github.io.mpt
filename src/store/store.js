@@ -8,6 +8,7 @@ import Vuex from 'vuex'
 // const authService = getInstance();
 
 const API_URL = 'https://ouaircihvg.execute-api.us-east-1.amazonaws.com/dev'
+import { getInstance } from '@/auth'
 
 import axios from 'axios'
 
@@ -22,6 +23,7 @@ export const store = new Vuex.Store({
   },
   state: {
     token: '',
+    userId: '',
     status: '',
     redirect: '/',
     currentTest: [],
@@ -34,6 +36,12 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    setToken(state, token) {
+      state.token = token
+    },
+    setUserId(state, userId) {
+      state.userId = userId
+    },
     setRedirect(state, payload) {
       state.redirect = payload
     },
@@ -110,6 +118,26 @@ export const store = new Vuex.Store({
         resolve()
       })
     },
+    retrieveTokenFromAuthz(context) {
+      return new Promise((resolve, reject) => {
+        const instance = getInstance()
+        instance.$watch('loading', (loading) => {
+          if (loading === false && instance.isAuthenticated) {
+            instance
+              .getTokenSilently()
+              .then((authToken) => {
+                context.commit('setToken', authToken)
+                context.commit('setUserId', instance.user.sub.split('|')[1])
+
+                resolve(authToken)
+              })
+              .catch((error) => {
+                reject(error)
+              })
+          }
+        })
+      })
+    },
     bookTest: (store, data) => {
       return axios
         .post(API_URL + '/pay', data)
@@ -178,9 +206,9 @@ export const store = new Vuex.Store({
     }
   },
   getters: {
-    isAuthenticated(state) {
-      return !!state.token
-    },
+    isAuthenticated: (state) => !!state.token,
+    getToken: (state) => state.token,
+    getUserId: (state) => state.userId,
     authStatus: (state) => state.status,
     getProducts: (state) => state.products,
     userTests: (state) => state.user.tests,

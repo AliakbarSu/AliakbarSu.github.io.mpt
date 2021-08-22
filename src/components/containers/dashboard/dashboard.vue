@@ -24,9 +24,10 @@ import TestHistory from './components/UI/test-history/test-history.vue'
 
 export default {
   mounted() {
-    const userId = this.$auth.user.sub.split('|')[1]
-    this.$store.dispatch('fetchTests', userId)
-    this.$store.dispatch('fetchTestHistory', userId)
+    this.$store.dispatch('retrieveTokenFromAuthz').then(() => {
+      this.$store.dispatch('fetchTests', this.userId)
+      this.$store.dispatch('fetchTestHistory', this.userId)
+    })
   },
   data() {
     return {
@@ -39,9 +40,8 @@ export default {
   methods: {
     takeTest(prodId) {
       const testId = prodId
-      const userId = this.$auth.user.sub.split('|')[1]
       this.$store
-        .dispatch('loadTest', { userId, testId })
+        .dispatch('loadTest', { userId: this.userId, testId })
         .then(() => {
           this.$router.push('/test')
         })
@@ -98,6 +98,9 @@ export default {
     },
     testHistory() {
       return this.$store.getters.getTestHistory
+    },
+    userId() {
+      return this.$store.getters.getUserId
     }
   }
 }
