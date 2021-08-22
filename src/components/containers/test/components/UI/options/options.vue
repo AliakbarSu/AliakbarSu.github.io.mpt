@@ -1,5 +1,5 @@
 <template>
-  <v-list flat subheader three-line>
+  <v-list flat subheader three-line class="elevation-2 rounded-lg my-3">
     <v-subheader>Options</v-subheader>
 
     <v-list-item-group v-model="settings" multiple active-class="">
@@ -13,7 +13,9 @@
             option.alpha
           }}</v-chip>
           <v-list-item-content>
-            <v-list-item-title>{{ option.text }}</v-list-item-title>
+            <v-list-item-title class="text-wrap">{{
+              option.text
+            }}</v-list-item-title>
             <!-- <v-list-item-subtitle></v-list-item-subtitle> -->
           </v-list-item-content>
         </template>

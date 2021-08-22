@@ -5,7 +5,7 @@
 
       <Instructions @start="start" v-if="!hasTestStarted && !loading" />
       <div class="content" v-else>
-        <div class="time-container" v-if="!loading">
+        <div class="elevation-2 pa-2 py-4 rounded-lg my-7" v-if="!loading">
           <!-- <span>Time Remaining: </span>
           <span
             >{{ timeRemained.h }} : {{ timeRemained.m }} :
@@ -16,12 +16,6 @@
         </div>
         <div class="question" v-if="!loading">
           <Question :question="question" />
-          <div
-            v-if="question.images && question.media.length"
-            class="content__thumbnail"
-          >
-            <img :src="question.media[0]" class="content__img" />
-          </div>
           <!-- <CircularTimer/> -->
           <Options @select="selectAnswer" :options="question.options" />
         </div>
@@ -120,7 +114,11 @@ export default {
     },
     next() {
       if (!this.submitted_answer.id) {
-        return alert('Please select an answer first')
+        return this.$swal.fire(
+          'No Option Selected',
+          'Please select an option before pressing NEXT!',
+          'error'
+        )
       }
       this.removeQuestion()
       const now = new Date().getTime()

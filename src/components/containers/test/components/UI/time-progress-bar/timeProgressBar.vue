@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <v-progress-linear
-      v-model="timeElapsed"
-      :color="barColor"
-      height="35"
-    ></v-progress-linear>
-  </div>
+  <v-progress-linear
+    class="rounded-sm"
+    v-model="timeElapsed"
+    :color="barColor"
+    height="35"
+  ></v-progress-linear>
 </template>
 
 <script>

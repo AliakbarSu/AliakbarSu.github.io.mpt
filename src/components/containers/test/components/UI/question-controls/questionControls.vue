@@ -1,8 +1,8 @@
 <template>
-  <div class="controls">
-    <v-btn @click="next" depressed color="primary"> Next </v-btn>
-    <v-btn @click="skip" depressed color="warning"> Skip </v-btn>
-    <v-btn @click="end" depressed color="error"> End </v-btn>
+  <div class="controls my-8">
+    <v-btn class="ml-3" @click="next" depressed color="primary"> Next </v-btn>
+    <v-btn class="ml-3" @click="skip" depressed color="warning"> Skip </v-btn>
+    <v-btn class="ml-3" @click="end" depressed color="error"> End </v-btn>
   </div>
 </template>
 
