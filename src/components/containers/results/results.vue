@@ -9,77 +9,171 @@
     </v-alert>
 
     <v-container class="mt-5 elevation-1">
-      <p class="text-body1">Score Breakdown</p>
-      <div class="d-flex justify-space-around">
-        <div class="elevation-2 flex-grow-1 mx-2 pa-2 rounded-lg">
-          <p class="text-caption mb-0 text-grey lighten-2">Overall Score</p>
-          <span class="text-h6 text-grey darken-1">{{ overallScore }}</span>
-        </div>
-        <div class="elevation-2 flex-grow-1 mx-2 pa-2 rounded-lg">
-          <p class="text-caption mb-0 text-grey lighten-2">Correct Questions</p>
-          <span class="text-h6 text-grey darken-1">{{ correct }}</span>
-        </div>
-        <div class="elevation-2 flex-grow-1 mx-2 pa-2 rounded-lg">
-          <p class="text-caption mb-0 text-grey lighten-2">
-            Incorrect Questions
-          </p>
-          <span class="text-h6 text-grey darken-1">{{ incorrect }}</span>
-        </div>
-      </div>
+      <!-- <p class="text-body1">Score Breakdown</p> -->
+      <v-row dense>
+        <v-col class="my-1" cols="12" sm="4">
+          <v-container class="elevation-1 rounded-sm">
+            <v-row dense>
+              <v-col cols="12">
+                <p class="text-caption mb-0 text-grey lighten-2">
+                  Overall Score
+                </p>
+              </v-col>
+              <v-col cols="12">
+                <span class="text-h6 text-grey darken-1">{{
+                  overallScore
+                }}</span>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
+        <v-col class="my-1" cols="12" sm="4">
+          <v-container class="elevation-1 rounded-sm">
+            <v-row dense>
+              <v-col cols="12">
+                <p class="text-caption mb-0 text-grey lighten-2">
+                  Correct Questions
+                </p>
+              </v-col>
+              <v-col cols="12">
+                <span class="text-h6 text-grey darken-1">{{ correct }}</span>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
+        <v-col class="my-1" cols="12" sm="4">
+          <v-container class="elevation-1 rounded-sm">
+            <v-row dense>
+              <v-col cols="12">
+                <p class="text-caption mb-0 text-grey lighten-2">
+                  Incorrect Questions
+                </p>
+              </v-col>
+              <v-col cols="12">
+                <span class="text-h6 text-grey darken-1">{{ incorrect }}</span>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
+      </v-row>
     </v-container>
 
     <v-container class="elevation-1 mt-7 rounded-sm">
       <p>Score Graphs</p>
-      <div class="sections__wrapper">
-        <div class="sections elevation-2">
-          <p class="text-caption">
-            Your Scores Percentage at Different Categories
-          </p>
-          <Pie
-            :data="categoriesScores.datasets"
-            :labels="categoriesScores.labels"
-          />
-        </div>
-        <div class="sections elevation-2">
-          <p class="text-caption">Accuracy Accross Questions</p>
-          <!-- <Line-graph :data="accuracyOverTime" :options="options"/> -->
-        </div>
-      </div>
-      <div class="sections__wrapper">
-        <div class="sections elevation-2">
-          <p class="text-caption">Average Time Taken at Each Category</p>
-          <Pie
-            :data="averageCategoryTiming.datasets"
-            :labels="averageCategoryTiming.labels"
-            :options="averageCategoryTiming.options"
-          />
-        </div>
-        <div class="sections elevation-2">
-          <p class="text-caption">Timing Performance Accross Questions</p>
-          <Line-graph
-            :data="speedOverTime.datasets"
-            :labels="speedOverTime.labels"
-          />
-        </div>
-      </div>
-      <div class="sections__wrapper">
-        <div class="sections elevation-2">
-          <p class="text-caption">Correct Answers</p>
-          <Pie
-            :data="sectionsCorrectScores.datasets"
-            :labels="sectionsCorrectScores.labels"
-            :options="sectionsIncorrectScores.options"
-          />
-        </div>
-        <div class="sections elevation-2">
-          <p class="text-caption">Incorrect Answers</p>
-          <Pie
-            :data="sectionsIncorrectScores.datasets"
-            :labels="sectionsIncorrectScores.labels"
-            :options="sectionsIncorrectScores.options"
-          />
-        </div>
-      </div>
+      <v-container>
+        <v-row dense>
+          <v-col cols="12" sm="6">
+            <v-container class="fill-height">
+              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
+                <v-col cols="12" class="d-flex justify-center">
+                  <p class="text-caption">
+                    Your Scores Percentage at Different Categories
+                  </p>
+                </v-col>
+                <v-col cols="12" class="d-flex justify-center">
+                  <Pie
+                    :data="categoriesScores.datasets"
+                    :labels="categoriesScores.labels"
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-container class="fill-height">
+              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
+                <v-col cols="12" class="d-flex justify-center">
+                  <p class="text-caption">Accuracy Accross Questions</p>
+                </v-col>
+                <v-col cols="12" class="d-flex justify-center">
+                  <Line-graph
+                    :data="accuracyOverTime.datasets"
+                    :labels="accuracyOverTime.labels"
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container>
+        <v-row dense>
+          <v-col cols="12" sm="6">
+            <v-container class="fill-height">
+              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
+                <v-col cols="12" class="d-flex justify-center">
+                  <p class="text-caption">
+                    Average Time Taken at Each Category
+                  </p>
+                </v-col>
+                <v-col cols="12" class="d-flex justify-center">
+                  <Pie
+                    :data="averageCategoryTiming.datasets"
+                    :labels="averageCategoryTiming.labels"
+                    :options="averageCategoryTiming.options"
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-container class="fill-height">
+              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
+                <v-col cols="12" class="d-flex justify-center">
+                  <p class="text-caption">
+                    Timing Performance Accross Questions
+                  </p>
+                </v-col>
+                <v-col cols="12" class="d-flex justify-center">
+                  <Line-graph
+                    :data="speedOverTime.datasets"
+                    :labels="speedOverTime.labels"
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container>
+        <v-row dense>
+          <v-col cols="12" sm="6">
+            <v-container class="fill-height">
+              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
+                <v-col cols="12" class="d-flex justify-center">
+                  <p class="text-caption">Correct Answers</p>
+                </v-col>
+
+                <v-col cols="12" class="d-flex justify-center">
+                  <Pie
+                    :data="sectionsCorrectScores.datasets"
+                    :labels="sectionsCorrectScores.labels"
+                    :options="sectionsIncorrectScores.options"
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-col>
+
+          <v-col cols="12" sm="6">
+            <v-container class="fill-height">
+              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
+                <v-col cols="12" class="d-flex justify-center">
+                  <p class="text-caption">Incorrect Answers</p>
+                </v-col>
+
+                <v-col cols="12" class="d-flex justify-center">
+                  <Pie
+                    :data="sectionsIncorrectScores.datasets"
+                    :labels="sectionsIncorrectScores.labels"
+                    :options="sectionsIncorrectScores.options"
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-container>
 
     <v-container class="elevation-2 mt-7 mb-7 rounded-sm">
@@ -99,24 +193,6 @@
 // import Bar from './components/bar/bar'
 import Pie from './components/pie/pie'
 import Line from './components/line/line'
-
-const backgroundColors = [
-  'rgba(255, 99, 132, 0.2)',
-  'rgba(54, 162, 235, 0.2)',
-  'rgba(255, 206, 86, 0.2)',
-  'rgba(75, 192, 192, 0.2)',
-  'rgba(153, 102, 255, 0.2)',
-  'rgba(255, 159, 64, 0.2)'
-]
-
-const borderColors = [
-  'rgba(255, 99, 132, 1)',
-  'rgba(54, 162, 235, 1)',
-  'rgba(255, 206, 86, 1)',
-  'rgba(75, 192, 192, 1)',
-  'rgba(153, 102, 255, 1)',
-  'rgba(255, 159, 64, 1)'
-]
 
 export default {
   data() {
@@ -227,17 +303,9 @@ export default {
     accuracyOverTime() {
       return {
         labels: this.$store.getters.getTestResult.accuracy.map((qa) => qa.time),
-        datasets: [
-          {
-            label: 'your accuracy over the course of the test',
-            data: this.$store.getters.getTestResult.accuracy.map(
-              (qa) => qa.count
-            ),
-            backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 3
-          }
-        ]
+        datasets: this.$store.getters.getTestResult.accuracy.map(
+          (qa) => qa.count
+        )
       }
     },
     speedOverTime() {
@@ -265,6 +333,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.equal-height {
+  height: 100%;
+}
+
 .content {
   padding: 12px;
   @media (min-width: 1200px) {
