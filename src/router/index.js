@@ -1,16 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Results from '../components/containers/results/results.vue'
-import Checkout from '../components/containers/payment-gateway/paymentGateway.vue'
+import Checkout from '../components/containers/checkout/checkout'
 // import Questions from '../components/containers/admin/questions/questions.vue'
-import Account from "../components/containers/account/account.vue"
+import Account from '../components/containers/account/account.vue'
 import Home from '../components/containers/home/index.vue'
 import SelectTest from '../components/containers/test/components/selectTest/selectTest.vue'
 import Dashboard from '../components/containers/dashboard/dashboard.vue'
 import Confirmation from '../components/containers/confirmation/index.vue'
-import { authGuard } from "../auth/authGuard";
+import { authGuard } from '../auth/authGuard'
 // import { store } from '../store/store'
-
 
 // const ifNotAuthenticated = (to, from, next) => {
 //   store.dispatch('checkAuth')
@@ -30,10 +29,9 @@ import { authGuard } from "../auth/authGuard";
 //   next('/auth')
 // }
 
-
 Vue.use(VueRouter)
 
-  const routes = [
+const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
@@ -87,7 +85,10 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../components/containers/test/test.vue')
+    component: () =>
+      import(
+        /* webpackChunkName: "about" */ '../components/containers/test/test.vue'
+      )
   }
 ]
 
