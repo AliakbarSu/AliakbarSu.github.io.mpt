@@ -1,25 +1,31 @@
 <template>
-  <v-container class="grey lighten-5 mb-6">
-    <v-row>
-      <v-col>
-        <h1>This is the test page</h1>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <p>You can select from one of the following test types to proceed</p>
-      </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col v-for="product in products" :key="product.id">
-        <Card
-          @takeTest="goToCheckout(product.id)"
-          :duration="40"
-          :productDetails="product"
-        />
-      </v-col>
-    </v-row>
+  <v-container fluid>
+    <v-container class="mt-6" fluid>
+      <v-alert border="top" colored-border type="info" elevation="2">
+        At the moment we only have the AMC tastes available, however, we are
+        working hard to bring other tests as well.
+      </v-alert>
+    </v-container>
+    <v-container class="my-6" fluid>
+      <v-row>
+        <v-col
+          align="center"
+          cols="12"
+          sm="12"
+          md="4"
+          lg="4"
+          xl="3"
+          v-for="product in products"
+          :key="product.id"
+        >
+          <Card
+            @takeTest="goToCheckout(product.id)"
+            :duration="40"
+            :productDetails="product"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
