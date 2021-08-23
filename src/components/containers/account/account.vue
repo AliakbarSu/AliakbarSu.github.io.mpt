@@ -25,9 +25,6 @@
 
 <script>
 export default {
-  mounted() {
-    console.log(this.$auth.user)
-  },
   computed: {
     user() {
       return this.$store.getters.getUser
