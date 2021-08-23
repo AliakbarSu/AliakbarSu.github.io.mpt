@@ -32,7 +32,10 @@ export const store = new Vuex.Store({
     testId: '',
     products: [],
     user: {
-      tests: []
+      tests: [],
+      email: '',
+      name: '',
+      avatar: ''
     }
   },
   mutations: {
@@ -78,6 +81,11 @@ export const store = new Vuex.Store({
     },
     setTestId: (state, testId) => {
       state.testId = testId
+    },
+    setUserData: (state, userData) => {
+      state.user.name = userData.name
+      state.user.email = userData.email
+      state.user.avatar = userData.picture
     }
   },
   actions: {
@@ -128,6 +136,7 @@ export const store = new Vuex.Store({
               .then((authToken) => {
                 context.commit('setToken', authToken)
                 context.commit('setUserId', instance.user.sub.split('|')[1])
+                context.commit('setUserData', instance.user)
 
                 resolve(authToken)
               })
@@ -215,6 +224,7 @@ export const store = new Vuex.Store({
     getCurrentTest: (state) => state.currentTest,
     getTestResult: (state) => state.testResult,
     getTestHistory: (state) => state.testHistory,
-    getTestId: (state) => state.testId
+    getTestId: (state) => state.testId,
+    getUser: (state) => state.user
   }
 })
