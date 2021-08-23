@@ -5,7 +5,7 @@ import Checkout from '../components/containers/checkout/checkout'
 // import Questions from '../components/containers/admin/questions/questions.vue'
 import Account from '../components/containers/account/account.vue'
 import Home from '../components/containers/home/index.vue'
-import SelectTest from '../components/containers/test/components/selectTest/selectTest.vue'
+import Products from '../components/containers/products/products.vue'
 import Dashboard from '../components/containers/dashboard/dashboard.vue'
 import Confirmation from '../components/containers/confirmation/index.vue'
 import { authGuard } from '../auth/authGuard'
@@ -75,8 +75,8 @@ const routes = [
   // },
   {
     path: '/tests',
-    name: 'Select Test',
-    component: SelectTest
+    name: 'Products',
+    component: Products
   },
   {
     path: '/test',
