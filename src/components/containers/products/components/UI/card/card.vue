@@ -6,7 +6,7 @@
       <p class="text-h4 text--primary">
         {{ productDetails.name }}
       </p>
-      <p>{{ duration }} Minutes</p>
+      <p>{{ duration }}</p>
       <div class="text--primary">
         {{ productDetails.description }}
       </div>
