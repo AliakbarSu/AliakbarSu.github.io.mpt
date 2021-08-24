@@ -20,8 +20,9 @@
         >
           <Card
             @takeTest="goToCheckout(product.id)"
-            duration="3.5 hours"
+            :duration="product.metadata.duration"
             :productDetails="product"
+            :price="product.metadata.price"
           />
         </v-col>
       </v-row>

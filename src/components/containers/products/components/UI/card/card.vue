@@ -6,7 +6,10 @@
       <p class="text-h4 text--primary">
         {{ productDetails.name }}
       </p>
-      <p>{{ duration }}</p>
+      <div class="d-flex justify-space-between">
+        <p>{{ duration }}</p>
+        <p>{{ price }}</p>
+      </div>
       <div class="text--primary">
         {{ productDetails.description }}
       </div>
@@ -21,7 +24,7 @@
 
 <script>
 export default {
-  props: ['duration', 'productDetails'],
+  props: ['duration', 'productDetails', 'price'],
   methods: {
     takeTest() {
       this.$emit('takeTest')
