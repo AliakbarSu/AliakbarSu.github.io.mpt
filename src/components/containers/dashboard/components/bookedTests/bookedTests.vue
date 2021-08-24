@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Card from '../../../test/components/UI/card/card.vue'
+import Card from '../../../products/components/UI/card/card.vue'
 
 export default {
   props: ['tests'],
