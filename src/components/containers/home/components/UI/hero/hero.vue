@@ -9,7 +9,7 @@
     <v-row align="center" justify="center">
       <v-col cols="10"
         ><h1 class="text-h1 text-center font-weight-bold">
-          Medical Practice Test
+          Medical Licensing Exam Prep Tests
         </h1>
       </v-col>
       <v-col cols="8"

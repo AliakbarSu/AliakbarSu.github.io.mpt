@@ -14,8 +14,8 @@
       <v-divider></v-divider>
 
       <v-card-text class="white--text">
-        Copyright © {{ new Date().getFullYear() }}, Medical Practice Test. All
-        Rights Reserved.
+        Copyright © {{ new Date().getFullYear() }}, MLE Prep Tests. All Rights
+        Reserved.
       </v-card-text>
     </v-card>
   </v-footer>
