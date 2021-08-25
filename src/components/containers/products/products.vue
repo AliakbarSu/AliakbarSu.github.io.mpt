@@ -2,8 +2,8 @@
   <v-container fluid>
     <v-container class="mt-6" fluid>
       <v-alert border="top" colored-border type="info" elevation="2">
-        At the moment we only have the AMC tastes available, however, we are
-        working hard to bring other tests as well.
+        At the moment we only have the AMC practice tests available, however, we
+        are working hard to bring in other standards as well.
       </v-alert>
     </v-container>
     <v-container class="my-6" fluid>
