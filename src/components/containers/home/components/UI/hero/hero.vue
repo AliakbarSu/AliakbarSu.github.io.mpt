@@ -8,8 +8,8 @@
       </v-col>
       <v-col cols="8"
         ><p class="text-h6 text-sm-h5 text-center font-weight-medium">
-          We'll help you to pass your medical theory test by providing you
-          feedback on mock tests.
+          We'll help you to pass your medical licensing exam by providing you
+          feedback on practice tests
         </p>
       </v-col>
 
