@@ -15,7 +15,12 @@
       </div>
     </v-card-text>
     <v-card-actions>
-      <v-btn text color="deep-purple accent-4" @click="takeTest">
+      <v-btn
+        :disabled="productDetails.id !== 'prod_Jvv487fb4ZqcIb'"
+        text
+        color="deep-purple accent-4"
+        @click="takeTest"
+      >
         Book Test
       </v-btn>
     </v-card-actions>
