@@ -36,13 +36,12 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    // beforeEnter: ifNotAuthenticated,
+    beforeEnter: authGuard,
     component: Dashboard
   },
   {
     path: '/confirmation',
     name: 'Confirmation',
-    // beforeEnter: ifNotAuthenticated,
     component: Confirmation
   },
   {
@@ -53,13 +52,12 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    // beforeEnter: ifNotAuthenticated,
     component: Home
   },
   {
     path: '/account',
     name: 'Account',
-    // beforeEnter: ifNotAuthenticated,
+    beforeEnter: authGuard,
     component: Account
   },
   {
