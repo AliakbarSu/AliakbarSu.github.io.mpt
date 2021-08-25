@@ -45,7 +45,7 @@ const routes = [
     component: Confirmation
   },
   {
-    path: '/payment-failed',
+    path: '/unsuccessful',
     name: 'Unsuccessful',
     component: Unsuccessful
   },
@@ -80,6 +80,7 @@ const routes = [
   {
     path: '/tests',
     name: 'Products',
+    beforeEnter: authGuard,
     component: Products
   },
   {
