@@ -11,6 +11,7 @@
         cols="4"
       >
         <Card
+          text="Take Test"
           @takeTest="takeTest(product._id)"
           :duration="40"
           :productDetails="product"

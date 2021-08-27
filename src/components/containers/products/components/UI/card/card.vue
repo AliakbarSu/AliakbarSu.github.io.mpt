@@ -21,7 +21,7 @@
         color="deep-purple accent-4"
         @click="takeTest"
       >
-        Book Test
+        {{ text }}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  props: ['duration', 'productDetails', 'price'],
+  props: ['duration', 'productDetails', 'price', 'text'],
   methods: {
     takeTest() {
       this.$emit('takeTest')

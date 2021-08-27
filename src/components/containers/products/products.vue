@@ -20,6 +20,7 @@
         >
           <Card
             @takeTest="goToCheckout(product.id)"
+            text="Book Test"
             :duration="product.metadata.duration"
             :productDetails="product"
             :price="product.metadata.price"
