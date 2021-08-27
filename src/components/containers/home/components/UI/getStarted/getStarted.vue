@@ -3,7 +3,7 @@
     <v-container fluid class="mt-16">
       <v-row justify="center">
         <v-col cols="12 pa-4 mt-16">
-          <h3 class="text-h5 text-sm-h4 font-weight-medium text-center">
+          <h3 class="text-h6 text-sm-h4 font-weight-medium text-center">
             Getting Started
           </h3>
         </v-col>
@@ -16,7 +16,7 @@
             <v-icon dark size="40" class="mr-4">
               mdi-account-edit-outline
             </v-icon>
-            <h2 class="text-h5 text-sm-h4 white--text font-weight-light">
+            <h2 class="text-h6 text-sm-h4 white--text font-weight-light">
               Create an Account
             </h2>
           </v-card-title>
@@ -61,7 +61,7 @@
         <v-card>
           <v-card-title class="cyan lighten-1">
             <v-icon class="mr-4" dark size="42">mdi-credit-card-check</v-icon>
-            <h2 class="text-h5 text-sm-h4 white--text font-weight-light">
+            <h2 class="text-h6 text-sm-h4 white--text font-weight-light">
               Make the Payment
             </h2>
           </v-card-title>
@@ -79,7 +79,7 @@
       <v-timeline-item color="red lighten-1" fill-dot left small>
         <v-card>
           <v-card-title class="red lighten-1 justify-end">
-            <h2 class="text-h5 text-sm-h4 mr-4 white--text font-weight-light">
+            <h2 class="text-h6 text-sm-h4 mr-4 white--text font-weight-light">
               Set the Test
             </h2>
             <v-icon dark size="40"> mdi-newspaper-variant-outline </v-icon>
@@ -99,7 +99,7 @@
         <v-card>
           <v-card-title class="green lighten-1">
             <v-icon class="mr-4" dark size="40"> mdi-repeat </v-icon>
-            <h2 class="text-h5 text-sm-h4 white--text font-weight-light">
+            <h2 class="text-h6 text-sm-h4 white--text font-weight-light">
               Recieve Feedback
             </h2>
           </v-card-title>
