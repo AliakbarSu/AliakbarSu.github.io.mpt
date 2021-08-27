@@ -285,7 +285,7 @@ export default {
         options: {
           dataLabels: {
             formatter: function (val, opts) {
-              return opts.w.config.series[opts.seriesIndex] + ' Minutes'
+              return opts.w.config.series[opts.seriesIndex] + ' Mins'
             }
           }
         }
@@ -301,8 +301,11 @@ export default {
       return this.$store.getters.getTestResult.overallScore.incorrect
     },
     accuracyOverTime() {
+      this.$store.getters.getTestResult.accuracy.map((qa) => qa.time)
       return {
-        labels: this.$store.getters.getTestResult.accuracy.map((qa) => qa.time),
+        labels: this.$store.getters.getTestResult.accuracy.map(
+          (qa) => qa.time + ' Mins'
+        ),
         datasets: this.$store.getters.getTestResult.accuracy.map(
           (qa) => qa.count
         )
@@ -311,7 +314,7 @@ export default {
     speedOverTime() {
       return {
         labels: this.$store.getters.getTestResult.speed.map(
-          (qa) => qa.time + ' mins'
+          (qa) => qa.time + ' Mins'
         ),
         datasets: this.$store.getters.getTestResult.speed.map(
           (qa) => qa.answeredIn
