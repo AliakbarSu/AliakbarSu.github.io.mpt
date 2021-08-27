@@ -9,7 +9,9 @@
         </v-btn>
       </v-card-text>
 
-      <!-- <v-card-text class="white--text pt-0"> </v-card-text> -->
+      <v-card-text class="white--text pt-0"
+        >Email: info@mle-prep-tests.org</v-card-text
+      >
 
       <v-divider></v-divider>
 
