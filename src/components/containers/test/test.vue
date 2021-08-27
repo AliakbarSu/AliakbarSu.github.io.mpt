@@ -83,6 +83,7 @@ export default {
     start() {
       this.setTimer()
       const now = new Date().getTime()
+      this.testStartTime = now
       this.question = { ...this.questions[0], startAt: now }
     },
     setTimer() {
