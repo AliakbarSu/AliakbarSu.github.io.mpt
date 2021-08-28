@@ -50,7 +50,7 @@
             </v-list-item-icon>
             <v-list-item-title
               ><v-list-item-title @click="goTo('/tests')"
-                >Take New Test</v-list-item-title
+                >Tests</v-list-item-title
               ></v-list-item-title
             >
           </v-list-item>
