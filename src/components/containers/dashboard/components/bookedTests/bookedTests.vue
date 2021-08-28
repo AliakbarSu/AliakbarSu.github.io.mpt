@@ -11,9 +11,8 @@
         cols="4"
       >
         <Card
-          text="Take Test"
           @takeTest="takeTest(product._id)"
-          :duration="40"
+          :duration="product.metadata.duration"
           :productDetails="product"
         />
       </v-col>
@@ -22,7 +21,7 @@
 </template>
 
 <script>
-import Card from '../../../products/components/UI/card/card.vue'
+import Card from '../UI/card/card.vue'
 
 export default {
   props: ['tests'],
