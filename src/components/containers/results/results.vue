@@ -4,8 +4,7 @@
       Congratulations you have passed the test.
     </v-alert>
     <v-alert v-if="!passed" outlined type="warning" prominent border="left">
-      We are sorry to let you know that you failed the test. Practice and try
-      again later.
+      We are sorry to let you know that you failed the test. Try again later.
     </v-alert>
 
     <v-container class="mt-5 elevation-1">
@@ -207,31 +206,8 @@ export default {
             }
           ]
         }
-      },
-      passed: false
+      }
     }
-  },
-  mounted() {
-    // if(!this.$store.getters.getResults.length) {
-    //   return this.$router.push("/")
-    // }
-    // if(this.overallScore >= 250) {
-    //   this.passed = true
-    //   this.$store.dispatch("updateTestsStatus", "passed")
-    //   this.$swal.fire(
-    //     'You Passed',
-    //     'Congratulations! you passed the test',
-    //     'success'
-    //   )
-    // }else {
-    //   this.passed = false
-    //   this.$store.dispatch("updateTestsStatus", "failed")
-    //   this.$swal.fire(
-    //     'You Failed',
-    //     'Unfortunately! you failed the test',
-    //     'error'
-    //   )
-    // }
   },
   components: {
     // Bar,
@@ -247,6 +223,9 @@ export default {
     }
   },
   computed: {
+    passed() {
+      return this.overallScore >= 250
+    },
     sectionsCorrectScores() {
       return {
         labels: this.$store.getters.getTestResult.categoryBasedScore.map(
