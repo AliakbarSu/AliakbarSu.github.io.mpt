@@ -36,6 +36,10 @@ import Card from './components/UI/card/card.vue'
 export default {
   methods: {
     goToCheckout(testId) {
+      if (!this.isAuthenticated) {
+        this.$auth.loginWithRedirect()
+        return
+      }
       this.$store
         .dispatch('bookTest', {
           productId: testId,
@@ -57,6 +61,9 @@ export default {
   computed: {
     products() {
       return this.$store.getters.getProducts
+    },
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated
     }
   },
   created() {

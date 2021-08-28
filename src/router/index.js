@@ -80,7 +80,7 @@ const routes = [
   {
     path: '/tests',
     name: 'Products',
-    beforeEnter: authGuard,
+    // beforeEnter: authGuard,
     component: Products
   },
   {
