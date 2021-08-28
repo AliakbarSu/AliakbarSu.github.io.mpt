@@ -24,7 +24,7 @@
             <v-row>
               <v-col cols="12" md="12">
                 In order to use our services you will need to create an account
-                with. It is easy and simple head over to sign up page.
+                with us. It is easy and simple head over to sign up page.
               </v-col>
               <!-- <v-col class="hidden-sm-and-down text-right" md="2">
               <v-icon size="64"> mdi-calendar-text </v-icon>
@@ -87,8 +87,8 @@
           <v-container>
             <v-row>
               <v-col cols="12" md="12">
-                Once you booked your test you can set them anytime you want.
-                Your booked tests stays active for up to 30 days.
+                Once you booked your test you can take them anytime you want.
+                Your booked tests stay active for up to 30 days.
               </v-col>
             </v-row>
           </v-container>
