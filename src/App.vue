@@ -19,8 +19,6 @@ import axios from 'axios'
 export default {
   name: 'App',
   created() {
-    this.$store.dispatch('retrieveTokenFromAuthz')
-
     axios.interceptors.response.use(undefined, function (err) {
       return new Promise(function () {
         if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
@@ -31,6 +29,9 @@ export default {
         throw err
       })
     })
+  },
+  mounted() {
+    this.$store.dispatch('retrieveTokenFromAuthz')
   },
   components: {
     Footer,
