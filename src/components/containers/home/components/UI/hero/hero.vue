@@ -15,7 +15,7 @@
 
       <v-col cols="10" class="text-center mt-7">
         <v-btn x-large color="success" @click="bookTest" dark>
-          Book Your First Test
+          View Tests
         </v-btn>
       </v-col>
     </v-row>
