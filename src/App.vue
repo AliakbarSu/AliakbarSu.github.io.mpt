@@ -1,5 +1,6 @@
 <template>
   <v-app app>
+    <Alert />
     <Navbar />
 
     <!-- Sizes your content based upon application components -->
@@ -14,6 +15,7 @@
 <script>
 import Footer from './components/UI/footer/footer.vue'
 import Navbar from './components/UI/navbar/navbar.vue'
+import Alert from './components/UI/alert/alert.vue'
 import axios from 'axios'
 
 export default {
@@ -35,7 +37,8 @@ export default {
   },
   components: {
     Footer,
-    Navbar
+    Navbar,
+    Alert
   },
   data: () => ({
     drawer: false,
