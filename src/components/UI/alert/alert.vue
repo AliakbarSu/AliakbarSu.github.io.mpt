@@ -8,7 +8,7 @@
   >
     All our products are on 50% off at the moment. Book your test before it
     ends. Promo Code: 9N1QBW0S
-  </v-alert>
+  </v-alert>k
 </template>
 
 <script>
