@@ -12,7 +12,7 @@
     "@ckeditor/ckeditor5-build-classic": "^20.0.0",
     "@ckeditor/ckeditor5-vue": "^1.0.1",
     "apexcharts": "^3.27.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
     "d3": "^5.16.0",
