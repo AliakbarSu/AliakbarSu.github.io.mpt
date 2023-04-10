@@ -8,7 +8,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   data() {
     return {
@@ -18,7 +18,7 @@ export default {
     }
   },
   methods: {
-    tabClicked(clickedItem) {
+    tabClicked(clickedItem: string) {
       this.$emit('tabClicked', clickedItem)
     }
   }

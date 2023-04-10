@@ -9,7 +9,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
 // import Carousel from './components/UI/carousel/carousel.vue'
 import Section from './components/UI/section/section.vue'
 import GetStarted from './components/UI/getStarted/getStarted.vue'
@@ -17,7 +18,7 @@ import Hero from './components/UI/hero/hero.vue'
 import Examples from './components/examples/examples.vue'
 import Testimonial from './components/testimonial/testimonial.vue'
 
-export default {
+export default defineComponent({
   components: {
     Section,
     GetStarted,
@@ -25,5 +26,5 @@ export default {
     Examples,
     Testimonial
   }
-}
+})
 </script>

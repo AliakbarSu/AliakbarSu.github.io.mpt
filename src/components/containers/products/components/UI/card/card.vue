@@ -27,7 +27,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: ['duration', 'productDetails', 'price', 'text'],
   methods: {

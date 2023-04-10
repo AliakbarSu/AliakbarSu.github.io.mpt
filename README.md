@@ -1,35 +1,52 @@
-# Multiple Choice Test Platform
+# MPT
 
-The motivation behind building this app was to help Med student to pass Medical Theory test by allowing them to take mock test without having to pay for costly services out there. The app fetches questions from different sources and bundles then into a large databse of multi-choice questions. The user of the app can take a test and see result upon submission. The user can see the history off all the test he has taken within the app. In order to take a test you need to signin or create a new account. It's built using VueJs and AWS Lambda for the backend.
+This template should help get you started developing with Vue 3 in Vite.
 
-![MPT](/screenshot.jpg?raw=true)
+## Recommended IDE Setup
 
-## [Live Demo](https://mle-prep-tests.org/)
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Runing it locally
+## Type Support for `.vue` Imports in TS
 
-Clone this repository from your terminal and run
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
 
-```
+If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+
+1. Disable the built-in TypeScript Extension
+    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
+    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
+2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+```sh
 npm install
 ```
 
-```
-npm run serve
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
 ```
 
-### Compiles and minifies for production
+### Type-Check, Compile and Minify for Production
 
-```
+```sh
 npm run build
 ```
 
-### Lints and fixes files
+### Run Unit Tests with [Vitest](https://vitest.dev/)
 
+```sh
+npm run test:unit
 ```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
 npm run lint
 ```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).

@@ -31,11 +31,11 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import Card from './components/UI/card/card.vue'
 export default {
   methods: {
-    goToCheckout(testId) {
+    goToCheckout(testId: string) {
       if (!this.isAuthenticated) {
         this.$auth.loginWithRedirect()
         return

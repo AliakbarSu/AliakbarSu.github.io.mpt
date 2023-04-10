@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Card from '../UI/card/card.vue'
 
 export default {

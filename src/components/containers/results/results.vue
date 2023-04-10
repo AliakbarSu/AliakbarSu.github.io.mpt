@@ -188,10 +188,10 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+import Pie from '@components/pie/pie'
 // import Bar from './components/bar/bar'
-import Pie from './components/pie/pie'
-import Line from './components/line/line'
+import Line from '@components/line/line'
 
 export default {
   data() {

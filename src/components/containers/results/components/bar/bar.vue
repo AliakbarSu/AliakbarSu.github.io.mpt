@@ -1,26 +1,22 @@
-
-
-<script>
-import { Bar } from 'vue-chartjs'
+<script lang="ts">
+import { BarChart } from 'vue-chart-3'
 
 export default {
-  extends: Bar,
-  props: ["data", "options"],
-  mounted () {
+  extends: BarChart,
+  props: ['data', 'options'],
+  mounted() {
     this.renderChart(this.data, this.options)
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .content {
   padding: 12px;
-  @media(min-width: 1200px) {
+  @media (min-width: 1200px) {
     width: 1200px;
     margin: auto;
   }
   font-family: 'Roboto', sans-serif;
 }
-
 </style>

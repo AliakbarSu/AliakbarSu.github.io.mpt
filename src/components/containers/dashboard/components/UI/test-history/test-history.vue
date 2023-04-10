@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import moment from 'moment'
 export default {
   props: ['history'],
@@ -41,11 +41,11 @@ export default {
     }
   },
   methods: {
-    displayCorrectDate(dateToParse) {
+    displayCorrectDate(dateToParse: string) {
       const date = new Date(dateToParse)
       return moment(date).format('Do MMMM YYYY, h:mm a')
     },
-    showTestResults(results) {
+    showTestResults(results: string) {
       this.$store.commit('setTestResult', results)
       this.$router.push('/test-results')
     }

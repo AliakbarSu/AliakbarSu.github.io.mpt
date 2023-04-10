@@ -17,7 +17,7 @@
   </Tabs>
 </template>
 
-<script>
+<script lang="ts">
 import Tabs from './components/tabs/tabs.vue'
 import BookedTests from './components/bookedTests/bookedTests.vue'
 import TestHistory from './components/UI/test-history/test-history.vue'
@@ -38,7 +38,7 @@ export default {
     }
   },
   methods: {
-    takeTest(prodId) {
+    takeTest(prodId: string) {
       const testId = prodId
       this.$store
         .dispatch('loadTest', { userId: this.userId, testId })
@@ -52,15 +52,15 @@ export default {
     logout() {
       this.$store.dispatch('logout')
     },
-    getDate(dateToParse) {
+    getDate(dateToParse: string) {
       var time = new Date(dateToParse)
       var date = new Date(time)
       return date.toString()
     },
-    isFail(status) {
+    isFail(status: string) {
       return status.toLowerCase() == 'failed'
     },
-    activateTab(clickedTab) {
+    activateTab(clickedTab: string) {
       this.tabs = this.tabs.map((tb) => {
         if (tb.name.toLowerCase() == clickedTab.toLowerCase()) {
           return { ...tb, active: true }
@@ -68,11 +68,11 @@ export default {
         return { ...tb, active: false }
       })
     },
-    isTabActive(tabValue) {
+    isTabActive(tabValue: string) {
       const activeTab = this.tabs.find(
         (tb) => tb.name.toLowerCase() == tabValue.toLowerCase()
       )
-      return activeTab.active
+      return activeTab?.active
     }
   },
   components: {
