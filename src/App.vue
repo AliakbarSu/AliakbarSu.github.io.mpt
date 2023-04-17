@@ -23,6 +23,9 @@ import Alert from '@/components/UI/alert/alert.vue'
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-vue'
 export default defineComponent({
+  mounted() {
+    this.$store.dispatch('retrieveTokenFromAuthz')
+  },
   components: {
     Footer,
     Navbar,

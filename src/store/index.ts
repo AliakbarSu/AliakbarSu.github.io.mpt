@@ -13,6 +13,7 @@ import axios from 'axios'
 import type { SubmittedAnswer } from '@/types/test'
 import { DummyProducts } from '@/dummyData/products'
 import { DummyTestHistory } from '@/dummyData/dashboard'
+import { DummyUser } from '@/dummyData/user'
 
 export const store = createStore({
   modules: {
@@ -127,7 +128,7 @@ export const store = createStore({
       })
     },
     retrieveTokenFromAuthz(context) {
-      return new Promise((resolve, reject) => {
+      // return new Promise((resolve, reject) => {
         // Todo Check this function again
         // const instance = getInstance()
         // instance.$watch('loading', (loading: boolean) => {
@@ -146,7 +147,10 @@ export const store = createStore({
         //       })
         //   }
         // })
-      })
+        context.commit("setUserData", DummyUser)
+        context.commit("setUserId", "user1")
+        context.commit("setToken", "dummyToken")
+      // })
     },
     bookTest: (store, data) => {
       return axios

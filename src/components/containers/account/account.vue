@@ -24,13 +24,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
 
-export default defineComponent({
+export default {
   computed: {
     user() {
       return this.$store.getters.getUser
     }
   }
-})
+}
 </script>

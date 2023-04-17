@@ -24,10 +24,10 @@ import TestHistory from './components/UI/test-history/test-history.vue'
 
 export default {
   mounted() {
-    // this.$store.dispatch('retrieveTokenFromAuthz').then(() => {
+    this.$store.dispatch('retrieveTokenFromAuthz')
     this.$store.dispatch('fetchTests', this.userId)
     this.$store.dispatch('fetchTestHistory', this.userId)
-    // })
+  
   },
   data() {
     return {
