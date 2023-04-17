@@ -3,7 +3,7 @@
     <v-container>
       <v-row align="center" justify="center">
         <v-col cols="10">
-          <v-alert outlined type="success" text class="py-5">
+          <v-alert outlined type="success"  class="py-5">
             Thank you your payment was successful, we are in the process of
             booking your test.
           </v-alert>
@@ -18,7 +18,8 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+
 export default {
   methods: {
     goToDashboard() {

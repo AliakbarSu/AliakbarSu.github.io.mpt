@@ -8,8 +8,8 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Home from '@/components/containers/home/index.vue'
 import Products from '@/components/containers/products/products.vue'
 // import Dashboard from '@components/containers/dashboard/dashboard.vue'
-// import Confirmation from '@components/containers/confirmation/index.vue'
-// import Unsuccessful from '@components/containers/unsuccessful/unsuccessful.vue'
+import Confirmation from '@/components/containers/confirmation/index.vue'
+import Unsuccessful from '@/components/containers/unsuccessful/unsuccessful.vue'
 // import { authGuard } from '@auth/authGuard'
 
 const routes: RouteRecordRaw[] = [
@@ -19,16 +19,16 @@ const routes: RouteRecordRaw[] = [
   //   beforeEnter: authGuard,
   //   component: Dashboard
   // },
-  // {
-  //   path: '/confirmation',
-  //   name: 'Confirmation',
-  //   component: Confirmation
-  // },
-  // {
-  //   path: '/unsuccessful',
-  //   name: 'Unsuccessful',
-  //   component: Unsuccessful
-  // },
+  {
+    path: '/confirmation',
+    name: 'Confirmation',
+    component: Confirmation
+  },
+  {
+    path: '/unsuccessful',
+    name: 'Unsuccessful',
+    component: Unsuccessful
+  },
   {
     path: '/',
     name: 'Home',

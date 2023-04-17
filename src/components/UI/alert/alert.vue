@@ -1,7 +1,6 @@
 <template>
   <v-alert
     dismissible
-    border="left"
     color="#C51162"
     dark
     class="ma-0 rounded-0"

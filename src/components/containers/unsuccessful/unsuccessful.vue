@@ -3,7 +3,7 @@
     <v-container>
       <v-row align="center" justify="center">
         <v-col cols="10">
-          <v-alert outlined type="error" text class="py-5">
+          <v-alert outlined type="error"  class="py-5">
             Sorry there was a problem processing your payment card. Please try
             to book your test again by going to the booking page.
           </v-alert>
@@ -18,7 +18,8 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+
 export default {
   methods: {
     goToBookTest() {

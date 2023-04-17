@@ -1,15 +1,32 @@
+
+<template>
+  <v-app app>
+    <Alert />
+    <Navbar />
+
+    <!-- Sizes your content based upon application components -->
+    <v-main>
+      <router-view />
+    </v-main>
+
+    <Footer />
+  </v-app>
+  <!-- <RouterView /> -->
+</template>
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import Footer from '@/components/UI/footer/footer.vue'
 import Navbar from '@/components/UI/navbar/navbar.vue'
+import Alert from '@/components/UI/alert/alert.vue'
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-vue'
 export default defineComponent({
   components: {
     Footer,
     Navbar,
+    Alert
   },
   setup() {
     // const { loginWithRedirect } = useAuth0()
@@ -34,20 +51,6 @@ export default defineComponent({
 })
 </script>
 
-<template>
-  <v-app app>
-    <Alert />
-    <Navbar />
-
-    <!-- Sizes your content based upon application components -->
-    <v-main>
-      <router-view />
-    </v-main>
-
-    <Footer />
-  </v-app>
-  <!-- <RouterView /> -->
-</template>
 
 <style scoped>
 header {
