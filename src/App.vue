@@ -2,16 +2,22 @@
 import { defineComponent } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import Footer from '@/components/UI/footer/footer.vue'
+import Navbar from '@/components/UI/navbar/navbar.vue'
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-vue'
 export default defineComponent({
+  components: {
+    Footer,
+    Navbar,
+  },
   setup() {
-    const { loginWithRedirect } = useAuth0()
-    return {
-      login: () => {
-        loginWithRedirect()
-      }
-    }
+    // const { loginWithRedirect } = useAuth0()
+    // return {
+    //   login: () => {
+    //     loginWithRedirect()
+    //   }
+    // }
   },
   created() {
     axios.interceptors.response.use(undefined, function (err) {
@@ -29,26 +35,18 @@ export default defineComponent({
 </script>
 
 <template>
-  <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
+  <v-app app>
+    <Alert />
+    <Navbar />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <!-- Sizes your content based upon application components -->
+    <v-main>
+      <router-view />
+    </v-main>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <Footer />
+  </v-app>
+  <!-- <RouterView /> -->
 </template>
 
 <style scoped>

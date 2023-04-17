@@ -189,9 +189,9 @@
 </template>
 
 <script lang="ts">
-import Pie from '@components/pie/pie'
+import Pie from './components/pie/pie.vue'
 // import Bar from './components/bar/bar'
-import Line from '@components/line/line'
+import Line from './components/line/line.vue'
 
 export default {
   data() {

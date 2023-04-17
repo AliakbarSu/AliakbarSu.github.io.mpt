@@ -1,8 +1,10 @@
 <template>
   <div>
     <v-app-bar color="deep-purple" dark>
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-
+      <template v-slot:prepend>
+      <!-- <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon> -->
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      </template>
       <v-toolbar-title class="font-weight-bold">MLE Prep Tests</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute temporary>
@@ -74,7 +76,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   data: () => ({
     drawer: false,
@@ -82,7 +84,9 @@ export default {
   }),
   computed: {
     isAuthenticated() {
-      return this.$auth.isAuthenticated
+      // TODO: needs to be fixed
+      // return this.$auth.isAuthenticated
+      return false
     }
   },
   methods: {
@@ -92,9 +96,9 @@ export default {
       })
     },
     login() {
-      this.$auth.loginWithRedirect()
+      // this.$auth.loginWithRedirect()
     },
-    goTo(link) {
+    goTo(link: string) {
       this.$router.push(link)
     }
   }

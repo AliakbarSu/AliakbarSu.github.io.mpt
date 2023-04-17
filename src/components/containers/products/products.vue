@@ -61,9 +61,11 @@ export default {
   computed: {
     products() {
       return this.$store.getters.getProducts
+      // return []
     },
     isAuthenticated() {
-      return this.$store.getters.isAuthenticated
+      // return this.$store.getters.isAuthenticated
+      return true
     }
   },
   created() {

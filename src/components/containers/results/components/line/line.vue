@@ -7,7 +7,8 @@
   ></apexchart>
 </template>
 
-<script>
+<script lang="ts">
+
 export default {
   props: ['labels', 'data'],
   computed: {
@@ -24,7 +25,7 @@ export default {
           enabled: false
         },
         legend: {
-          tooltipHoverFormatter: function (val, opts) {
+          tooltipHoverFormatter: function (val: string, opts: {seriesIndex: number; dataPointIndex: number; w: {globals: any}}) {
             return (
               val +
               ' - <strong>' +

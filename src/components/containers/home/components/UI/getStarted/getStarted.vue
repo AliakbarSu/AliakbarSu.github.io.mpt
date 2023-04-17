@@ -9,7 +9,8 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-timeline :dense="$vuetify.breakpoint.smAndDown" class="getStarted">
+    <!-- <v-timeline :dense="$vuetify.theme." class="getStarted"> -->
+    <v-timeline :dense="true" class="getStarted">
       <v-timeline-item color="purple lighten-2" fill-dot right>
         <v-card>
           <v-card-title class="purple lighten-2">

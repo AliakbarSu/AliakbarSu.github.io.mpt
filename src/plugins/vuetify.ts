@@ -1,4 +1,5 @@
-import '@mdi/font/css/materialdesignicons.css'
+import 'mdi/fonts/materialdesignicons-webfont.ttf'
+// Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'

@@ -3,15 +3,16 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import {store} from "./store/index"
 
-import './assets/main.css'
+import './main.css'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
 
-import VueApexCharts from 'vue-apexcharts'
+import VueApexCharts from 'vue3-apexcharts'
 app.use(VueApexCharts)
 app.component('apexchart', VueApexCharts)
 
@@ -21,7 +22,10 @@ app.use(VueSweetalert2)
 import vuetify from './plugins/vuetify'
 app.use(vuetify)
 
-import auth0 from '@authentication/index'
+// Vuex - Store
+app.use(store)
+
+import auth0 from '@/auth/index'
 app.use(auth0)
 
 app.mount('#app')

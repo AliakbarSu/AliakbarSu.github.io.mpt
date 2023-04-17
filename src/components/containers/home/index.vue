@@ -18,7 +18,7 @@ import Hero from './components/UI/hero/hero.vue'
 import Examples from './components/examples/examples.vue'
 import Testimonial from './components/testimonial/testimonial.vue'
 
-export default defineComponent({
+export default  {
   components: {
     Section,
     GetStarted,
@@ -26,5 +26,5 @@ export default defineComponent({
     Examples,
     Testimonial
   }
-})
+}
 </script>

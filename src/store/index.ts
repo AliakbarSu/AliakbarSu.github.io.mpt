@@ -7,9 +7,11 @@ import { createStore } from 'vuex'
 // const authService = getInstance();
 
 const API_URL = 'https://ouaircihvg.execute-api.us-east-1.amazonaws.com/dev'
-import { getInstance } from '@/auth'
+// import { getInstance } from '@/auth'
 
 import axios from 'axios'
+import type { SubmittedAnswer } from '@/types/test'
+import { DummyProducts } from '@/dummyData/products'
 
 export const store = createStore({
   modules: {
@@ -125,23 +127,24 @@ export const store = createStore({
     },
     retrieveTokenFromAuthz(context) {
       return new Promise((resolve, reject) => {
-        const instance = getInstance()
-        instance.$watch('loading', (loading: boolean) => {
-          if (loading === false && instance.isAuthenticated) {
-            instance
-              .getTokenSilently()
-              .then((authToken: string) => {
-                context.commit('setToken', authToken)
-                context.commit('setUserId', instance.user.sub.split('|')[1])
-                context.commit('setUserData', instance.user)
+        // Todo Check this function again
+        // const instance = getInstance()
+        // instance.$watch('loading', (loading: boolean) => {
+        //   if (loading === false && instance.isAuthenticated) {
+        //     instance
+        //       .getTokenSilently()
+        //       .then((authToken: string) => {
+        //         context.commit('setToken', authToken)
+        //         context.commit('setUserId', instance.user.sub.split('|')[1])
+        //         context.commit('setUserData', instance.user)
 
-                resolve(authToken)
-              })
-              .catch((error: Error) => {
-                reject(error)
-              })
-          }
-        })
+        //         resolve(authToken)
+        //       })
+        //       .catch((error: Error) => {
+        //         reject(error)
+        //       })
+        //   }
+        // })
       })
     },
     bookTest: (store, data) => {
@@ -153,13 +156,14 @@ export const store = createStore({
         .catch((err) => console.log(err))
     },
     fetchProducts: ({ commit }) => {
-      return axios
-        .get(API_URL + '/listproducts')
-        .then((res) => {
-          commit('setProducts', JSON.parse(res.data.body))
-          return JSON.parse(res.data.body)
-        })
-        .catch((err) => console.log(err))
+      // return axios
+      //   .get(API_URL + '/listproducts')
+      //   .then((res) => {
+      //     commit('setProducts', JSON.parse(res.data.body))
+      //     return JSON.parse(res.data.body)
+      //   })
+      //   .catch((err) => console.log(err))
+      commit('setProducts', DummyProducts)
     },
     fetchTests: ({ commit }, userId) => {
       return axios
@@ -190,11 +194,11 @@ export const store = createStore({
         .catch((err) => console.log(err))
     },
     submitTest: ({ commit }, data) => {
-      const deconstructed_data = data.submitted_answers.map((q) => ({
-        questionId: q.id,
-        submitted_answer: q.submitted_answer.id,
-        startAt: q.startAt,
-        endAt: q.endAt
+      const deconstructed_data = data.submitted_answers.map(({id, submitted_answer, startAt, endAt}: SubmittedAnswer) => ({
+        questionId: id,
+        submitted_answer: submitted_answer.id,
+        startAt: startAt,
+        endAt: endAt
       }))
       const dataToPost = {
         submitted_answers: deconstructed_data,
