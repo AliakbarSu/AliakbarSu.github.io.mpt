@@ -12,6 +12,7 @@ const API_URL = 'https://ouaircihvg.execute-api.us-east-1.amazonaws.com/dev'
 import axios from 'axios'
 import type { SubmittedAnswer } from '@/types/test'
 import { DummyProducts } from '@/dummyData/products'
+import { DummyTestHistory } from '@/dummyData/dashboard'
 
 export const store = createStore({
   modules: {
@@ -166,22 +167,24 @@ export const store = createStore({
       commit('setProducts', DummyProducts)
     },
     fetchTests: ({ commit }, userId) => {
-      return axios
-        .post(API_URL + '/user_tests', { userId })
-        .then((res) => {
-          commit('setUserTests', JSON.parse(res.data.body))
-          return JSON.parse(res.data.body)
-        })
-        .catch((err) => console.log(err))
+      // return axios
+      //   .post(API_URL + '/user_tests', { userId })
+      //   .then((res) => {
+      //     commit('setUserTests', JSON.parse(res.data.body))
+      //     return JSON.parse(res.data.body)
+      //   })
+      //   .catch((err) => console.log(err))
+      return commit('setUserTests', DummyProducts)
     },
     fetchTestHistory: ({ commit }, userId) => {
-      return axios
-        .post(API_URL + '/test_history', { userId })
-        .then((res) => {
-          commit('setUserTestHistory', JSON.parse(res.data.body))
-          return JSON.parse(res.data.body)
-        })
-        .catch((err) => console.log(err))
+      // return axios
+      //   .post(API_URL + '/test_history', { userId })
+      //   .then((res) => {
+      //     commit('setUserTestHistory', JSON.parse(res.data.body))
+      //     return JSON.parse(res.data.body)
+      //   })
+      //   .catch((err) => console.log(err))
+      return commit('setUserTestHistory', DummyTestHistory)
     },
     loadTest: ({ commit }, data) => {
       return axios

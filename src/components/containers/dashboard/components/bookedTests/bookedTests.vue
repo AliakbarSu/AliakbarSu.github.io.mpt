@@ -29,7 +29,7 @@ export default {
     Card
   },
   methods: {
-    takeTest(testId) {
+    takeTest(testId: string) {
       this.$emit('takeTest', testId)
     }
   },

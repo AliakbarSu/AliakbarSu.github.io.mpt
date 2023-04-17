@@ -7,18 +7,18 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 // import Account from '@components/containers/account/account.vue'
 import Home from '@/components/containers/home/index.vue'
 import Products from '@/components/containers/products/products.vue'
-// import Dashboard from '@components/containers/dashboard/dashboard.vue'
+import Dashboard from '@/components/containers/dashboard/dashboard.vue'
 import Confirmation from '@/components/containers/confirmation/index.vue'
 import Unsuccessful from '@/components/containers/unsuccessful/unsuccessful.vue'
 // import { authGuard } from '@auth/authGuard'
 
 const routes: RouteRecordRaw[] = [
-  // {
-  //   path: '/dashboard',
-  //   name: 'Dashboard',
-  //   beforeEnter: authGuard,
-  //   component: Dashboard
-  // },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    // beforeEnter: authGuard,
+    component: Dashboard
+  },
   {
     path: '/confirmation',
     name: 'Confirmation',
