@@ -1,8 +1,7 @@
-<template>
+<!-- <template>
   <div>
     <v-app-bar color="deep-purple" dark>
       <template v-slot:prepend>
-      <!-- <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon> -->
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
       </template>
       <v-toolbar-title class="font-weight-bold">MLE Prep Tests</v-toolbar-title>
@@ -84,8 +83,7 @@ export default {
   }),
   computed: {
     isAuthenticated() {
-      // TODO: needs to be fixed
-      // return this.$auth.isAuthenticated
+      return this.$auth.isAuthenticated
       return false
     }
   },
@@ -96,11 +94,84 @@ export default {
       })
     },
     login() {
-      // this.$auth.loginWithRedirect()
+      this.$auth.loginWithRedirect()
     },
     goTo(link: string) {
       this.$router.push(link)
     }
+  }
+}
+</script> -->
+
+<template>
+  <Disclosure as="nav" class="bg-white shadow" v-slot="{ open }">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 justify-between">
+        <div class="flex">
+          <div class="-ml-2 mr-2 flex items-center md:hidden">
+            <!-- Mobile menu button -->
+            <MobileButton :open="open"/>
+          </div>
+          <div class="flex flex-shrink-0 items-center" @click="goTo('/')">
+            <img class="block h-8 w-auto lg:hidden" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
+            <img class="hidden h-8 w-auto lg:block" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
+          </div>
+          <div class="hidden md:ml-6 md:flex md:space-x-8">
+            <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
+            <a href="#" class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900" @click="goTo('/dashboard')">Dashboard</a>
+            <a href="#" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Tests</a>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <button type="button" class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <PlusIcon class="-ml-0.5 h-5 w-5" aria-hidden="true" />
+              New Test
+            </button>
+          </div>
+          <div class="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
+            <button type="button" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <span class="sr-only">View notifications</span>
+              <BellIcon class="h-6 w-6" aria-hidden="true" />
+            </button>
+
+            <!-- Profile dropdown -->
+            <ProfileDropdown/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <DsiclosurePanel/>
+  </Disclosure>
+</template>
+
+<script lang="ts">
+import { Disclosure } from '@headlessui/vue'
+import { BellIcon } from '@heroicons/vue/24/outline'
+import { PlusIcon } from '@heroicons/vue/20/solid'
+import MobileButton from './components/MobileButton.vue';
+import ProfileDropdown from './components/ProfileDropdown.vue';
+import DsiclosurePanel from './components/DisclosurePanel.vue';
+
+export default {
+  methods: {
+    goTo(link: string) {
+      this.$router.push(link)
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.getters.getUser
+    }
+  },
+  components: {
+    Disclosure,
+    DsiclosurePanel,
+    MobileButton,
+    PlusIcon,
+    BellIcon,
+    ProfileDropdown
   }
 }
 </script>
