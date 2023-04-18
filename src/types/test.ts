@@ -18,3 +18,26 @@ export interface Test {
   status: 'failed' | 'pass'
   submitted_questions: Question[]
 }
+
+export interface Result {
+  overallScore: {
+    score: number;
+    correct: number;
+    incorrect: number;
+  }
+  accuracy: {
+    time: number;
+    count: number;
+  }[];
+  speed: {
+    time: number;
+    answeredIn: number;
+  }[],
+  categoryBasedScore: {
+    category: string;
+    percentage: number;
+    averageAnsweringTime: number;
+    incorrect: number;
+    correct: number;
+  }[]
+}

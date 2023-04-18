@@ -10,10 +10,11 @@ const API_URL = 'https://ouaircihvg.execute-api.us-east-1.amazonaws.com/dev'
 // import { getInstance } from '@/auth'
 
 import axios from 'axios'
-import type { SubmittedAnswer } from '@/types/test'
+import type { Result, SubmittedAnswer } from '@/types/test'
 import { DummyProducts } from '@/dummyData/products'
 import { DummyTestHistory } from '@/dummyData/dashboard'
 import { DummyUser } from '@/dummyData/user'
+import { DummyTestResults } from '@/dummyData/testResults'
 
 export const store = createStore({
   modules: {
@@ -28,7 +29,7 @@ export const store = createStore({
     status: '',
     redirect: '/',
     currentTest: [],
-    testResult: {},
+    testResult: DummyTestResults,
     testHistory: [],
     testId: '',
     products: [],
@@ -230,7 +231,7 @@ export const store = createStore({
     getProducts: (state) => state.products,
     userTests: (state) => state.user.tests,
     getCurrentTest: (state) => state.currentTest,
-    getTestResult: (state) => state.testResult,
+    getTestResult: (state): Result => state.testResult,
     getTestHistory: (state) => state.testHistory,
     getTestId: (state) => state.testId,
     getUser: (state) => state.user

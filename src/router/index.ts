@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
 
-// import Results from '@components/containers/results/results.vue'
+import Results from '@/components/containers/results/results.vue'
 import Checkout from '@/components/containers/checkout/checkout.vue'
 // import Questions from '../components/containers/admin/questions/questions.vue'
 import Account from '@/components/containers/account/account.vue'
@@ -40,12 +40,12 @@ const routes: RouteRecordRaw[] = [
     // beforeEnter: authGuard,
     component: Account
   },
-  // {
-  //   path: '/test-results',
-  //   name: 'Results Summary',
-  //   beforeEnter: authGuard,
-  //   component: Results
-  // },
+  {
+    path: '/test-results',
+    name: 'Results Summary',
+    // beforeEnter: authGuard,
+    component: Results
+  },
   {
     path: '/checkout',
     name: 'Checkout',

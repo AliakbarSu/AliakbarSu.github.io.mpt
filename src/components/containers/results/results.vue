@@ -1,9 +1,9 @@
 <template>
   <v-container class="pt-12">
-    <v-alert v-if="passed" outlined type="success" prominent text>
+    <v-alert v-if="passed" outlined type="success" prominent>
       Congratulations you have passed the test.
     </v-alert>
-    <v-alert v-if="!passed" outlined type="warning" prominent border="left">
+    <v-alert v-if="!passed" outlined type="warning" prominent >
       We are sorry to let you know that you failed the test. Try again later.
     </v-alert>
 
@@ -190,8 +190,9 @@
 
 <script lang="ts">
 import Pie from './components/pie/pie.vue'
-// import Bar from './components/bar/bar'
+import Bar from './components/bar/bar.vue'
 import Line from './components/line/line.vue'
+import type { Result } from '@/types/test'
 
 export default {
   data() {
@@ -210,7 +211,7 @@ export default {
     }
   },
   components: {
-    // Bar,
+    Bar,
     Pie,
     'Line-graph': Line
   },
@@ -228,25 +229,25 @@ export default {
     },
     sectionsCorrectScores() {
       return {
-        labels: this.$store.getters.getTestResult.categoryBasedScore.map(
+        labels: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
           (section) => section.category
         ),
-        datasets: this.$store.getters.getTestResult.categoryBasedScore.map(
+        datasets: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
           (section) => section.correct
         )
       }
     },
     sectionsIncorrectScores() {
       return {
-        labels: this.$store.getters.getTestResult.categoryBasedScore.map(
+        labels: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
           (section) => section.category
         ),
-        datasets: this.$store.getters.getTestResult.categoryBasedScore.map(
+        datasets: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
           (section) => section.incorrect
         ),
         options: {
           dataLabels: {
-            formatter: function (val, opts) {
+            formatter: function (val: any, opts: any) {
               return opts.w.config.series[opts.seriesIndex] + ' Questions'
             }
           }
@@ -255,15 +256,15 @@ export default {
     },
     averageCategoryTiming() {
       return {
-        labels: this.$store.getters.getTestResult.categoryBasedScore.map(
+        labels: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
           (section) => section.category
         ),
-        datasets: this.$store.getters.getTestResult.categoryBasedScore.map(
+        datasets: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
           (section) => section.averageAnsweringTime
         ),
         options: {
           dataLabels: {
-            formatter: function (val, opts) {
+            formatter: function (val: any, opts: any) {
               return opts.w.config.series[opts.seriesIndex] + ' Mins'
             }
           }
@@ -280,32 +281,32 @@ export default {
       return this.$store.getters.getTestResult.overallScore.incorrect
     },
     accuracyOverTime() {
-      this.$store.getters.getTestResult.accuracy.map((qa) => qa.time)
+      (this.$store.getters.getTestResult as Result).accuracy.map((qa) => qa.time)
       return {
-        labels: this.$store.getters.getTestResult.accuracy.map(
+        labels: (this.$store.getters.getTestResult as Result).accuracy.map(
           (qa) => qa.time + ' Mins'
         ),
-        datasets: this.$store.getters.getTestResult.accuracy.map(
+        datasets: (this.$store.getters.getTestResult as Result).accuracy.map(
           (qa) => qa.count
         )
       }
     },
     speedOverTime() {
       return {
-        labels: this.$store.getters.getTestResult.speed.map(
+        labels: (this.$store.getters.getTestResult as Result).speed.map(
           (qa) => qa.time + ' Mins'
         ),
-        datasets: this.$store.getters.getTestResult.speed.map(
+        datasets: (this.$store.getters.getTestResult as Result).speed.map(
           (qa) => qa.answeredIn
         )
       }
     },
     categoriesScores() {
       return {
-        labels: this.$store.getters.getTestResult.categoryBasedScore.map(
+        labels: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
           (qa) => qa.category
         ),
-        datasets: this.$store.getters.getTestResult.categoryBasedScore.map(
+        datasets: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
           (qa) => qa.percentage
         )
       }
