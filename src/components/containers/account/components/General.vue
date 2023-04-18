@@ -12,24 +12,18 @@
               <div class="pt-6 sm:flex">
                 <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Full name</dt>
                 <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                  <div class="text-gray-900">Tom Cook</div>
+                  <div class="text-gray-900">{{ user.name }}</div>
                   <button type="button" class="font-semibold text-indigo-600 hover:text-indigo-500">Update</button>
                 </dd>
               </div>
               <div class="pt-6 sm:flex">
                 <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Email address</dt>
                 <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                  <div class="text-gray-900">tom.cook@example.com</div>
+                  <div class="text-gray-900">{{ user.email }}</div>
                   <button type="button" class="font-semibold text-indigo-600 hover:text-indigo-500">Update</button>
                 </dd>
               </div>
-              <div class="pt-6 sm:flex">
-                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Title</dt>
-                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                  <div class="text-gray-900">Human Resources Manager</div>
-                  <button type="button" class="font-semibold text-indigo-600 hover:text-indigo-500">Update</button>
-                </dd>
-              </div>
+             
             </dl>
           </div>
   
@@ -44,6 +38,7 @@
   </template>
   
   <script lang="ts" setup>
+  import { useAuth0 } from "@auth0/auth0-vue";
   import { ref } from 'vue'
   import { Dialog, DialogPanel, Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
   import { Bars3Icon } from '@heroicons/vue/20/solid'
@@ -56,6 +51,8 @@
     UsersIcon,
     XMarkIcon,
   } from '@heroicons/vue/24/outline'
+
+  const { user } = useAuth0();
   
   const secondaryNavigation = [
     { name: 'General', href: '#', icon: UserCircleIcon, current: true },

@@ -128,31 +128,6 @@ export const store = createStore({
         resolve('')
       })
     },
-    retrieveTokenFromAuthz(context) {
-      // return new Promise((resolve, reject) => {
-        // Todo Check this function again
-        // const instance = getInstance()
-        // instance.$watch('loading', (loading: boolean) => {
-        //   if (loading === false && instance.isAuthenticated) {
-        //     instance
-        //       .getTokenSilently()
-        //       .then((authToken: string) => {
-        //         context.commit('setToken', authToken)
-        //         context.commit('setUserId', instance.user.sub.split('|')[1])
-        //         context.commit('setUserData', instance.user)
-
-        //         resolve(authToken)
-        //       })
-        //       .catch((error: Error) => {
-        //         reject(error)
-        //       })
-        //   }
-        // })
-        context.commit("setUserData", DummyUser)
-        context.commit("setUserId", "user1")
-        context.commit("setToken", "dummyToken")
-      // })
-    },
     bookTest: (store, data) => {
       return axios
         .post(API_URL + '/pay', data)

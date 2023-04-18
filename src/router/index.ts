@@ -10,13 +10,13 @@ import Products from '@/components/containers/products/products.vue'
 import Dashboard from '@/components/containers/dashboard/dashboard.vue'
 import Confirmation from '@/components/containers/confirmation/index.vue'
 import Unsuccessful from '@/components/containers/unsuccessful/unsuccessful.vue'
-// import { authGuard } from '@auth/authGuard'
+import { authGuard } from "@auth0/auth0-vue";
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
     component: Dashboard
   },
   {
@@ -37,19 +37,19 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/account',
     name: 'Account',
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
     component: Account
   },
   {
     path: '/test-results',
     name: 'Results Summary',
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
     component: Results
   },
   {
     path: '/checkout',
     name: 'Checkout',
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
     component: Checkout
   },
   // Todo: from before
@@ -61,7 +61,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/tests',
     name: 'Products',
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
     component: Products
   },
   // {

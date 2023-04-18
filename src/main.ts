@@ -26,6 +26,6 @@ app.use(vuetify)
 app.use(store)
 
 import auth0 from '@/auth/index'
-app.use(auth0)
+app.use(auth0())
 
 app.mount('#app')

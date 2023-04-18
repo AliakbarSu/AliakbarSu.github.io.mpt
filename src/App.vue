@@ -22,9 +22,28 @@ import Navbar from '@/components/UI/navbar/navbar.vue'
 // import Alert from '@/components/UI/alert/alert.vue'
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-vue'
-export default defineComponent({
-  mounted() {
-    this.$store.dispatch('retrieveTokenFromAuthz')
+import { DummyUser } from './dummyData/user'
+export default {
+  data() {
+    return {
+      isAuth: this.$auth0.isAuthenticated
+      }
+    },
+  watch: {
+    isAuth() {
+     if(this.isAuth) {
+      const userData = this.$auth0.user as unknown as {
+        nickname: string;
+        email: string;
+        picture: string;
+      }
+      this.$store.commit('setUserData', {
+        name: DummyUser.name,
+        email: DummyUser.email,
+        picture: DummyUser.picture
+      })
+     }
+    }
   },
   components: {
     Footer,
@@ -51,6 +70,6 @@ export default defineComponent({
       })
     })
   }
-})
+}
 </script>
 
