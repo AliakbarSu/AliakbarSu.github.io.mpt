@@ -1,11 +1,5 @@
+import type { User } from '@auth0/auth0-vue'
 import type { Question } from './question'
-import type { Test } from './Test'
+import type { Test } from './test'
 
-export interface User {
-  id: string
-  customer_id: string
-  bookedTests: Test[]
-  category: string
-  status: 'failed' | 'pass'
-  submitted_questions: Question[]
-}
+export interface AppUser extends User {}

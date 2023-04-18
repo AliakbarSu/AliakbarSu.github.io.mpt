@@ -1,14 +1,14 @@
-export interface Choice {
+export interface MultiChoiceAnswer {
   id: string
   isCorrect: boolean
-  text: string
+  description: string
 }
 
 export interface Question {
   id: string
-  explanation: string
-  question: string
+  text: string
+  description: string
   subject: string
-  choices: Choice[]
+  answers: MultiChoiceAnswer[]
   images: string[]
 }
