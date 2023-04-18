@@ -3,7 +3,7 @@
     <!-- <Carousel /> -->
     <Hero />
     <Section />
-    <Examples />
+    <!-- <Examples /> -->
     <Testimonial />
     <GetStarted />
   </div>
