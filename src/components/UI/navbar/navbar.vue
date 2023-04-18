@@ -194,7 +194,6 @@ import DsiclosurePanel from './components/DisclosurePanel.vue'
 export default {
   data() {
     return {
-      user: this.$auth0.user.value,
       isAuth: this.$auth0.isAuthenticated
     }
   },

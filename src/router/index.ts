@@ -10,7 +10,8 @@ import Products from '@/components/containers/products/products.vue'
 import Dashboard from '@/components/containers/dashboard/dashboard.vue'
 import Confirmation from '@/components/containers/confirmation/index.vue'
 import Unsuccessful from '@/components/containers/unsuccessful/unsuccessful.vue'
-import { authGuard } from "@auth0/auth0-vue";
+import Faqs from '@/components/containers/faqs/Faqs.vue'
+import { authGuard } from '@auth0/auth0-vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -28,6 +29,11 @@ const routes: RouteRecordRaw[] = [
     path: '/unsuccessful',
     name: 'Unsuccessful',
     component: Unsuccessful
+  },
+  {
+    path: '/faqs',
+    name: 'Faqs',
+    component: Faqs
   },
   {
     path: '/',
@@ -63,7 +69,7 @@ const routes: RouteRecordRaw[] = [
     name: 'Products',
     beforeEnter: authGuard,
     component: Products
-  },
+  }
   // {
   //   path: '/test',
   //   name: 'Test',
