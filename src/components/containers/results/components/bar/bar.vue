@@ -1,13 +1,14 @@
 <script lang="ts">
+import { defineComponent } from 'vue'
 import { BarChart } from 'vue-chart-3'
 
-export default {
+export default defineComponent({
   extends: BarChart,
   props: ['data', 'options'],
   mounted() {
-    this.renderChart(this.data, this.options)
+    ;(this.renderChart as any)(this.data, this.options)
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

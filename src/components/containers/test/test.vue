@@ -31,7 +31,6 @@
 </template>
 
 <script lang="ts">
-// import CircularTimer from '../../UI/circular-timer/circular-timer'
 // import { questions } from '../../../dummyData'
 import Instructions from './components/instructions/instructions.vue'
 // import Circle8 from 'vue-loading-spinner/src/components/Circle8'
@@ -164,7 +163,7 @@ export default defineComponent({
           //     this.calculateResults()
           //   })
         }
-      }, 100)
+      }, 100) as any as number
     },
     next() {
       if (!this.submitted_answer.id) {

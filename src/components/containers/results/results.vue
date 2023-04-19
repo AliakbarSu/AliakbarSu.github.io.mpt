@@ -3,7 +3,7 @@
     <v-alert v-if="passed" outlined type="success" prominent>
       Congratulations you have passed the test.
     </v-alert>
-    <v-alert v-if="!passed" outlined type="warning" prominent >
+    <v-alert v-if="!passed" outlined type="warning" prominent>
       We are sorry to let you know that you failed the test. Try again later.
     </v-alert>
 
@@ -193,8 +193,9 @@ import Pie from './components/pie/pie.vue'
 import Bar from './components/bar/bar.vue'
 import Line from './components/line/line.vue'
 import type { Result } from '@/types/test'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
   data() {
     return {
       options: {
@@ -225,26 +226,26 @@ export default {
   },
   computed: {
     passed() {
-      return this.overallScore >= 250
+      return (this as any).overallScore >= 250
     },
     sectionsCorrectScores() {
       return {
-        labels: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
-          (section) => section.category
-        ),
-        datasets: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
-          (section) => section.correct
-        )
+        labels: (
+          this.$store.getters.getTestResult as Result
+        ).categoryBasedScore.map((section) => section.category),
+        datasets: (
+          this.$store.getters.getTestResult as Result
+        ).categoryBasedScore.map((section) => section.correct)
       }
     },
     sectionsIncorrectScores() {
       return {
-        labels: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
-          (section) => section.category
-        ),
-        datasets: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
-          (section) => section.incorrect
-        ),
+        labels: (
+          this.$store.getters.getTestResult as Result
+        ).categoryBasedScore.map((section) => section.category),
+        datasets: (
+          this.$store.getters.getTestResult as Result
+        ).categoryBasedScore.map((section) => section.incorrect),
         options: {
           dataLabels: {
             formatter: function (val: any, opts: any) {
@@ -256,12 +257,12 @@ export default {
     },
     averageCategoryTiming() {
       return {
-        labels: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
-          (section) => section.category
-        ),
-        datasets: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
-          (section) => section.averageAnsweringTime
-        ),
+        labels: (
+          this.$store.getters.getTestResult as Result
+        ).categoryBasedScore.map((section) => section.category),
+        datasets: (
+          this.$store.getters.getTestResult as Result
+        ).categoryBasedScore.map((section) => section.averageAnsweringTime),
         options: {
           dataLabels: {
             formatter: function (val: any, opts: any) {
@@ -281,7 +282,9 @@ export default {
       return this.$store.getters.getTestResult.overallScore.incorrect
     },
     accuracyOverTime() {
-      (this.$store.getters.getTestResult as Result).accuracy.map((qa) => qa.time)
+      ;(this.$store.getters.getTestResult as Result).accuracy.map(
+        (qa) => qa.time
+      )
       return {
         labels: (this.$store.getters.getTestResult as Result).accuracy.map(
           (qa) => qa.time + ' Mins'
@@ -303,16 +306,16 @@ export default {
     },
     categoriesScores() {
       return {
-        labels: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
-          (qa) => qa.category
-        ),
-        datasets: (this.$store.getters.getTestResult as Result).categoryBasedScore.map(
-          (qa) => qa.percentage
-        )
+        labels: (
+          this.$store.getters.getTestResult as Result
+        ).categoryBasedScore.map((qa) => qa.category),
+        datasets: (
+          this.$store.getters.getTestResult as Result
+        ).categoryBasedScore.map((qa) => qa.percentage)
       }
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

@@ -34,7 +34,7 @@ export interface RootState {
   }
 }
 
-export const store: StoreOptions<RootState> = createStore({
+export const store = createStore<RootState>({
   modules: {
     // auth: auth,
     // user: user,
