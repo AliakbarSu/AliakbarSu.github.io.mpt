@@ -1,12 +1,30 @@
 <template>
-  <div class="controls my-8">
-    <v-btn class="ml-3" @click="next" depressed color="primary"> Next </v-btn>
-    <v-btn class="ml-3" @click="skip" depressed color="warning"> Skip </v-btn>
-    <v-btn class="ml-3" @click="end" depressed color="error"> End </v-btn>
-  </div>
+  <span class="mt-5 isolate inline-flex rounded-md shadow-sm">
+    <button
+      @click="next"
+      type="button"
+      class="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+    >
+      Next
+    </button>
+    <button
+      @click="skip"
+      type="button"
+      class="relative -ml-px inline-flex items-center bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+    >
+      Skip
+    </button>
+    <button
+      @click="end"
+      type="button"
+      class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+    >
+      End
+    </button>
+  </span>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   methods: {
     next() {

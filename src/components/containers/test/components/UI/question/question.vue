@@ -1,20 +1,20 @@
-<template>
+<!-- <template>
   <div class="elevation-2 rounded-lg pa-2">
-    <p class="text-caption">Question Number: {{ question.number }}</p>
-    <p v-html="question.title" class="font-weight-regular">Loading...</p>
+    <p class="text-caption">Question Number: {{ question?.number }}</p>
+    <p v-html="question?.title" class="font-weight-regular"></p>
     <v-container class="d-flex flex-wrap justify-space-between">
       <v-hover
-        v-for="image in question.media"
+        v-for="image in question?.media"
         :key="image.url"
-        v-slot="{ hover }"
+        v-slot="{ isHovering }"
       >
         <v-img
           :class="{
             'mx-1': true,
-            'hover-image': hover,
+            'hover-image': isHovering,
             'mt-2': true,
-            'elevation-16': hover,
-            'elevation-2': !hover
+            'elevation-16': isHovering,
+            'elevation-2': !isHovering
           }"
           :aspect-ratio="16 / 8"
           @click="showImage(image.url)"
@@ -36,11 +36,34 @@
       </v-container>
     </v-overlay>
   </div>
+</template> -->
+
+<template>
+  <div class="bg-white px-6 py-16 lg:px-8">
+    <div class="mx-auto max-w-3xl text-base leading-7 text-gray-700">
+      <p class="text-base font-semibold leading-7 text-indigo-600">
+        Question Number: {{ question?.number }}
+      </p>
+
+      <p v-html="question?.title" class="mt-6 text-xl leading-8"></p>
+    </div>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
+type Question = {
+  number: number
+  title: string
+  media: { url: string }[]
+}
+import type { PropType } from 'vue'
+
 export default {
-  props: ['question'],
+  props: {
+    question: {
+      type: Object as PropType<Question>
+    }
+  },
   data() {
     return {
       imageOpen: false,
@@ -48,7 +71,7 @@ export default {
     }
   },
   methods: {
-    showImage(image) {
+    showImage(image: string) {
       this.imageOpen = true
       this.selectedImage = image
     },

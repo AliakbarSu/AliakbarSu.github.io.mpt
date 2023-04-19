@@ -12,6 +12,7 @@ import Confirmation from '@/components/containers/confirmation/index.vue'
 import Unsuccessful from '@/components/containers/unsuccessful/unsuccessful.vue'
 import Faqs from '@/components/containers/faqs/Faqs.vue'
 import { authGuard } from '@auth0/auth0-vue'
+import Test from '@/components/containers/test/test.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -69,19 +70,13 @@ const routes: RouteRecordRaw[] = [
     name: 'Products',
     beforeEnter: authGuard,
     component: Products
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    beforeEnter: authGuard,
+    component: Test
   }
-  // {
-  //   path: '/test',
-  //   name: 'Test',
-  //   // beforeEnter: authGuard,
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   // component: () =>
-  //   //   import(
-  //   //     /* webpackChunkName: "about" */ '../components/containers/test/test.vue'
-  //   //   )
-  // }
 ]
 
 const router = createRouter({

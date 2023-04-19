@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import Vuex, { createStore, type StoreOptions } from 'vuex'
 // import { auth } from './auth'
 // import { user } from './user'
 // import { test } from './test'
@@ -16,7 +16,25 @@ import { DummyTestHistory } from '@/dummyData/dashboard'
 import { DummyUser } from '@/dummyData/user'
 import { DummyTestResults } from '@/dummyData/testResults'
 
-export const store = createStore({
+export interface RootState {
+  token: string
+  userId: string
+  status: string
+  redirect: string
+  currentTest: string[]
+  testResult: Result
+  testHistory: string[]
+  testId: string
+  products: string[]
+  user: {
+    tests: string[]
+    email: string
+    name: string
+    avatar: string
+  }
+}
+
+export const store: StoreOptions<RootState> = createStore({
   modules: {
     // auth: auth,
     // user: user,
@@ -177,12 +195,14 @@ export const store = createStore({
         .catch((err) => console.log(err))
     },
     submitTest: ({ commit }, data) => {
-      const deconstructed_data = data.submitted_answers.map(({id, submitted_answer, startAt, endAt}: SubmittedAnswer) => ({
-        questionId: id,
-        submitted_answer: submitted_answer.id,
-        startAt: startAt,
-        endAt: endAt
-      }))
+      const deconstructed_data = data.submitted_answers.map(
+        ({ id, submitted_answer, startAt, endAt }: SubmittedAnswer) => ({
+          questionId: id,
+          submitted_answer: submitted_answer.id,
+          startAt: startAt,
+          endAt: endAt
+        })
+      )
       const dataToPost = {
         submitted_answers: deconstructed_data,
         test_start_time: data.testStartTime,

@@ -3,21 +3,21 @@
     <div class="test">
       <ProgressCircular v-if="loading" />
 
-      <Instructions @start="start" v-if="!hasTestStarted && !loading" />
-      <div class="content" v-else>
-        <div class="elevation-2 pa-2 py-4 rounded-lg my-7" v-if="!loading">
-          <!-- <span>Time Remaining: </span>
-          <span
-            >{{ timeRemained.h }} : {{ timeRemained.m }} :
-            {{ timeRemained.s }}</span
-          > -->
-          <TimeDisplay :time="timeRemained" />
-          <TimeProgressBar :timeElapsed="timeProgress" />
+      <Instructions @start="start" :open="!hasTestStarted && !loading" />
+      <div class="content" v-if="hasTestStarted && !loading">
+        <div class="overflow-hidden rounded-lg bg-white shadow">
+          <div class="px-4 py-5 sm:p-6" v-if="!loading">
+            <TimeDisplay :time="timeRemained" />
+            <TimeProgressBar :timeElapsed="timeProgress" />
+          </div>
         </div>
-        <div class="question" v-if="!loading">
-          <Question :question="question" />
-          <!-- <CircularTimer/> -->
-          <Options @select="selectAnswer" :options="question.options" />
+
+        <div class="mt-6 overflow-hidden rounded-lg bg-white shadow">
+          <div class="px-4 py-5 sm:p-6" v-if="!loading">
+            <Question :question="question" />
+            <!-- <CircularTimer/> -->
+            <Options @select="selectAnswer" :options="question.options" />
+          </div>
         </div>
         <QuestionControls
           @next="next"
@@ -30,34 +30,84 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 // import CircularTimer from '../../UI/circular-timer/circular-timer'
-import { questions } from '../../../dummyData'
+// import { questions } from '../../../dummyData'
 import Instructions from './components/instructions/instructions.vue'
 // import Circle8 from 'vue-loading-spinner/src/components/Circle8'
-import ProgressCircular from '../../UI/progress-circular/progressCircular.vue'
+import ProgressCircular from '@/components/UI/progress-circular/progressCircular.vue'
 import TimeProgressBar from './components/UI/time-progress-bar/timeProgressBar.vue'
 import Question from './components/UI/question/question.vue'
 import Options from './components/UI/options/options.vue'
 import QuestionControls from './components/UI/question-controls/questionControls.vue'
 import TimeDisplay from './components/UI/time-display/time-display.vue'
+import { defineComponent } from 'vue'
 
-export default {
+import { store } from '@/store/index'
+
+type Question = {
+  id: string
+  title: string
+  number: number
+  media: { url: string }[]
+  options: Option[]
+  startAt?: number
+  endAt?: number
+  submitted_answer?: Answer
+}
+
+interface Option {
+  id: string
+  text: string
+  alpha: string
+}
+
+type Answer = {
+  id: string
+}
+export default defineComponent({
   data() {
     return {
-      questions: [],
-      question: {},
-      submitted_questions: [],
-      skipped_questions: [],
-      submitted_answer: {},
+      questions: [
+        {
+          id: 'question1',
+          number: 1,
+          title: 'This is a very import question!',
+          media: [],
+          options: [
+            { id: 'option1', text: 'This answer is correct', alpha: 'a' },
+            { id: 'option2', text: 'This answer is correct', alpha: 'b' },
+            { id: 'option3', text: 'This answer is correct', alpha: 'c' },
+            { id: 'option4', text: 'This answer is correct', alpha: 'e' }
+          ]
+        },
+        {
+          id: 'question2',
+          number: 2,
+          title:
+            'What is the name of the biggest country in the world my population?',
+          media: [],
+          options: [
+            { id: 'option1', text: 'America', alpha: 'a' },
+            { id: 'option2', text: 'India', alpha: 'b' },
+            { id: 'option3', text: 'China', alpha: 'c' },
+            { id: 'option4', text: 'New Zealand', alpha: 'e' }
+          ]
+        }
+      ] as Question[],
+      question: {} as Question,
+      submitted_questions: [] as Question[],
+      skipped_questions: [] as Question[],
+      submitted_answer: {} as { id: string },
       testEndsIn: 0,
-      interval: null,
+      interval: 0,
       timeLimit: 1.26e7,
       timeRemained: { h: 0, m: 0, s: 0, mil: 0 },
       isTimeOver: false,
       hasTestStarted: false,
       loading: true,
-      testStartTime: 0
+      testStartTime: 0,
+      showExplanations: false
     }
   },
   components: {
@@ -71,12 +121,15 @@ export default {
     TimeDisplay
   },
   mounted() {
-    this.questions = questions
+    // this.questions = questions
+    // this.questions = []
     this.loading = false
-    this.questions = this.$store.getters.getCurrentTest.map((q, index) => ({
-      ...q,
-      number: index + 1
-    }))
+    // this.questions = this.$store.getters.getCurrentTest.map(
+    //   (q: Question, index: string) => ({
+    //     ...q,
+    //     number: index + 1
+    //   })
+    // )
     this.question = this.questions[0]
   },
   methods: {
@@ -105,21 +158,21 @@ export default {
         if (t < 0) {
           clearInterval(this.interval)
           this.isTimeOver = true
-          this.$swal
-            .fire('Time Over', 'Your time is over!', 'error')
-            .then(() => {
-              this.calculateResults()
-            })
+          // this.$swal
+          //   .fire('Time Over', 'Your time is over!', 'error')
+          //   .then(() => {
+          //     this.calculateResults()
+          //   })
         }
       }, 100)
     },
     next() {
       if (!this.submitted_answer.id) {
-        return this.$swal.fire(
-          'No Option Selected',
-          'Please select an option before pressing NEXT!',
-          'error'
-        )
+        // return this.$swal.fire(
+        //   'No Option Selected',
+        //   'Please select an option before pressing NEXT!',
+        //   'error'
+        // )
       }
       this.removeQuestion()
       const now = new Date().getTime()
@@ -145,7 +198,7 @@ export default {
     setNextQuestion() {
       const now = new Date().getTime()
       const currentIndex = this.questions.findIndex(
-        (q) => q.id == this.questions.id
+        (q) => q.id == this.question.id
       )
       this.question =
         currentIndex == this.questions.length - 1
@@ -168,7 +221,7 @@ export default {
       })
     },
     resetAnswers() {
-      this.submitted_answer = {}
+      this.submitted_answer = { id: '' }
       this.showExplanations = false
     },
     skip() {
@@ -184,23 +237,23 @@ export default {
       this.setNextQuestion()
     },
     endTest() {
-      this.$swal({
-        title: 'Are you sure?',
-        text: 'You will not be able to return to this test!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, end test!',
-        cancelButtonText: 'No, continue'
-      }).then(({ value }) => {
-        if (value) {
-          this.calculateResults()
-        }
-      })
+      // this.$swal({
+      //   title: 'Are you sure?',
+      //   text: 'You will not be able to return to this test!',
+      //   icon: 'warning',
+      //   showCancelButton: true,
+      //   confirmButtonText: 'Yes, end test!',
+      //   cancelButtonText: 'No, continue'
+      // }).then(({ value }) => {
+      //   if (value) {
+      //     this.calculateResults()
+      //   }
+      // })
     },
-    selectAnswer(answer) {
+    selectAnswer(answer: Answer) {
       this.submitted_answer = answer
     },
-    isSelected(answer) {
+    isSelected(answer: Answer) {
       return this.submitted_answer.id == answer.id
     }
   },
@@ -223,7 +276,7 @@ export default {
       return this.$store.getters.getTestId
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

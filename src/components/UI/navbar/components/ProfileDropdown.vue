@@ -48,7 +48,6 @@
 </template>
 
 <script lang="ts" setup>
-import { user } from '@/store/user'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth0 } from '@auth0/auth0-vue'

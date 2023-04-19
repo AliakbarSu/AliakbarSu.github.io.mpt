@@ -1,4 +1,4 @@
-const convertTimeToMinutes = (time: number) => {
+const convertTimeToMinutes = (time) => {
   const timeElapsed = time / 60000
   return (
     Math.round((timeElapsed + Number.EPSILON) * Math.pow(10, 2)) /
