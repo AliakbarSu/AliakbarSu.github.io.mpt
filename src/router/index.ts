@@ -13,8 +13,14 @@ import Unsuccessful from '@/components/containers/unsuccessful/unsuccessful.vue'
 import Faqs from '@/components/containers/faqs/Faqs.vue'
 import { authGuard } from '@auth0/auth0-vue'
 import Test from '@/components/containers/test/test.vue'
+import Plans from '@/components/containers/plans/Plans.vue'
 
 const routes: RouteRecordRaw[] = [
+  {
+    path: '/plans',
+    name: 'Plans',
+    component: Plans
+  },
   {
     path: '/dashboard',
     name: 'Dashboard',
