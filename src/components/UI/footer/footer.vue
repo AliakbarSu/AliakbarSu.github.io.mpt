@@ -139,7 +139,7 @@ const items = {
     { name: 'AMC', href: '#' }
   ],
   company: [
-    { name: 'Who we are', href: '#' },
+    { name: 'Who we are', href: '/about' },
     { name: 'Terms & Conditions', href: '#' },
     { name: 'Privacy', href: '#' }
   ],

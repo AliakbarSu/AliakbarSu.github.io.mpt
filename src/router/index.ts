@@ -14,8 +14,14 @@ import Faqs from '@/components/containers/faqs/Faqs.vue'
 import { authGuard } from '@auth0/auth0-vue'
 import Test from '@/components/containers/test/test.vue'
 import Plans from '@/components/containers/plans/Plans.vue'
+import About from '@/components/containers/about/About.vue'
 
 const routes: RouteRecordRaw[] = [
+  {
+    path: '/about',
+    name: 'About',
+    component: About
+  },
   {
     path: '/plans',
     name: 'Plans',

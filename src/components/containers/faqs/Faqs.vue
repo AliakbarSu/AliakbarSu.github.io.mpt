@@ -45,7 +45,6 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { MinusSmallIcon, PlusSmallIcon } from '@heroicons/vue/24/outline'
 import { defineComponent } from 'vue'
 const HYGRAPH_ENDPOINT = `https://api-ap-southeast-2.hygraph.com/v2/clgn1doxk5et901ug6uub1w1u/master`
-import axios from 'axios'
 import { request } from 'graphql-request'
 import { getFaqs } from './queries'
 
