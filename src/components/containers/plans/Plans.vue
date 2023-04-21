@@ -53,7 +53,7 @@
             </p>
             <p class="mt-6 flex items-baseline gap-x-1">
               <span class="text-4xl font-bold tracking-tight text-gray-900">{{
-                tier.priceMonthly
+                tier.price
               }}</span>
               <span class="text-sm font-semibold leading-6 text-gray-600">
                 USD /month</span
@@ -77,7 +77,6 @@
             </ul>
           </div>
           <a
-            :href="tier.href"
             :aria-describedby="tier.id"
             :class="[
               tier.mostPopular
@@ -93,51 +92,29 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+import type { Plan } from '@/types/plans'
 import { CheckIcon } from '@heroicons/vue/20/solid'
+import { defineComponent } from 'vue'
+import { API_ENDPOINT } from '../../../config'
+import axios from 'axios'
 
-const tiers = [
-  {
-    name: 'Basic Plan',
-    id: 'tier-freelancer',
-    href: '#',
-    priceMonthly: '$50',
-    description: 'The essentials to provide your best work for clients.',
-    features: [
-      'Monthly fee: $50',
-      'Access to 5 tests per month',
-      'Detailed feedback report after each test',
-      'Limited access to study materials and resources'
-    ],
-    mostPopular: false
+export default defineComponent<{ tiers: Plan[] }>({
+  components: {
+    CheckIcon
   },
-  {
-    name: 'Premium Plan',
-    id: 'tier-startup',
-    href: '#',
-    priceMonthly: '$75',
-    description: 'A plan that scales with your rapidly growing business.',
-    features: [
-      'Monthly fee: $75',
-      'Access to 10 tests per month',
-      'Detailed feedback report after each test',
-      'Full access to study materials and resources'
-    ],
-    mostPopular: true
+  data() {
+    return {
+      tiers: []
+    }
   },
-  {
-    name: 'Ultimate Plan',
-    id: 'tier-enterprise',
-    href: '#',
-    priceMonthly: '$100',
-    description: 'Dedicated support and infrastructure for your company.',
-    features: [
-      'Monthly fee: $100',
-      'Unlimited tests per month',
-      'Detailed feedback report after each test',
-      'Full access to study materials and resources'
-    ],
-    mostPopular: false
+  async created() {
+    const getPlans = async (): Promise<Plan[]> => {
+      const result = await axios.get(`${API_ENDPOINT}/plans`)
+      return JSON.parse(result.data.body)
+    }
+    this.tiers = await getPlans()
+    console.log(this.tiers)
   }
-]
+})
 </script>
