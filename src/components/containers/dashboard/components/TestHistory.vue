@@ -4,16 +4,16 @@
       class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:h-40 sm:w-40"
     >
       <img
-        :src="test.image[0]"
+        :src="test?.thumbnail[0]?.url"
         class="h-full w-full object-cover object-center"
       />
     </div>
     <div class="ml-6 flex-1 text-sm">
       <div class="font-medium text-gray-900 sm:flex sm:justify-between">
-        <h5>{{ test.name }}</h5>
+        <h5>{{ test?.name }}</h5>
       </div>
       <p class="hidden text-gray-500 sm:mt-2 sm:block">
-        {{ test.description }}
+        {{ test?.description }}
       </p>
     </div>
   </div>
@@ -23,7 +23,7 @@
       <CheckCircleIcon class="h-5 w-5 text-green-500" aria-hidden="true" />
       <p class="ml-2 text-sm font-medium text-gray-500">
         Set on
-        <time :datetime="test.timestamp">{{ test.timestamp }}</time>
+        <time :datetime="testTimestamp">{{ testTimestamp }}</time>
       </p>
     </div>
 
@@ -45,9 +45,20 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisVerticalIcon } from '@heroicons/vue/24/outline'
 import { CheckCircleIcon } from '@heroicons/vue/20/solid'
+import type { Test, TestPerformanceResult } from '@/types/test'
+import type { PropType } from 'vue'
 
 export default {
-  props: ['test'],
+  props: {
+    test: {
+      type: Object as PropType<Test & TestPerformanceResult>
+    }
+  },
+  computed: {
+    testTimestamp() {
+      return new Date(this.test?.timestamp as number).toDateString()
+    }
+  },
   components: {
     Menu,
     MenuButton,

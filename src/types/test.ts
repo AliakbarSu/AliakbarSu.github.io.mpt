@@ -7,8 +7,9 @@ export enum TestResult {
 
 export interface Test {
   id: string
+  name: string
   questions: string[]
-  image: string[]
+  thumbnail: { url: string }[]
   level: number
   description: string
 }
@@ -48,4 +49,19 @@ export interface Result {
     incorrect: number
     correct: number
   }[]
+}
+
+export enum ResultEnum {
+  pass = 'pass',
+  fail = 'fail'
+}
+
+export interface TestPerformanceResult {
+  test_id: string
+  averageTimeTaken: number
+  averageTimeTakenPerField: { [key: string]: number }
+  totalPoints: number
+  totalPointsPerField: { [key: string]: number }
+  result: ResultEnum
+  timestamp: number
 }

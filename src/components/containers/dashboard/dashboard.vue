@@ -220,8 +220,8 @@ export default {
                 </li>
                 <li
                   v-if="currentView === 'history'"
-                  v-for="test in testsHistory"
-                  :key="test.id"
+                  v-for="test in previousTests"
+                  :key="(test as TestType).id"
                   class="p-4 sm:p-6"
                 >
                   <TestHistory :test="test" />
@@ -242,18 +242,52 @@ import { CheckCircleIcon } from '@heroicons/vue/20/solid'
 import { DummyTestHistory, DummyTests } from '@/dummyData/test'
 import Test from './components/Test.vue'
 import TestHistory from './components/TestHistory.vue'
+import axios from 'axios'
+import { API_ENDPOINT } from '@/config'
+import type { TestPerformanceResult, Test as TestType } from '@/types/test'
+import type { UserAppMetadata } from '@/types/user'
 
 export default {
+  created() {
+    this.fetchTests()
+    this.fetchTestHistory()
+  },
   data() {
     return {
       currentView: 'tests',
-      tests: DummyTests,
-      testsHistory: DummyTestHistory
+      tests: [] as TestType[],
+      testsHistoryData: [] as UserAppMetadata['test_history']
     }
   },
   methods: {
     setCurrentView(view: 'tests' | 'history') {
       this.currentView = view
+    },
+    async fetchTests() {
+      const response = await axios.get(`${API_ENDPOINT}/tests`)
+      this.tests = JSON.parse(response.data.body)
+    },
+    async fetchTestHistory() {
+      const response = await axios.get(`${API_ENDPOINT}/tests/history`)
+      this.testsHistoryData = JSON.parse(response.data.body)
+    }
+  },
+  computed: {
+    previousTests() {
+      const previousTestIds = this.testsHistoryData.map(
+        ({ test_id }) => test_id
+      )
+      return this.tests
+        .filter((test) => previousTestIds.includes(test.id))
+        .map((test) => {
+          const testHistory = this.testsHistoryData.find(
+            ({ test_id }) => test_id === test.id
+          )
+          return {
+            ...test,
+            ...testHistory
+          }
+        }) as unknown
     }
   },
   components: {
