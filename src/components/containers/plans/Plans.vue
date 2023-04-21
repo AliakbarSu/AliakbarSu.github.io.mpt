@@ -77,6 +77,7 @@
             </ul>
           </div>
           <a
+            @click="subscribeToPlan(tier.id)"
             :aria-describedby="tier.id"
             :class="[
               tier.mostPopular
@@ -99,13 +100,13 @@ import { defineComponent } from 'vue'
 import { API_ENDPOINT } from '../../../config'
 import axios from 'axios'
 
-export default defineComponent<{ tiers: Plan[] }>({
+export default defineComponent({
   components: {
     CheckIcon
   },
   data() {
     return {
-      tiers: []
+      tiers: [] as Plan[]
     }
   },
   async created() {
@@ -114,7 +115,14 @@ export default defineComponent<{ tiers: Plan[] }>({
       return JSON.parse(result.data.body)
     }
     this.tiers = await getPlans()
-    console.log(this.tiers)
+  },
+  methods: {
+    async subscribeToPlan(planId: string) {
+      const checkoutUrl = await axios.get(
+        `${API_ENDPOINT}/plans/${planId}/subscribe`
+      )
+      window.location.replace(checkoutUrl.data.body)
+    }
   }
 })
 </script>
