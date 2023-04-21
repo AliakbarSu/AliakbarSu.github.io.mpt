@@ -40,61 +40,37 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { MinusSmallIcon, PlusSmallIcon } from '@heroicons/vue/24/outline'
+import { defineComponent } from 'vue'
+const HYGRAPH_ENDPOINT = `https://api-ap-southeast-2.hygraph.com/v2/clgn1doxk5et901ug6uub1w1u/master`
+import axios from 'axios'
+import { request } from 'graphql-request'
+import { getFaqs } from './queries'
 
-const faqs = [
-  {
-    question: "What's the best thing about Switzerland?",
-    answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat."
+export default defineComponent<{
+  faqs: { question: string; answer: string }[]
+}>({
+  name: 'Faqs',
+  data() {
+    return {
+      faqs: []
+    }
   },
-  {
-    question: "What's the difference between a crocodile and an alligator?",
-    answer:
-      "One you'll see in a while and the other you'll see later. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat."
+  components: {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    MinusSmallIcon,
+    PlusSmallIcon
   },
-  {
-    question: 'What do you call a fake noodle?',
-    answer:
-      'An impasta. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.'
-  },
-  {
-    question: "What's the best way to watch a fly fishing tournament?",
-    answer:
-      'Live stream. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.'
-  },
-  {
-    question: 'Why did the scarecrow win an award?',
-    answer:
-      'Because he was outstanding in his field. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.'
-  },
-  {
-    question: 'Why did the tomato turn red?',
-    answer:
-      'Because it saw the salad dressing. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.'
-  },
-  {
-    question: 'What do you call a man with no arms and no legs in the water?',
-    answer:
-      'Bob. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.'
-  },
-  {
-    question:
-      "What's the difference between a poorly dressed man on a trampoline and a well-dressed man on a trampoline?",
-    answer:
-      'Attire. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.'
-  },
-  {
-    question: 'Why did the coffee file a police report?',
-    answer:
-      'It got mugged. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.'
-  },
-  {
-    question: 'Why did the chicken go to the séance?',
-    answer:
-      'To talk to the other side. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.'
+  async created() {
+    const getFAQs = async () => {
+      const data = request(HYGRAPH_ENDPOINT, getFaqs) as Promise<{ faqses: [] }>
+      return (await data).faqses
+    }
+    this.faqs = await getFAQs()
   }
-]
+})
 </script>
