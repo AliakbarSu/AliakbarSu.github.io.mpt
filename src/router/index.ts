@@ -60,9 +60,9 @@ const routes: RouteRecordRaw[] = [
     component: Account
   },
   {
-    path: '/test-results',
-    name: 'Results Summary',
-    beforeEnter: authGuard,
+    path: '/results/:id',
+    name: 'Test results summary',
+    // beforeEnter: authGuard,
     component: Results
   },
   {

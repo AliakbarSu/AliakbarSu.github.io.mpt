@@ -97,7 +97,6 @@
 import type { Plan } from '@/types/plans'
 import { CheckIcon } from '@heroicons/vue/20/solid'
 import { defineComponent } from 'vue'
-import { API_ENDPOINT } from '../../../config'
 import axios from 'axios'
 
 export default defineComponent({
@@ -111,7 +110,9 @@ export default defineComponent({
   },
   async created() {
     const getPlans = async (): Promise<Plan[]> => {
-      const result = await axios.get(`${API_ENDPOINT}/plans`)
+      const result = await axios.get(
+        `${import.meta.env.VITE_API_ENDPOINT}/plans`
+      )
       return JSON.parse(result.data.body)
     }
     this.tiers = await getPlans()
@@ -119,7 +120,7 @@ export default defineComponent({
   methods: {
     async subscribeToPlan(planId: string) {
       const checkoutUrl = await axios.get(
-        `${API_ENDPOINT}/plans/${planId}/subscribe`
+        `${import.meta.env.VITE_API_ENDPOINT}/plans/${planId}/subscribe`
       )
       window.location.replace(checkoutUrl.data.body)
     }

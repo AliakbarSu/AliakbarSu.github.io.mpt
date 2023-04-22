@@ -1,203 +1,197 @@
 <template>
-  <v-container class="pt-12">
-    <v-alert v-if="passed" outlined type="success" prominent>
-      Congratulations you have passed the test.
-    </v-alert>
-    <v-alert v-if="!passed" outlined type="warning" prominent>
-      We are sorry to let you know that you failed the test. Try again later.
-    </v-alert>
+  <div class="min-h-full bg-gray-100">
+    <!-- <div class="p-4">
+      <Banner :pass="pass" />
+    </div> -->
+    <div v-if="testHistory.stats" class="py-10">
+      <header>
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h1
+            class="text-3xl font-bold leading-tight tracking-tight text-gray-900"
+          >
+            Test Results
+          </h1>
+        </div>
+      </header>
+      <main>
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div>
+            <!-- <h3 class="text-base font-semibold leading-6 text-gray-900">
+              Last 30 days
+            </h3> -->
+            <dl
+              class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-3 md:divide-x md:divide-y-0"
+            >
+              <div
+                v-for="item in testStats"
+                :key="item.name"
+                class="px-4 py-5 sm:p-6"
+              >
+                <dt class="text-base font-normal text-gray-900">
+                  {{ item.name }}
+                </dt>
+                <dd
+                  class="mt-1 flex items-baseline justify-between md:block lg:flex"
+                >
+                  <div
+                    class="flex items-baseline text-2xl font-semibold text-indigo-600"
+                  >
+                    {{ item.stat }}
+                    <span class="ml-2 text-sm font-medium text-gray-500"
+                      >from {{ item.previousStat }}</span
+                    >
+                  </div>
 
-    <v-container class="mt-5 elevation-1">
-      <!-- <p class="text-body1">Score Breakdown</p> -->
-      <v-row dense>
-        <v-col class="my-1" cols="12" sm="4">
-          <v-container class="elevation-1 rounded-sm">
-            <v-row dense>
-              <v-col cols="12">
-                <p class="text-caption mb-0 text-grey lighten-2">
-                  Overall Score
-                </p>
-              </v-col>
-              <v-col cols="12">
-                <span class="text-h6 text-grey darken-1">{{
-                  overallScore
-                }}</span>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-col>
-        <v-col class="my-1" cols="12" sm="4">
-          <v-container class="elevation-1 rounded-sm">
-            <v-row dense>
-              <v-col cols="12">
-                <p class="text-caption mb-0 text-grey lighten-2">
-                  Correct Questions
-                </p>
-              </v-col>
-              <v-col cols="12">
-                <span class="text-h6 text-grey darken-1">{{ correct }}</span>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-col>
-        <v-col class="my-1" cols="12" sm="4">
-          <v-container class="elevation-1 rounded-sm">
-            <v-row dense>
-              <v-col cols="12">
-                <p class="text-caption mb-0 text-grey lighten-2">
-                  Incorrect Questions
-                </p>
-              </v-col>
-              <v-col cols="12">
-                <span class="text-h6 text-grey darken-1">{{ incorrect }}</span>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <v-container class="elevation-1 mt-7 rounded-sm">
-      <p>Score Graphs</p>
-      <v-container>
-        <v-row dense>
-          <v-col cols="12" sm="6">
-            <v-container class="fill-height">
-              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
-                <v-col cols="12" class="d-flex justify-center">
-                  <p class="text-caption">
-                    Your Scores Percentage at Different Categories
-                  </p>
-                </v-col>
-                <v-col cols="12" class="d-flex justify-center">
-                  <Pie
-                    :data="categoriesScores.datasets"
-                    :labels="categoriesScores.labels"
-                  />
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-container class="fill-height">
-              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
-                <v-col cols="12" class="d-flex justify-center">
-                  <p class="text-caption">Accuracy Accross Questions</p>
-                </v-col>
-                <v-col cols="12" class="d-flex justify-center">
-                  <Line-graph
-                    :data="accuracyOverTime.datasets"
-                    :labels="accuracyOverTime.labels"
-                  />
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-        </v-row>
-      </v-container>
-      <v-container>
-        <v-row dense>
-          <v-col cols="12" sm="6">
-            <v-container class="fill-height">
-              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
-                <v-col cols="12" class="d-flex justify-center">
-                  <p class="text-caption">
-                    Average Time Taken at Each Category
-                  </p>
-                </v-col>
-                <v-col cols="12" class="d-flex justify-center">
-                  <Pie
-                    :data="averageCategoryTiming.datasets"
-                    :labels="averageCategoryTiming.labels"
-                    :options="averageCategoryTiming.options"
-                  />
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-container class="fill-height">
-              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
-                <v-col cols="12" class="d-flex justify-center">
-                  <p class="text-caption">
-                    Timing Performance Accross Questions
-                  </p>
-                </v-col>
-                <v-col cols="12" class="d-flex justify-center">
-                  <Line-graph
-                    :data="speedOverTime.datasets"
-                    :labels="speedOverTime.labels"
-                  />
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-        </v-row>
-      </v-container>
-      <v-container>
-        <v-row dense>
-          <v-col cols="12" sm="6">
-            <v-container class="fill-height">
-              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
-                <v-col cols="12" class="d-flex justify-center">
-                  <p class="text-caption">Correct Answers</p>
-                </v-col>
-
-                <v-col cols="12" class="d-flex justify-center">
-                  <Pie
-                    :data="sectionsCorrectScores.datasets"
-                    :labels="sectionsCorrectScores.labels"
-                    :options="sectionsIncorrectScores.options"
-                  />
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-
-          <v-col cols="12" sm="6">
-            <v-container class="fill-height">
-              <v-row class="elevation-2 pa-2 mt-2 rounded-lg fill-height">
-                <v-col cols="12" class="d-flex justify-center">
-                  <p class="text-caption">Incorrect Answers</p>
-                </v-col>
-
-                <v-col cols="12" class="d-flex justify-center">
-                  <Pie
-                    :data="sectionsIncorrectScores.datasets"
-                    :labels="sectionsIncorrectScores.labels"
-                    :options="sectionsIncorrectScores.options"
-                  />
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-container>
-
-    <v-container class="elevation-2 mt-7 mb-7 rounded-sm">
-      <v-btn class="ma-2" color="success" @click="navigateToDashboard"
-        >Go to Dashboard
-        <v-icon right dark>mdi-view-dashboard</v-icon>
-      </v-btn>
-      <v-btn color="blue-grey" @click="printResults" class="ma-2 white--text">
-        Print results
-        <v-icon right dark> mdi-cloud-print </v-icon>
-      </v-btn>
-    </v-container>
-  </v-container>
+                  <div
+                    :class="[
+                      item.changeType === 'increase'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800',
+                      'inline-flex items-baseline rounded-full px-2.5 py-0.5 text-sm font-medium md:mt-2 lg:mt-0'
+                    ]"
+                  >
+                    <ArrowUpIcon
+                      v-if="item.changeType === 'increase'"
+                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-green-500"
+                      aria-hidden="true"
+                    />
+                    <ArrowDownIcon
+                      v-else
+                      class="-ml-1 mr-0.5 h-5 w-5 flex-shrink-0 self-center text-red-500"
+                      aria-hidden="true"
+                    />
+                    <span class="sr-only">
+                      {{
+                        item.changeType === 'increase'
+                          ? 'Increased'
+                          : 'Decreased'
+                      }}
+                      by
+                    </span>
+                    {{ item.change }}
+                  </div>
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <dl
+            class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0"
+          >
+            <div class="px-4 py-5 sm:p-6">
+              <dt class="text-base font-normal text-gray-900">
+                Subject-wise Percentage
+              </dt>
+              <dd
+                class="mt-1 flex h-full items-center justify-center md:block lg:flex"
+              >
+                <Pie
+                  :data="correctResponseRatePerField.datasets"
+                  :labels="correctResponseRatePerField.labels"
+                />
+              </dd>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+              <dt class="text-base font-normal text-gray-900">
+                Overall Question Accuracy
+              </dt>
+              <dd
+                class="mt-1 h-full items-center flex justify-center md:block lg:flex"
+              >
+                <Line-graph
+                  :data="accuracyOverTime.datasets"
+                  :labels="accuracyOverTime.labels"
+                />
+              </dd>
+            </div>
+          </dl>
+          <dl
+            class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0"
+          >
+            <div class="px-4 py-5 sm:p-6">
+              <dt class="text-base font-normal text-gray-900">
+                Overall Time Performance
+              </dt>
+              <dd
+                class="mt-1 flex h-full items-center justify-center md:block lg:flex"
+              >
+                <Line-graph
+                  :data="speedOverTime.datasets"
+                  :labels="speedOverTime.labels"
+                />
+              </dd>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+              <dt class="text-base font-normal text-gray-900">
+                Mean Subject Time
+              </dt>
+              <dd
+                class="mt-1 flex h-full items-center justify-center md:block lg:flex"
+              >
+                <Pie
+                  :data="averageCategoryTiming.datasets"
+                  :labels="averageCategoryTiming.labels"
+                  :options="averageCategoryTiming.options"
+                />
+              </dd>
+            </div>
+          </dl>
+          <dl
+            class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-2 md:divide-x md:divide-y-0"
+          >
+            <div class="px-4 py-5 sm:p-6">
+              <dt class="text-base font-normal text-gray-900">
+                Incorrect Response Count
+              </dt>
+              <dd
+                class="mt-1 flex h-full items-center justify-center md:block lg:flex"
+              >
+                <Pie
+                  :data="incorrectResponseCountPerSubject.datasets"
+                  :labels="incorrectResponseCountPerSubject.labels"
+                  :options="correctResponseCountPerSubject.options"
+                />
+              </dd>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+              <dt class="text-base font-normal text-gray-900">
+                Correct Response Count
+              </dt>
+              <dd
+                class="mt-1 flex h-full items-center justify-center md:block lg:flex"
+              >
+                <Pie
+                  :data="correctResponseCountPerSubject.datasets"
+                  :labels="correctResponseCountPerSubject.labels"
+                  :options="correctResponseCountPerSubject.options"
+                />
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </main>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import Pie from './components/pie/pie.vue'
 import Bar from './components/bar/bar.vue'
 import Line from './components/line/line.vue'
-import type { Result } from '@/types/test'
+import Banner from './components/banner/banner.vue'
 import { defineComponent } from 'vue'
+import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/vue/20/solid'
+import axios from 'axios'
+import type { UserAppMetadata } from '@/types/user'
+import type { Stats } from '@/types/test'
 
 export default defineComponent({
+  created() {
+    this.fetchTestHistory()
+  },
   data() {
     return {
+      testHistory: {} as UserAppMetadata['test_history'][0],
+      previous_tests: [] as UserAppMetadata['test_history'],
       options: {
         scales: {
           yAxes: [
@@ -214,7 +208,10 @@ export default defineComponent({
   components: {
     Bar,
     Pie,
-    'Line-graph': Line
+    'Line-graph': Line,
+    ArrowDownIcon,
+    ArrowUpIcon,
+    Banner
   },
   methods: {
     navigateToDashboard() {
@@ -222,47 +219,118 @@ export default defineComponent({
     },
     printResults() {
       window.print()
+    },
+    async fetchTestHistory() {
+      const testId = this.$route.params.id || ''
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_ENDPOINT}/tests/history`
+      )
+      const testHistoryArray = JSON.parse(response.data.body)
+      this.previous_tests = testHistoryArray
+      this.testHistory = (
+        testHistoryArray as unknown as UserAppMetadata['test_history']
+      ).find(
+        ({ test_id }: any) => test_id === testId
+      ) as UserAppMetadata['test_history'][0]
+    },
+    calculateChangeRate(key: keyof Stats) {
+      const sortedTestHistory = this.previous_tests.sort(
+        (a, b) => Number(a.timestamp) - Number(b.timestamp)
+      )
+      const currentHistoryIndex = sortedTestHistory.findIndex(
+        ({ test_id }) => test_id === this.testHistory.test_id
+      )
+      const previousTest = sortedTestHistory[currentHistoryIndex + 1]
+      if (!previousTest) return 0
+      return (
+        Number(this.testHistory.stats[key]) - Number(previousTest.stats[key])
+      )
+    },
+    calculateChangeType(key: keyof Stats) {
+      // if (this.calculateChangeRate(key) === 0) return 'same'
+      return this.calculateChangeRate(key) > 0 ? 'increase' : 'decrease'
     }
   },
   computed: {
-    passed() {
-      return (this as any).overallScore >= 250
+    pass() {
+      return this.testHistory.result === 'pass'
     },
-    sectionsCorrectScores() {
-      return {
-        labels: (
-          this.$store.getters.getTestResult as Result
-        ).categoryBasedScore.map((section) => section.category),
-        datasets: (
-          this.$store.getters.getTestResult as Result
-        ).categoryBasedScore.map((section) => section.correct)
-      }
+    testStats() {
+      if (!this.testHistory?.stats) return []
+      return [
+        {
+          name: 'Total Points',
+          stat: this.testHistory.stats.totalPoints,
+          previousStat: this.testHistory.stats.totalPoints,
+          change: this.calculateChangeRate('totalPoints'),
+          changeType: this.calculateChangeType('totalPoints')
+        },
+        {
+          name: 'Average Time',
+          stat: this.testHistory.stats.averageTimeTaken,
+          previousStat: this.testHistory.stats.averageTimeTaken,
+          change: this.calculateChangeRate('averageTimeTaken'),
+          changeType: this.calculateChangeType('averageTimeTaken')
+        },
+        {
+          name: 'Average Time',
+          stat: this.testHistory.stats.averageTimeTaken,
+          previousStat: this.testHistory.stats.averageTimeTaken,
+          change: '4.05%',
+          changeType: 'increase'
+        }
+      ]
     },
-    sectionsIncorrectScores() {
+    correctResponseCountPerSubject() {
+      const labels = Object.keys(
+        this.testHistory.stats.correctResponseCountPerField
+      )
+      const values = labels.map(
+        (key) => this.testHistory.stats.correctResponseCountPerField[key]
+      )
       return {
-        labels: (
-          this.$store.getters.getTestResult as Result
-        ).categoryBasedScore.map((section) => section.category),
-        datasets: (
-          this.$store.getters.getTestResult as Result
-        ).categoryBasedScore.map((section) => section.incorrect),
+        labels: labels,
+        datasets: values,
         options: {
           dataLabels: {
             formatter: function (val: any, opts: any) {
-              return opts.w.config.series[opts.seriesIndex] + ' Questions'
+              return opts.w.config.series[opts.seriesIndex]
             }
           }
         }
       }
     },
-    averageCategoryTiming() {
+    correctResponseRatePerSubject() {
+      const labels = Object.keys(
+        this.testHistory.stats.correctResponseRatePerField
+      )
       return {
-        labels: (
-          this.$store.getters.getTestResult as Result
-        ).categoryBasedScore.map((section) => section.category),
-        datasets: (
-          this.$store.getters.getTestResult as Result
-        ).categoryBasedScore.map((section) => section.averageAnsweringTime),
+        labels,
+        datasets: labels.map(
+          (key) => this.testHistory.stats.correctResponseRatePerField[key]
+        )
+      }
+    },
+    incorrectResponseCountPerSubject() {
+      const labels = Object.keys(
+        this.testHistory.stats.incorrectResponseCountPerField
+      )
+      return {
+        labels,
+        datasets: labels.map(
+          (key) => this.testHistory.stats.incorrectResponseCountPerField[key]
+        )
+      }
+    },
+    averageCategoryTiming() {
+      const labels = Object.keys(
+        this.testHistory.stats.averageTimeTakenPerField
+      )
+      return {
+        labels,
+        datasets: labels.map(
+          (key) => this.testHistory.stats.averageTimeTakenPerField[key]
+        ),
         options: {
           dataLabels: {
             formatter: function (val: any, opts: any) {
@@ -272,171 +340,46 @@ export default defineComponent({
         }
       }
     },
-    overallScore() {
-      return this.$store.getters.getTestResult.overallScore.score
-    },
-    correct() {
-      return this.$store.getters.getTestResult.overallScore.correct
-    },
-    incorrect() {
-      return this.$store.getters.getTestResult.overallScore.incorrect
-    },
     accuracyOverTime() {
-      ;(this.$store.getters.getTestResult as Result).accuracy.map(
-        (qa) => qa.time
-      )
+      const labels = Object.keys(
+        this.testHistory.stats.correctAnswersByMinuteInterval
+      ).map((key) => {
+        return (Number(key) / 600000).toFixed(2) + ' Mins'
+      })
+      const values = Object.keys(
+        this.testHistory.stats.correctAnswersByMinuteInterval
+      ).map((key) => {
+        return this.testHistory.stats.correctAnswersByMinuteInterval[key]
+      })
       return {
-        labels: (this.$store.getters.getTestResult as Result).accuracy.map(
-          (qa) => qa.time + ' Mins'
-        ),
-        datasets: (this.$store.getters.getTestResult as Result).accuracy.map(
-          (qa) => qa.count
-        )
+        labels,
+        datasets: values
       }
     },
     speedOverTime() {
+      const labels = Object.keys(
+        this.testHistory.stats.speedByMinuteInterval
+      ).map((key) => {
+        return (Number(key) / 600000).toFixed(2) + ' Mins'
+      })
       return {
-        labels: (this.$store.getters.getTestResult as Result).speed.map(
-          (qa) => qa.time + ' Mins'
-        ),
-        datasets: (this.$store.getters.getTestResult as Result).speed.map(
-          (qa) => qa.answeredIn
+        labels,
+        datasets: Object.keys(this.testHistory.stats.speedByMinuteInterval).map(
+          (key) => Number(this.testHistory.stats.speedByMinuteInterval[key])
         )
       }
     },
-    categoriesScores() {
+    correctResponseRatePerField() {
+      const labels = Object.keys(
+        this.testHistory.stats.correctResponseRatePerField
+      )
       return {
-        labels: (
-          this.$store.getters.getTestResult as Result
-        ).categoryBasedScore.map((qa) => qa.category),
-        datasets: (
-          this.$store.getters.getTestResult as Result
-        ).categoryBasedScore.map((qa) => qa.percentage)
+        labels,
+        datasets: labels.map(
+          (key) => this.testHistory.stats.correctResponseRatePerField[key]
+        )
       }
     }
   }
 })
 </script>
-
-<style lang="scss" scoped>
-.equal-height {
-  height: 100%;
-}
-
-.content {
-  padding: 12px;
-  @media (min-width: 1200px) {
-    width: 1200px;
-    margin: auto;
-  }
-  font-family: 'Roboto', sans-serif;
-}
-
-.alert {
-  background: #96e496;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  padding: 8px 0;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-.alert--red {
-  background: #ea6464;
-}
-
-.alert__text {
-  color: white;
-  padding: 7px;
-  font-size: 1em;
-  margin: 0;
-}
-
-.results {
-  border: 1px solid #ececec;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  padding: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-.results__result {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.result__title {
-  margin-right: 20px;
-  padding: 15px;
-  border-radius: 5px;
-  color: white;
-  width: 200px;
-  text-align: center;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-.result__score {
-  font-size: 2em;
-  font-weight: bold;
-}
-
-.result__title--green {
-  background: #53ab53;
-}
-
-.result__title--red {
-  background: #eb6463;
-}
-
-.result__title--orange {
-  background: #f9ae19;
-}
-
-.sections__wrapper {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.sections {
-  width: 48%;
-  // background: #efefef;
-  border-radius: 5px;
-  padding: 12px;
-  display: flex;
-  box-sizing: border-box;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.graph__title {
-  width: 100%;
-  text-align: center;
-}
-
-.actions {
-  padding: 12px;
-  margin-top: 12px;
-}
-
-.actions__buttons {
-  padding: 12px;
-  margin-right: 20px;
-  width: 150px;
-  text-align: center;
-  background: #5cbf5c;
-  border: 1px solid #5cbf5c;
-  color: white;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  &:hover {
-    cursor: pointer;
-    transition: 0.3s;
-    color: #5cbf5c;
-    background: white;
-  }
-}
-</style>

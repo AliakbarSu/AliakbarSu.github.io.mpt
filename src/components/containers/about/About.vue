@@ -23,7 +23,6 @@ import {
   LockClosedIcon,
   ServerIcon
 } from '@heroicons/vue/20/solid'
-const HYGRAPH_ENDPOINT = `https://api-ap-southeast-2.hygraph.com/v2/clgn1doxk5et901ug6uub1w1u/master`
 import { request } from 'graphql-request'
 import { getAbout } from './queries'
 import { defineComponent } from 'vue'
@@ -36,7 +35,10 @@ export default defineComponent<{ about: { heading: string; content: string } }>(
     },
     async created() {
       const getAboutPageContent = async () => {
-        const data = request(HYGRAPH_ENDPOINT, getAbout) as Promise<{
+        const data = request(
+          import.meta.env.VITE_HYGRAPH_ENDPOINT,
+          getAbout
+        ) as Promise<{
           about: { heading: string; content: string }
         }>
         return (await data).about

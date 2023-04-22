@@ -32,7 +32,7 @@
     >
       <div class="flex flex-1 justify-center">
         <a
-          href="#"
+          :href="`results/${test?.id}`"
           class="whitespace-nowrap text-indigo-600 hover:text-indigo-500"
           >View Results</a
         >

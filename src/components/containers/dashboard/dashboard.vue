@@ -239,12 +239,10 @@ export default {
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisVerticalIcon } from '@heroicons/vue/24/outline'
 import { CheckCircleIcon } from '@heroicons/vue/20/solid'
-import { DummyTestHistory, DummyTests } from '@/dummyData/test'
 import Test from './components/Test.vue'
 import TestHistory from './components/TestHistory.vue'
 import axios from 'axios'
-import { API_ENDPOINT } from '@/config'
-import type { TestPerformanceResult, Test as TestType } from '@/types/test'
+import type { Test as TestType } from '@/types/test'
 import type { UserAppMetadata } from '@/types/user'
 
 export default {
@@ -264,30 +262,26 @@ export default {
       this.currentView = view
     },
     async fetchTests() {
-      const response = await axios.get(`${API_ENDPOINT}/tests`)
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_ENDPOINT}/tests`
+      )
       this.tests = JSON.parse(response.data.body)
     },
     async fetchTestHistory() {
-      const response = await axios.get(`${API_ENDPOINT}/tests/history`)
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_ENDPOINT}/tests/history`
+      )
       this.testsHistoryData = JSON.parse(response.data.body)
     }
   },
   computed: {
     previousTests() {
-      const previousTestIds = this.testsHistoryData.map(
-        ({ test_id }) => test_id
-      )
-      return this.tests
-        .filter((test) => previousTestIds.includes(test.id))
-        .map((test) => {
-          const testHistory = this.testsHistoryData.find(
-            ({ test_id }) => test_id === test.id
-          )
-          return {
-            ...test,
-            ...testHistory
-          }
-        }) as unknown
+      return this.testsHistoryData.map((testHistory) => {
+        const test = this.tests.find(({ id }) => testHistory.test_id === id)
+        return {
+          ...test
+        }
+      }) as unknown
     }
   },
   components: {
