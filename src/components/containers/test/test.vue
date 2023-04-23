@@ -143,12 +143,8 @@ const dummyTest: Test = {
 }
 
 export default defineComponent({
-  created() {
-    // this.loadTest()
-    this.test = {
-      ...dummyTest,
-      lastIndex: dummyTest.questions.length - 1
-    } as TestInProgress
+  async created() {
+    await this.loadTest()
     this.numberQuestions()
   },
   data() {
@@ -188,7 +184,11 @@ export default defineComponent({
       const response = await axios.get(
         `${import.meta.env.VITE_API_ENDPOINT}/tests/${testId}/load`
       )
-      this.test = JSON.parse(response.data.body)
+      const test = JSON.parse(response.data.body) as TestInProgress
+      this.test = {
+        ...test,
+        lastIndex: test.questions.length - 1
+      }
     },
     async submit() {
       const payload: SubmittedAnswer = {
@@ -307,6 +307,7 @@ export default defineComponent({
       this.skipping = false
     },
     numberQuestions() {
+      if (!this.test.id) return
       this.test.questions = this.test.questions.map((question, index) => ({
         ...question,
         number: index + 1
@@ -353,182 +354,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" scoped>
-.time-container {
-  margin: 25px 0;
-}
-
-.test {
-  // height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 12px;
-  text-align: left;
-  font-family: 'Roboto', sans-serif;
-}
-
-.content {
-  width: 100%;
-}
-
-.content__thumbnail {
-  display: flex;
-  justify-content: center;
-}
-
-.content__img {
-  width: auto;
-  height: 30vh;
-}
-
-.mode__btn-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.mode__btn {
-  border: none;
-  padding: 12px;
-  width: 120px;
-  background: #8d8df5;
-  border: 1px solid #8d8df5;
-  color: white;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  outline: none;
-  cursor: pointer;
-  transition: 0.3s;
-  &:hover {
-    background: white;
-    color: #8d8df5;
-    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-      0 17px 50px 0 rgba(0, 0, 0, 0.19);
-  }
-}
-
-.question__question {
-  margin-top: 20px;
-}
-
-.question__answer {
-  padding: 5px;
-}
-
-.answer__text {
-  cursor: pointer;
-  padding-left: 8px;
-}
-
-.answer__text--correct {
-  color: #9adc9a;
-}
-
-.answer__text--wrong {
-  color: #f36c6c;
-}
-
-.fa-dot-circle {
-  cursor: pointer;
-}
-
-.question__answers {
-  border-top: 1px solid #e6e6e6;
-  padding: 12px 50px;
-  list-style: none;
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.actions__action {
-  position: relative;
-  overflow: hidden;
-  padding: 10px 20px;
-  border-radius: 5px;
-  margin-right: 10px;
-  background: #70bf70;
-  border: 1px solid #70bf70;
-  color: white;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  outline: none;
-  &:hover {
-    cursor: pointer;
-    transition: 0.3s;
-    background: white;
-    color: #70bf70;
-    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-      0 17px 50px 0 rgba(0, 0, 0, 0.19);
-  }
-  &:active {
-    outline: none;
-  }
-}
-
-.actions__action:after {
-  content: '';
-  background: #f1f1f1;
-  display: block;
-  position: absolute;
-  padding-top: 300%;
-  padding-left: 350%;
-  margin-left: -20px !important;
-  margin-top: -120%;
-  opacity: 0;
-  transition: all 0.8s;
-}
-
-.actions__action:active:after {
-  padding: 0;
-  margin: 0;
-  opacity: 1;
-  transition: 0s;
-}
-
-.spinner__container {
-  position: absolute;
-  left: 0;
-  right: 0;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  top: 0;
-  bottom: 0;
-  align-items: center;
-  background: #7575759e;
-}
-
-.actions--red {
-  background: #f36c6c;
-  border: 1px solid #f36c6c;
-  &:hover {
-    color: #f36c6c;
-  }
-}
-
-.actions--yellow {
-  background: #c5c56d;
-  border: 1px solid #c5c56d;
-  &:hover {
-    color: #c5c56d;
-  }
-}
-
-.question__explanation {
-  padding: 12px;
-  border-radius: 5px;
-  margin-top: 5px;
-}
-
-.question__explanation--red {
-  background: #ef5e5e;
-}
-
-.question__explanation--green {
-  background: #60e460;
-}
-</style>

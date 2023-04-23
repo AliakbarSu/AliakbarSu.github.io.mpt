@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex justify-end">
     <span class="mt-5 isolate inline-flex rounded-md shadow-sm">
       <button
         @click="next"
