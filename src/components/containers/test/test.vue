@@ -1,29 +1,29 @@
 <template>
+  <Alert :alert="alert" @cancel="cancelAlert" @submit="alertSubmit" />
   <v-container fluid>
     <div class="test">
       <ProgressCircular v-if="loading" />
-
-      <Instructions @start="start" :open="!hasTestStarted && !loading" />
-      <div class="content" v-if="hasTestStarted && !loading">
+      <Instructions @start="start" :open="!testStarted" />
+      <div class="content" v-if="testStarted">
         <div class="overflow-hidden rounded-lg bg-white shadow">
-          <div class="px-4 py-5 sm:p-6" v-if="!loading">
+          <div class="px-4 py-5 sm:p-6">
             <TimeDisplay :time="timeRemained" />
-            <TimeProgressBar :timeElapsed="timeProgress" />
+            <TimeProgressBar :timeElapsed="timeElapsed" />
           </div>
         </div>
 
         <div class="mt-6 overflow-hidden rounded-lg bg-white shadow">
-          <div class="px-4 py-5 sm:p-6" v-if="!loading">
-            <Question :question="question" />
+          <div class="px-4 py-5 sm:p-6">
+            <QuestionComponent :question="question" />
             <!-- <CircularTimer/> -->
-            <Options @select="selectAnswer" :options="question.options" />
+            <Options @select="select" :options="question.options" />
           </div>
         </div>
         <QuestionControls
+          :canSkip="canSkip"
           @next="next"
           @skip="skip"
           @end="endTest"
-          v-if="!loading"
         />
       </div>
     </div>
@@ -36,77 +36,139 @@ import Instructions from './components/instructions/instructions.vue'
 // import Circle8 from 'vue-loading-spinner/src/components/Circle8'
 import ProgressCircular from '@/components/UI/progress-circular/progressCircular.vue'
 import TimeProgressBar from './components/UI/time-progress-bar/timeProgressBar.vue'
-import Question from './components/UI/question/question.vue'
+import QuestionComponent from './components/UI/question/question.vue'
 import Options from './components/UI/options/options.vue'
 import QuestionControls from './components/UI/question-controls/questionControls.vue'
 import TimeDisplay from './components/UI/time-display/time-display.vue'
 import { defineComponent } from 'vue'
+import Alert, { type AlertType } from './components/UI/alert/alert.vue'
 
-import { store } from '@/store/index'
+import axios from 'axios'
+import type { Test, SubmittedAnswer, Answer } from '@/types/test'
+import type { Option, Question } from '@/types/question'
 
-type Question = {
-  id: string
-  title: string
+interface TestInProgress extends Omit<Test, 'questions'> {
+  questions: QuestionInProgress[]
+  start_at: number
+  end_at: number
+  lastIndex: number
+}
+
+export interface QuestionInProgress extends Question {
   number: number
-  media: { url: string }[]
-  options: Option[]
-  startAt?: number
-  endAt?: number
-  submitted_answer?: Answer
+  start_at: number
+  submitted: boolean
+  skipped: boolean
+  isLast: boolean
+  isFirst: boolean
 }
 
-interface Option {
-  id: string
-  text: string
-  alpha: string
+const dummyTest: Test = {
+  id: 'fsjfsj',
+  name: 'jfsjf',
+  description: "This is the test's description",
+  questions: [
+    {
+      id: 'questionOne',
+      text: 'This is a good questin',
+      options: [
+        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
+        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
+      ],
+      correct_option_explanation: "This is the correct option's explanation",
+      field: "This is the question's field"
+    },
+    {
+      id: 'questionTwo',
+      text: 'This is a good questin',
+      options: [
+        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
+        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
+      ],
+      correct_option_explanation: "This is the correct option's explanation",
+      field: "This is the question's field"
+    },
+    {
+      id: 'questionThree',
+      text: 'This is a good questin',
+      options: [
+        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
+        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
+      ],
+      correct_option_explanation: "This is the correct option's explanation",
+      field: "This is the question's field"
+    },
+    {
+      id: 'questionFour',
+      text: 'This is a good questin',
+      options: [
+        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
+        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
+      ],
+      correct_option_explanation: "This is the correct option's explanation",
+      field: "This is the question's field"
+    },
+    {
+      id: 'questionFive',
+      text: 'This is a good questin',
+      options: [
+        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
+        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
+      ],
+      correct_option_explanation: "This is the correct option's explanation",
+      field: "This is the question's field"
+    },
+    {
+      id: 'questionSix',
+      text: 'This is a good questin',
+      options: [
+        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
+        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
+      ],
+      correct_option_explanation: "This is the correct option's explanation",
+      field: "This is the question's field"
+    },
+    {
+      id: 'questionSeven',
+      text: 'This is a good questin',
+      options: [
+        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
+        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
+      ],
+      correct_option_explanation: "This is the correct option's explanation",
+      field: "This is the question's field"
+    }
+  ],
+  thumbnail: []
 }
 
-type Answer = {
-  id: string
-}
 export default defineComponent({
+  created() {
+    // this.loadTest()
+    this.test = {
+      ...dummyTest,
+      lastIndex: dummyTest.questions.length - 1
+    } as TestInProgress
+    this.numberQuestions()
+  },
   data() {
     return {
-      questions: [
-        {
-          id: 'question1',
-          number: 1,
-          title: 'This is a very import question!',
-          media: [],
-          options: [
-            { id: 'option1', text: 'This answer is correct', alpha: 'a' },
-            { id: 'option2', text: 'This answer is correct', alpha: 'b' },
-            { id: 'option3', text: 'This answer is correct', alpha: 'c' },
-            { id: 'option4', text: 'This answer is correct', alpha: 'e' }
-          ]
-        },
-        {
-          id: 'question2',
-          number: 2,
-          title:
-            'What is the name of the biggest country in the world my population?',
-          media: [],
-          options: [
-            { id: 'option1', text: 'America', alpha: 'a' },
-            { id: 'option2', text: 'India', alpha: 'b' },
-            { id: 'option3', text: 'China', alpha: 'c' },
-            { id: 'option4', text: 'New Zealand', alpha: 'e' }
-          ]
-        }
-      ] as Question[],
-      question: {} as Question,
-      submitted_questions: [] as Question[],
-      skipped_questions: [] as Question[],
-      submitted_answer: {} as { id: string },
+      skipping: false,
+      test: {} as TestInProgress,
+      currentQuestionIndex: undefined as number | undefined,
+      submittedAnswers: [] as Answer[],
+      selectedOption: {} as Option,
       testEndsIn: 0,
       interval: 0,
       timeLimit: 1.26e7,
       timeRemained: { h: 0, m: 0, s: 0, mil: 0 },
       isTimeOver: false,
-      hasTestStarted: false,
-      loading: true,
-      testStartTime: 0,
-      showExplanations: false
+      loading: false,
+      alert: {
+        active: false,
+        message: '',
+        action: ''
+      } as AlertType
     }
   },
   components: {
@@ -114,35 +176,54 @@ export default defineComponent({
     // Circle8,
     ProgressCircular,
     TimeProgressBar,
-    Question,
+    QuestionComponent,
     Options,
     QuestionControls,
-    TimeDisplay
-  },
-  mounted() {
-    // this.questions = questions
-    // this.questions = []
-    this.loading = false
-    // this.questions = this.$store.getters.getCurrentTest.map(
-    //   (q: Question, index: string) => ({
-    //     ...q,
-    //     number: index + 1
-    //   })
-    // )
-    this.question = this.questions[0]
+    TimeDisplay,
+    Alert
   },
   methods: {
+    async loadTest() {
+      const testId = this.$route.params.id
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_ENDPOINT}/tests/${testId}/load`
+      )
+      this.test = JSON.parse(response.data.body)
+    },
+    async submit() {
+      const payload: SubmittedAnswer = {
+        test_id: this.test.id,
+        answers: this.submittedAnswers,
+        start_at: this.test.start_at,
+        end_at: new Date().getTime()
+      }
+      console.log(payload)
+      return
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_ENDPOINT}/tests/${this.test.id}/submit`,
+        payload
+      )
+      this.$router.push(`/results/${this.test.id}`)
+    },
     start() {
       this.setTimer()
       const now = new Date().getTime()
-      this.testStartTime = now
-      this.question = { ...this.questions[0], startAt: now }
+      this.test.start_at = now
+      this.currentQuestionIndex = 0
+      this.sortQuestions()
+      this.test.questions = this.test.questions.map((question, index) => {
+        return index === this.currentQuestionIndex
+          ? {
+              ...question,
+              start_at: now
+            }
+          : question
+      })
     },
     setTimer() {
       if (this.interval) {
         clearInterval(this.interval)
       }
-      this.hasTestStarted = true
       this.testEndsIn = this.timeLimit + new Date().getTime()
       this.interval = setInterval(() => {
         const now = new Date().getTime()
@@ -153,7 +234,7 @@ export default defineComponent({
         this.timeRemained.m = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60))
         this.timeRemained.s = Math.floor((t % (1000 * 60)) / 1000)
         this.timeRemained.mil = t
-        //1.2528e+7
+        1.2528e7
         if (t < 0) {
           clearInterval(this.interval)
           this.isTimeOver = true
@@ -165,114 +246,108 @@ export default defineComponent({
         }
       }, 100) as any as number
     },
-    next() {
-      if (!this.submitted_answer.id) {
-        // return this.$swal.fire(
-        //   'No Option Selected',
-        //   'Please select an option before pressing NEXT!',
-        //   'error'
-        // )
+    cancelAlert() {
+      this.alert.active = false
+    },
+    alertSubmit(action: string) {
+      if (action === 'end') {
+        this.submit()
       }
-      this.removeQuestion()
-      const now = new Date().getTime()
-      this.submitted_questions.push({
-        ...this.question,
-        submitted_answer: this.submitted_answer,
-        endAt: now
-      })
+    },
 
-      this.resetAnswers()
-
-      if (this.isTestOver) {
-        this.calculateResults()
-      } else if (this.isLastQuestion) {
-        this.applySkippedQuestions()
+    endTest() {
+      this.alert = {
+        active: true,
+        message: "You can't end the test without answering any question",
+        action: 'end'
       }
-
-      this.setNextQuestion()
     },
-    removeQuestion() {
-      this.questions = this.questions.filter((q) => q.id !== this.question.id)
-    },
-    setNextQuestion() {
-      const now = new Date().getTime()
-      const currentIndex = this.questions.findIndex(
-        (q) => q.id == this.question.id
-      )
-      this.question =
-        currentIndex == this.questions.length - 1
-          ? this.question
-          : { ...this.questions[currentIndex + 1], startAt: now }
-    },
-    applySkippedQuestions() {
-      this.questions = this.skipped_questions
-      this.skipped_questions = []
-    },
-    calculateResults() {
-      const dataToSubmit = {
-        submitted_answers: this.submitted_questions,
-        testStartTime: this.testStartTime,
-        testId: this.testId,
-        userId: this.$auth.user.sub.split('|')[1]
-      }
-      this.$store.dispatch('submitTest', dataToSubmit).then(() => {
-        this.$router.push('/test-results')
-      })
-    },
-    resetAnswers() {
-      this.submitted_answer = { id: '' }
-      this.showExplanations = false
+    select(option: Option) {
+      this.selectedOption = option
     },
     skip() {
-      this.removeQuestion()
-      this.skipped_questions = [
-        ...this.skipped_questions.filter((sq) => sq.id !== this.question.id),
-        this.question
-      ]
-      if (this.isLastQuestion) {
-        this.applySkippedQuestions()
+      this.test.questions = this.test.questions.map((question) => {
+        return question.id === this.question.id
+          ? { ...question, skipped: true }
+          : question
+      })
+      this.skipping = true
+      this.nextQuestion()
+    },
+    next() {
+      if (!this.selectedOption.id) {
+        this.alert = {
+          active: true,
+          message: 'Please select an option',
+          action: ''
+        }
+        return
       }
-      this.resetAnswers()
-      this.setNextQuestion()
+      const submittedAnswers: Answer = {
+        question_id: this.question.id,
+        option_id: this.selectedOption.id,
+        start_at: this.question.start_at,
+        end_at: new Date().getTime()
+      }
+      this.submittedAnswers.push(submittedAnswers)
+      this.nextQuestion()
     },
-    endTest() {
-      // this.$swal({
-      //   title: 'Are you sure?',
-      //   text: 'You will not be able to return to this test!',
-      //   icon: 'warning',
-      //   showCancelButton: true,
-      //   confirmButtonText: 'Yes, end test!',
-      //   cancelButtonText: 'No, continue'
-      // }).then(({ value }) => {
-      //   if (value) {
-      //     this.calculateResults()
-      //   }
-      // })
+    nextQuestion() {
+      this.sortQuestions()
+      if (this.question.isLast) {
+        console.log(this.submittedAnswers)
+        return
+      }
+      if (this.skipping && this.question.isFirst) {
+        this.currentQuestionIndex = 0
+        this.skipping = false
+      } else {
+        this.currentQuestionIndex = (this.currentQuestionIndex || 0) + 1
+      }
     },
-    selectAnswer(answer: Answer) {
-      this.submitted_answer = answer
+    numberQuestions() {
+      this.test.questions = this.test.questions.map((question, index) => ({
+        ...question,
+        number: index + 1
+      }))
     },
-    isSelected(answer: Answer) {
-      return this.submitted_answer.id == answer.id
+    sortQuestions() {
+      const sortedQuestions = this.test.questions.sort((a, b) => {
+        if (a.skipped && !b.skipped) {
+          return 1
+        } else if (!a.skipped && b.skipped) {
+          return -1
+        } else {
+          return a.number - b.number
+        }
+      })
+      this.test.questions = sortedQuestions
+      this.indexQuestions()
+    },
+    indexQuestions() {
+      this.test.questions = this.test.questions.map((question, index) => {
+        return {
+          ...question,
+          isLast: index === this.test.questions.length - 1,
+          isFirst: index === 0
+        }
+      })
     }
   },
   computed: {
-    isTestOver() {
-      return (
-        (this.questions.length == 0 && this.skipped_questions.length == 0) ||
-        this.isTimeOver
-      )
+    canSkip() {
+      return !this.question.skipped
     },
-    isLastQuestion() {
-      return this.questions.length === 0
+    question() {
+      return this.test.questions[this.currentQuestionIndex || 0]
     },
-    timeProgress() {
+    testStarted(): boolean {
+      return this.currentQuestionIndex !== undefined
+    },
+    timeElapsed() {
       return (
         100 - ((this.timeLimit - this.timeRemained.mil) / this.timeLimit) * 100
       )
-    },
-    testId() {
-      return this.$store.getters.getTestId
     }
   }
 })

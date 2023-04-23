@@ -40,28 +40,29 @@
 
 <template>
   <div class="bg-white px-6 py-16 lg:px-8">
-    <div class="mx-auto max-w-3xl text-base leading-7 text-gray-700">
+    <div class="mx-auto text-base leading-7 text-gray-700">
       <p class="text-base font-semibold leading-7 text-indigo-600">
         Question Number: {{ question?.number }}
+        <span
+          class="ml-1 inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20"
+          v-if="question?.skipped"
+          >Skipped</span
+        >
       </p>
 
-      <p v-html="question?.title" class="mt-6 text-xl leading-8"></p>
+      <p v-html="question?.text" class="mt-6 text-xl leading-8"></p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-type Question = {
-  number: number
-  title: string
-  media: { url: string }[]
-}
 import type { PropType } from 'vue'
+import type { QuestionInProgress } from '../../../test.vue'
 
 export default {
   props: {
     question: {
-      type: Object as PropType<Question>
+      type: Object as PropType<QuestionInProgress>
     }
   },
   data() {

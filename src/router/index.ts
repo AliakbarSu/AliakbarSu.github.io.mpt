@@ -83,7 +83,7 @@ const routes: RouteRecordRaw[] = [
     component: Products
   },
   {
-    path: '/test',
+    path: '/test/:id',
     name: 'Test',
     beforeEnter: authGuard,
     component: Test

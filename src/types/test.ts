@@ -8,9 +8,8 @@ export enum TestResult {
 export interface Test {
   id: string
   name: string
-  questions: string[]
+  questions: Question[]
   thumbnail: { url: string }[]
-  level: number
   description: string
 }
 
@@ -19,13 +18,18 @@ export interface TestHistory extends Test {
   result: TestResult
 }
 
+export interface Answer {
+  start_at: number
+  end_at: number
+  question_id: string
+  option_id: string
+}
+
 export interface SubmittedAnswer {
-  id: string
-  submitted_answer: {
-    id: string
-  }
-  startAt: string
-  endAt: string
+  test_id: string
+  start_at: number
+  end_at: number
+  answers: Answer[]
 }
 
 export interface Result {

@@ -71,12 +71,13 @@ export default {
     <div class="space-y-4">
       <RadioGroupOption
         as="template"
-        v-for="option in updatedOptions"
+        v-for="option in options"
         :key="option.id"
         :value="option.id"
         v-slot="{ checked, active }"
       >
         <div
+          @click="select(option)"
           :class="[
             checked ? 'border-transparent' : 'border-gray-300',
             active ? 'border-indigo-600 ring-2 ring-indigo-600' : '',
@@ -109,11 +110,8 @@ export default {
 
 <script lang="ts">
 import type { PropType } from 'vue'
+import type { Option } from '@/types/question'
 
-interface Option {
-  id: string
-  text: string
-}
 import {
   RadioGroup,
   RadioGroupDescription,
@@ -136,27 +134,12 @@ export default {
   data() {
     return {
       settings: [],
-      alphabets: 'a,b,c,d,e,f,g',
-      activeItem: '',
-      selected: 0
-    }
-  },
-  computed: {
-    updatedOptions() {
-      return this.options?.map((op, index) => {
-        return {
-          ...op,
-          alpha: this.alphabets.split(',')[index].toUpperCase()
-        }
-      })
+      selected: ''
     }
   },
   methods: {
-    isActive(item: string) {
-      return item.toLowerCase() === this.activeItem.toLowerCase()
-    },
     select(option: Option) {
-      this.activeItem = option.id
+      this.selected = ''
       this.$emit('select', option)
     }
   }
