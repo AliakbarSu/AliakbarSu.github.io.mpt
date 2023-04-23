@@ -34,9 +34,10 @@
     >
       <div class="flex flex-1 justify-center">
         <a
+          @click="takeTest(test?.id || '')"
           href="#"
           class="whitespace-nowrap text-indigo-600 hover:text-indigo-500"
-          >Book Test</a
+          >Take Test</a
         >
       </div>
     </div>
@@ -63,6 +64,11 @@ export default {
     MenuItems,
     EllipsisVerticalIcon,
     CheckCircleIcon
+  },
+  methods: {
+    takeTest(testId: string) {
+      this.$router.push(`/test/${testId}`)
+    }
   }
 }
 </script>
