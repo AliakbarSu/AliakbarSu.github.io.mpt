@@ -9,12 +9,6 @@
         @click="goTo('/dashboard')"
         >Dashboard</DisclosureButton
       >
-      <DisclosureButton
-        as="a"
-        href="#"
-        class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6"
-        >Tests</DisclosureButton
-      >
     </div>
     <div v-if="isAuth" class="border-t border-gray-200 pb-3 pt-4">
       <div class="flex items-center px-4 sm:px-6">
@@ -47,7 +41,7 @@
           as="a"
           href="#"
           class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6"
-          @click="logout"
+          @click="onLogout"
           >Sign out</DisclosureButton
         >
       </div>
@@ -55,29 +49,18 @@
   </DisclosurePanel>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { useAuth0 } from '@auth0/auth0-vue'
 import { DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { BellIcon } from '@heroicons/vue/24/outline'
-
-export default {
-  data() {
-    return {
-      isAuth: this.$auth0.isAuthenticated,
-      user: this.$auth0.user.value
-    }
-  },
-  methods: {
-    logout() {
-      this.$auth0.logout({ logoutParams: { returnTo: window.location.origin } })
-    },
-    goTo(link: string) {
-      this.$router.push(link)
-    }
-  },
-  components: {
-    DisclosureButton,
-    DisclosurePanel,
-    BellIcon
-  }
+import { useRouter } from 'vue-router'
+const { user, logout } = useAuth0()
+const router = useRouter()
+const isAuth = useAuth0().isAuthenticated
+const goTo = (link: string) => {
+  router.push(link)
+}
+const onLogout = () => {
+  logout({ logoutParams: { returnTo: window.location.origin } })
 }
 </script>
