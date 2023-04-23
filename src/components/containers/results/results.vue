@@ -1,9 +1,10 @@
 <template>
   <div class="min-h-full bg-gray-100">
+    <LoadingIssueAlert v-if="error" />
     <!-- <div class="p-4">
       <Banner :pass="pass" />
     </div> -->
-    <div v-if="testHistory.stats" class="py-10">
+    <div class="py-10">
       <header>
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h1
@@ -30,7 +31,9 @@
                 <dt class="text-base font-normal text-gray-900">
                   {{ item.name }}
                 </dt>
+                <ContentSkeleton v-if="loading" />
                 <dd
+                  v-if="!loading"
                   class="mt-1 flex items-baseline justify-between md:block lg:flex"
                 >
                   <div
@@ -84,7 +87,9 @@
               <dd
                 class="mt-1 flex h-full items-center justify-center md:block lg:flex"
               >
+                <SkeletonLoading v-if="loading" />
                 <Pie
+                  v-if="!loading"
                   :data="correctResponseRatePerField.datasets"
                   :labels="correctResponseRatePerField.labels"
                 />
@@ -97,7 +102,9 @@
               <dd
                 class="mt-1 h-full items-center flex justify-center md:block lg:flex"
               >
+                <SkeletonLoading v-if="loading" />
                 <Line-graph
+                  v-if="!loading"
                   :data="accuracyOverTime.datasets"
                   :labels="accuracyOverTime.labels"
                 />
@@ -114,7 +121,9 @@
               <dd
                 class="mt-1 flex h-full items-center justify-center md:block lg:flex"
               >
+                <SkeletonLoading v-if="loading" />
                 <Line-graph
+                  v-if="!loading"
                   :data="speedOverTime.datasets"
                   :labels="speedOverTime.labels"
                 />
@@ -127,7 +136,9 @@
               <dd
                 class="mt-1 flex h-full items-center justify-center md:block lg:flex"
               >
+                <SkeletonLoading v-if="loading" />
                 <Pie
+                  v-if="!loading"
                   :data="averageCategoryTiming.datasets"
                   :labels="averageCategoryTiming.labels"
                   :options="averageCategoryTiming.options"
@@ -145,7 +156,9 @@
               <dd
                 class="mt-1 flex h-full items-center justify-center md:block lg:flex"
               >
+                <SkeletonLoading v-if="loading" />
                 <Pie
+                  v-if="!loading"
                   :data="incorrectResponseCountPerSubject.datasets"
                   :labels="incorrectResponseCountPerSubject.labels"
                   :options="correctResponseCountPerSubject.options"
@@ -159,7 +172,9 @@
               <dd
                 class="mt-1 flex h-full items-center justify-center md:block lg:flex"
               >
+                <SkeletonLoading v-if="loading" />
                 <Pie
+                  v-if="!loading"
                   :data="correctResponseCountPerSubject.datasets"
                   :labels="correctResponseCountPerSubject.labels"
                   :options="correctResponseCountPerSubject.options"
@@ -180,9 +195,12 @@ import Line from './components/line/line.vue'
 import Banner from './components/banner/banner.vue'
 import { defineComponent } from 'vue'
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/vue/20/solid'
+import SkeletonLoading from './components/UI/loading/Skeleton.vue'
+import ContentSkeleton from './components/UI/loading/ContentSkeleton.vue'
 import axios from 'axios'
 import type { UserAppMetadata } from '@/types/user'
-import type { Stats } from '@/types/test'
+import type { Stats, TestHistory } from '@/types/test'
+import LoadingIssueAlert from '@/components/UI/alerts/error.vue'
 
 export default defineComponent({
   created() {
@@ -190,6 +208,8 @@ export default defineComponent({
   },
   data() {
     return {
+      loading: false,
+      error: false,
       testHistory: {} as UserAppMetadata['test_history'][0],
       previous_tests: [] as UserAppMetadata['test_history'],
       options: {
@@ -211,7 +231,10 @@ export default defineComponent({
     'Line-graph': Line,
     ArrowDownIcon,
     ArrowUpIcon,
-    Banner
+    Banner,
+    SkeletonLoading,
+    ContentSkeleton,
+    LoadingIssueAlert
   },
   methods: {
     navigateToDashboard() {
@@ -221,17 +244,29 @@ export default defineComponent({
       window.print()
     },
     async fetchTestHistory() {
+      this.loading = true
       const testId = this.$route.params.id || ''
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_ENDPOINT}/tests/history`
-      )
-      const testHistoryArray = JSON.parse(response.data.body)
-      this.previous_tests = testHistoryArray
-      this.testHistory = (
-        testHistoryArray as unknown as UserAppMetadata['test_history']
-      ).find(
-        ({ test_id }: any) => test_id === testId
-      ) as UserAppMetadata['test_history'][0]
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_ENDPOINT}/tests/history`
+        )
+        const testHistoryArray = JSON.parse(response.data.body)
+        this.previous_tests = testHistoryArray
+        const matchingTestHistory = (
+          testHistoryArray as unknown as UserAppMetadata['test_history']
+        ).find(
+          ({ test_id }: any) => test_id === testId
+        ) as UserAppMetadata['test_history'][0]
+        if (!matchingTestHistory) {
+          this.error = true
+          return
+        }
+        this.testHistory = matchingTestHistory
+        this.loading = false
+      } catch (err) {
+        console.error(err)
+        this.error = true
+      }
     },
     calculateChangeRate(key: keyof Stats) {
       const sortedTestHistory = this.previous_tests.sort(
@@ -256,6 +291,13 @@ export default defineComponent({
       return this.testHistory.result === 'pass'
     },
     testStats() {
+      if (this.loading) {
+        return [
+          { name: 'Total Points' },
+          { name: 'Average Time' },
+          { name: 'Average Time' }
+        ] as any[]
+      }
       if (!this.testHistory?.stats) return []
       return [
         {

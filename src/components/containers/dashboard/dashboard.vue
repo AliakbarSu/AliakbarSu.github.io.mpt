@@ -210,6 +210,7 @@ export default {
               <!-- Products -->
               <h4 class="sr-only">Items</h4>
               <ul role="list" class="divide-y divide-gray-200">
+                <LoadingSkeleton v-if="loading" />
                 <li
                   v-if="currentView === 'tests'"
                   v-for="test in tests"
@@ -218,6 +219,7 @@ export default {
                 >
                   <Test :test="test" />
                 </li>
+                <LoadingSkeleton v-if="loading" />
                 <li
                   v-if="currentView === 'history'"
                   v-for="test in previousTests"
@@ -244,14 +246,17 @@ import TestHistory from './components/TestHistory.vue'
 import axios from 'axios'
 import type { Test as TestType } from '@/types/test'
 import type { UserAppMetadata } from '@/types/user'
+import LoadingSkeleton from './components/UI/loading/skeleton.vue'
 
 export default {
   created() {
+    this.loading = true
     this.fetchTests()
     this.fetchTestHistory()
   },
   data() {
     return {
+      loading: false,
       currentView: 'tests',
       tests: [] as TestType[],
       testsHistoryData: [] as UserAppMetadata['test_history']
@@ -262,16 +267,28 @@ export default {
       this.currentView = view
     },
     async fetchTests() {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_ENDPOINT}/tests`
-      )
-      this.tests = JSON.parse(response.data.body)
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_ENDPOINT}/tests`
+        )
+        this.tests = JSON.parse(response.data.body)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
     },
     async fetchTestHistory() {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_ENDPOINT}/tests/history`
-      )
-      this.testsHistoryData = JSON.parse(response.data.body)
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_ENDPOINT}/tests/history`
+        )
+        this.testsHistoryData = JSON.parse(response.data.body)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
     }
   },
   computed: {
@@ -292,7 +309,8 @@ export default {
     EllipsisVerticalIcon,
     CheckCircleIcon,
     Test,
-    TestHistory
+    TestHistory,
+    LoadingSkeleton
   }
 }
 </script>

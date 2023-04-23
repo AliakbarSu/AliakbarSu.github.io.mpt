@@ -15,7 +15,7 @@
       @view="viewResults"
     />
     <div class="test">
-      <ProgressCircular v-if="loading" />
+      <SkeletonLoading v-if="loading" />
       <Instructions @start="start" :open="!testStarted" />
       <div class="content" v-if="testStarted">
         <div class="overflow-hidden rounded-lg bg-white shadow">
@@ -61,6 +61,7 @@ import type { Option, Question } from '@/types/question'
 import ReadyToSubmitAlert from './components/alerts/readyToSubmit.vue'
 import SelectOptionAlert from './components/alerts/selectOption.vue'
 import TimeOverAlert from './components/alerts/timeOver.vue'
+import SkeletonLoading from './components/UI/loading/skeleton.vue'
 
 interface TestInProgress extends Omit<Test, 'questions'> {
   questions: QuestionInProgress[]
@@ -200,7 +201,8 @@ export default defineComponent({
     TimeDisplay,
     ReadyToSubmitAlert,
     SelectOptionAlert,
-    TimeOverAlert
+    TimeOverAlert,
+    SkeletonLoading
   },
   methods: {
     async loadTest() {
