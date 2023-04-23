@@ -1,6 +1,19 @@
 <template>
-  <Alert :alert="alert" @cancel="cancelAlert" @submit="alertSubmit" />
   <v-container fluid>
+    <ReadyToSubmitAlert
+      @submit="submit"
+      v-if="alerts.readyToSubmit"
+      @cancel="cancelAlert('readyToSubmit')"
+    />
+    <SelectOptionAlert
+      v-if="alerts.selectOption"
+      @cancel="cancelAlert('selectOption')"
+    />
+    <TimeOverAlert
+      v-if="alerts.timeOver"
+      @cancel="cancelAlert('timeOver')"
+      @view="viewResults"
+    />
     <div class="test">
       <ProgressCircular v-if="loading" />
       <Instructions @start="start" :open="!testStarted" />
@@ -23,7 +36,7 @@
           :canSkip="canSkip"
           @next="next"
           @skip="skip"
-          @end="endTest"
+          @end="endTestAlert"
         />
       </div>
     </div>
@@ -41,11 +54,13 @@ import Options from './components/UI/options/options.vue'
 import QuestionControls from './components/UI/question-controls/questionControls.vue'
 import TimeDisplay from './components/UI/time-display/time-display.vue'
 import { defineComponent } from 'vue'
-import Alert, { type AlertType } from './components/UI/alert/alert.vue'
 
 import axios from 'axios'
 import type { Test, SubmittedAnswer, Answer } from '@/types/test'
 import type { Option, Question } from '@/types/question'
+import ReadyToSubmitAlert from './components/alerts/readyToSubmit.vue'
+import SelectOptionAlert from './components/alerts/selectOption.vue'
+import TimeOverAlert from './components/alerts/timeOver.vue'
 
 interface TestInProgress extends Omit<Test, 'questions'> {
   questions: QuestionInProgress[]
@@ -142,6 +157,12 @@ const dummyTest: Test = {
   thumbnail: []
 }
 
+export interface Alerts {
+  timeOver: boolean
+  selectOption: boolean
+  readyToSubmit: boolean
+}
+
 export default defineComponent({
   async created() {
     await this.loadTest()
@@ -160,11 +181,12 @@ export default defineComponent({
       timeRemained: { h: 0, m: 0, s: 0, mil: 0 },
       isTimeOver: false,
       loading: false,
-      alert: {
-        active: false,
-        message: '',
-        action: ''
-      } as AlertType
+      alerts: {
+        timeOver: false,
+        selectOption: false,
+        readyToSubmit: false,
+        endTest: false
+      } as Alerts
     }
   },
   components: {
@@ -176,18 +198,27 @@ export default defineComponent({
     Options,
     QuestionControls,
     TimeDisplay,
-    Alert
+    ReadyToSubmitAlert,
+    SelectOptionAlert,
+    TimeOverAlert
   },
   methods: {
     async loadTest() {
+      this.loading = true
       const testId = this.$route.params.id
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_ENDPOINT}/tests/${testId}/load`
-      )
-      const test = JSON.parse(response.data.body) as TestInProgress
-      this.test = {
-        ...test,
-        lastIndex: test.questions.length - 1
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_ENDPOINT}/tests/${testId}/load`
+        )
+        const test = JSON.parse(response.data.body) as TestInProgress
+        this.test = {
+          ...test,
+          lastIndex: test.questions.length - 1
+        }
+      } catch (err) {
+        console.error(err)
+      } finally {
+        this.loading = false
       }
     },
     async submit() {
@@ -203,7 +234,7 @@ export default defineComponent({
         `${import.meta.env.VITE_API_ENDPOINT}/tests/${this.test.id}/submit`,
         payload
       )
-      this.$router.push(`/results/${this.test.id}`)
+      this.viewResults()
     },
     start() {
       this.setTimer()
@@ -246,21 +277,22 @@ export default defineComponent({
         }
       }, 100) as any as number
     },
-    cancelAlert() {
-      this.alert.active = false
+    setAlert(key: keyof Alerts) {
+      this.alerts[key] = true
+    },
+    cancelAlert(key: keyof Alerts) {
+      this.alerts[key] = false
     },
     alertSubmit(action: string) {
       if (action === 'end') {
         this.submit()
       }
     },
-
-    endTest() {
-      this.alert = {
-        active: true,
-        message: "You can't end the test without answering any question",
-        action: 'end'
-      }
+    viewResults() {
+      this.$router.push(`/results/${this.test.id}`)
+    },
+    endTestAlert() {
+      this.setAlert('readyToSubmit')
     },
     select(option: Option) {
       this.selectedOption = option
@@ -276,11 +308,7 @@ export default defineComponent({
     },
     next() {
       if (!this.selectedOption.id) {
-        this.alert = {
-          active: true,
-          message: 'Please select an option',
-          action: ''
-        }
+        this.setAlert('selectOption')
         return
       }
       const submittedAnswers: Answer = {
@@ -296,7 +324,7 @@ export default defineComponent({
     nextQuestion() {
       this.sortQuestions()
       if (this.question.isLast) {
-        console.log(this.submittedAnswers)
+        this.endTestAlert()
         return
       }
       if (this.skipping && this.question.isFirst) {
@@ -334,6 +362,13 @@ export default defineComponent({
           isFirst: index === 0
         }
       })
+    }
+  },
+  watch: {
+    timeElapsed() {
+      if (this.timeElapsed === 0) {
+        this.submit()
+      }
     }
   },
   computed: {
