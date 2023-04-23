@@ -290,6 +290,7 @@ export default defineComponent({
         end_at: new Date().getTime()
       }
       this.submittedAnswers.push(submittedAnswers)
+      this.selectedOption = {} as Option
       this.nextQuestion()
     },
     nextQuestion() {
@@ -300,10 +301,10 @@ export default defineComponent({
       }
       if (this.skipping && this.question.isFirst) {
         this.currentQuestionIndex = 0
-        this.skipping = false
-      } else {
+      } else if (!this.skipping) {
         this.currentQuestionIndex = (this.currentQuestionIndex || 0) + 1
       }
+      this.skipping = false
     },
     numberQuestions() {
       this.test.questions = this.test.questions.map((question, index) => ({

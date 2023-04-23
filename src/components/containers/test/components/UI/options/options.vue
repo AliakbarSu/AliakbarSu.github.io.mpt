@@ -137,9 +137,16 @@ export default {
       selected: ''
     }
   },
+  watch: {
+    options: {
+      handler() {
+        this.selected = ''
+      },
+      immediate: true
+    }
+  },
   methods: {
     select(option: Option) {
-      this.selected = ''
       this.$emit('select', option)
     }
   }
