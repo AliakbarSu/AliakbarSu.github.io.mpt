@@ -17,6 +17,7 @@ import Plans from '@/components/containers/plans/Plans.vue'
 import About from '@/components/containers/about/About.vue'
 import TermsAndConditions from '@/components/containers/terms&conditions/terms&conditions.vue'
 import SecurePayments from '@/components/containers/securePayments/securePayments.vue'
+import Privacy from '@/components/containers/privacy/privacy.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -59,6 +60,11 @@ const routes: RouteRecordRaw[] = [
     path: '/secure-payments',
     name: 'Secure Payments',
     component: SecurePayments
+  },
+  {
+    path: '/privacy',
+    name: 'Privacy',
+    component: Privacy
   },
   {
     path: '/',
