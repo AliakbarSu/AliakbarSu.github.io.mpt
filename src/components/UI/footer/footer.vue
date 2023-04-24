@@ -144,7 +144,7 @@ const items = {
     { name: 'Privacy', href: '/privacy' }
   ],
   customerService: [
-    { name: 'Contact', href: '#' },
+    { name: 'Contact', href: '/contact' },
     { name: 'Secure Payments', href: '/secure-payments' },
     { name: 'FAQ', href: '/faqs' }
   ]

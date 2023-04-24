@@ -18,6 +18,7 @@ import About from '@/components/containers/about/About.vue'
 import TermsAndConditions from '@/components/containers/terms&conditions/terms&conditions.vue'
 import SecurePayments from '@/components/containers/securePayments/securePayments.vue'
 import Privacy from '@/components/containers/privacy/privacy.vue'
+import Contact from '@/components/containers/contact/contact.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -65,6 +66,11 @@ const routes: RouteRecordRaw[] = [
     path: '/privacy',
     name: 'Privacy',
     component: Privacy
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: Contact
   },
   {
     path: '/',
