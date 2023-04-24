@@ -36,13 +36,13 @@
             </dt>
             <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
               <div class="text-gray-900">*****************</div>
-              <!-- <button
-                disabled
+              <button
+                @click="resetPassword"
                 type="button"
                 class="font-semibold text-indigo-600 hover:text-indigo-500"
               >
                 Reset
-              </button> -->
+              </button>
             </dd>
           </div>
         </dl>
@@ -55,12 +55,23 @@
 import type { Profile } from '@/types/user'
 import type { PropType } from 'vue'
 import { defineComponent } from 'vue'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'Security',
   props: {
     profile: {
       type: Object as PropType<Profile>
+    }
+  },
+  methods: {
+    async resetPassword() {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_ENDPOINT}/user/reset-password`
+      )
+      console.log(response)
+      const link = response.data.body.ticket
+      window.location.replace(link)
     }
   }
 })
