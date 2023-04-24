@@ -16,6 +16,7 @@ import Test from '@/components/containers/test/test.vue'
 import Plans from '@/components/containers/plans/Plans.vue'
 import About from '@/components/containers/about/About.vue'
 import TermsAndConditions from '@/components/containers/terms&conditions/terms&conditions.vue'
+import SecurePayments from '@/components/containers/securePayments/securePayments.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -53,6 +54,11 @@ const routes: RouteRecordRaw[] = [
     path: '/terms-and-conditions',
     name: 'Terms and Conditions',
     component: TermsAndConditions
+  },
+  {
+    path: '/secure-payments',
+    name: 'Secure Payments',
+    component: SecurePayments
   },
   {
     path: '/',

@@ -145,7 +145,7 @@ const items = {
   ],
   customerService: [
     { name: 'Contact', href: '#' },
-    { name: 'Secure Payments', href: '#' },
+    { name: 'Secure Payments', href: '/secure-payments' },
     { name: 'FAQ', href: '/faqs' }
   ]
 }
