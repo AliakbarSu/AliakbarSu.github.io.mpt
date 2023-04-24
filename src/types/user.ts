@@ -15,3 +15,10 @@ export interface UserAppMetadata {
   test_history: TestPerformanceResult[]
   plan: UserPlan
 }
+
+export interface Profile {
+  id: string
+  name: string
+  email: string
+  plan: UserPlan
+}
