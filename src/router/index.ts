@@ -15,6 +15,7 @@ import { authGuard } from '@auth0/auth0-vue'
 import Test from '@/components/containers/test/test.vue'
 import Plans from '@/components/containers/plans/Plans.vue'
 import About from '@/components/containers/about/About.vue'
+import TermsAndConditions from '@/components/containers/terms&conditions/terms&conditions.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -47,6 +48,11 @@ const routes: RouteRecordRaw[] = [
     path: '/faqs',
     name: 'Faqs',
     component: Faqs
+  },
+  {
+    path: '/terms-and-conditions',
+    name: 'Terms and Conditions',
+    component: TermsAndConditions
   },
   {
     path: '/',

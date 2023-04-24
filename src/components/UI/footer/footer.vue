@@ -140,7 +140,7 @@ const items = {
   ],
   company: [
     { name: 'Who we are', href: '/about' },
-    { name: 'Terms & Conditions', href: '#' },
+    { name: 'Terms & Conditions', href: '/terms-and-conditions' },
     { name: 'Privacy', href: '#' }
   ],
   customerService: [
