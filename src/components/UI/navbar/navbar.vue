@@ -114,14 +114,14 @@ export default {
           </div>
           <div class="flex flex-shrink-0 items-center" @click="goTo('/')">
             <img
-              class="block h-8 w-auto lg:hidden"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
+              class="block h-20 w-auto lg:hidden"
+              src="https://res.cloudinary.com/dxuf2ssx6/image/upload/v1682296708/practiceMed/Illustrations/Practice_Med-logo.png"
+              alt="Practice Med"
             />
             <img
-              class="hidden h-8 w-auto lg:block"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
+              class="hidden h-20 w-auto lg:block"
+              src="https://res.cloudinary.com/dxuf2ssx6/image/upload/v1682296708/practiceMed/Illustrations/Practice_Med-logo.png"
+              alt="Practice Med"
             />
           </div>
           <div v-if="isAuth" class="hidden md:ml-6 md:flex md:space-x-8">

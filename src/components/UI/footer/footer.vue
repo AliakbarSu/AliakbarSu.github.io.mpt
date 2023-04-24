@@ -9,9 +9,9 @@
           <!-- Image section -->
           <div class="col-span-1 md:col-span-2 lg:col-start-1 lg:row-start-1">
             <img
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt=""
-              class="h-8 w-auto"
+              src="https://res.cloudinary.com/dxuf2ssx6/image/upload/v1682296708/practiceMed/Illustrations/Practice_Med-logo.png"
+              alt="Practice Med logo"
+              class="h-20 w-auto"
             />
           </div>
 
@@ -111,7 +111,7 @@
 
       <div class="border-t border-gray-100 py-10 text-center">
         <p class="text-sm text-gray-500">
-          &copy; {{ new Date().getFullYear() }} Your Company, Inc. All rights
+          &copy; {{ new Date().getFullYear() }} Practice Med LTD. All rights
           reserved.
         </p>
       </div>
