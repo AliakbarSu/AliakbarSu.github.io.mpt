@@ -30,7 +30,8 @@
             'flex flex-col justify-between rounded-3xl bg-white p-8 ring-1 ring-gray-200 xl:p-10'
           ]"
         >
-          <div>
+          <SkeletonLoading v-if="loading" />
+          <div v-if="!loading">
             <div class="flex items-center justify-between gap-x-4">
               <h3
                 :id="tier.id"
@@ -77,6 +78,7 @@
             </ul>
           </div>
           <a
+            v-if="!loading"
             @click="
               tier.freeTrial
                 ? subscribeToFreeTrial(tier.id)
@@ -106,15 +108,17 @@ import type { Plan } from '@/types/plans'
 import { CheckIcon } from '@heroicons/vue/20/solid'
 import { defineComponent } from 'vue'
 import axios from 'axios'
+import SkeletonLoading from './components/loading/CardLoading.vue'
 
 export default defineComponent({
   components: {
-    CheckIcon
+    CheckIcon,
+    SkeletonLoading
   },
   data() {
     return {
       loading: false,
-      tiers: [] as Plan[]
+      tiers: [{}, {}, {}] as Plan[]
     }
   },
   async created() {
