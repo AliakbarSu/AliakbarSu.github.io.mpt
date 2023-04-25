@@ -13,7 +13,8 @@
         <dl
           class="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6"
         >
-          <div class="pt-6 sm:flex">
+          <SkeletonLoading v-if="loading" />
+          <div v-if="!loading" class="pt-6 sm:flex">
             <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
               Full name
             </dt>
@@ -27,7 +28,7 @@
               </button> -->
             </dd>
           </div>
-          <div class="pt-6 sm:flex">
+          <div v-if="!loading" class="pt-6 sm:flex">
             <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
               Email address
             </dt>
@@ -51,12 +52,17 @@
 import type { Profile } from '@/types/user'
 import { defineComponent } from 'vue'
 import type { PropType } from 'vue'
+import SkeletonLoading from './UI/Loading/skeletonLoading.vue'
 
 export default defineComponent({
   props: {
+    loading: Boolean,
     profile: {
       type: Object as PropType<Profile>
     }
+  },
+  components: {
+    SkeletonLoading
   }
 })
 </script>

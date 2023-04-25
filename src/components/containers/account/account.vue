@@ -35,11 +35,23 @@
         </ul>
       </nav>
     </aside>
-    <div v-if="profile?.id">
-      <General :profile="profile" v-if="currentItem == 'General'" />
-      <Security :profile="profile" v-if="currentItem == 'Security'" />
-      <Plans :profile="profile" v-if="currentItem == 'Plan'" />
-      <!-- <Billing :profile="profile" v-if="currentItem == 'Billing'" /> -->
+    <div>
+      <General
+        :loading="loading"
+        :profile="profile"
+        v-if="currentItem == 'General'"
+      />
+      <Security
+        :loading="loading"
+        :profile="profile"
+        v-if="currentItem == 'Security'"
+      />
+      <Plans
+        :loading="loading"
+        :profile="profile"
+        v-if="currentItem == 'Plan'"
+      />
+      <Billing :profile="profile" v-if="currentItem == 'Billing'" />
     </div>
   </div>
 </template>
@@ -58,13 +70,12 @@ import {
   FingerPrintIcon,
   UserCircleIcon
 } from '@heroicons/vue/24/outline'
-import { useAuth0 } from '@auth0/auth0-vue'
 
 const secondaryNavigation = [
   { name: 'General', href: '#', icon: UserCircleIcon, current: true },
   { name: 'Security', href: '#', icon: FingerPrintIcon, current: false },
-  { name: 'Plan', href: '#', icon: CubeIcon, current: false }
-  // { name: 'Billing', href: '#', icon: CreditCardIcon, current: false }
+  { name: 'Plan', href: '#', icon: CubeIcon, current: false },
+  { name: 'Billing', href: '#', icon: CreditCardIcon, current: false }
 ]
 
 const currentItem = ref('General')
@@ -75,7 +86,6 @@ const setItem = (item: string) => {
 const profile = ref({} as Profile)
 const loading = ref(false)
 const error = ref(false)
-const { getAccessTokenSilently } = useAuth0()
 
 const fetchTestHistory = async () => {
   loading.value = true

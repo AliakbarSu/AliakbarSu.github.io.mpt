@@ -6,14 +6,14 @@
       <div>
         <h2 class="text-base font-semibold leading-7 text-gray-900">Plans</h2>
         <p class="mt-1 text-sm leading-6 text-gray-500">
-          Manage your subscription - view status, upgrade/downgrade, and cancel
-          anytime.
+          View your plan's limit and usage
         </p>
 
         <dl
           class="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6"
         >
-          <div class="pt-6 sm:flex">
+          <SkeletonLoading v-if="loading" />
+          <div v-if="!loading" class="pt-6 sm:flex">
             <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
               Plan name
             </dt>
@@ -26,16 +26,9 @@
               >
                 Upgrade
               </button>
-              <button
-                @click="cancelPlan"
-                type="button"
-                class="font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                Cancel
-              </button>
             </dd>
           </div>
-          <div class="pt-6 sm:flex">
+          <div v-if="!loading" class="pt-6 sm:flex">
             <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
               Limit
             </dt>
@@ -49,7 +42,7 @@
               </button> -->
             </dd>
           </div>
-          <div class="pt-6 sm:flex">
+          <div v-if="!loading" class="pt-6 sm:flex">
             <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
               Used
             </dt>
@@ -73,11 +66,15 @@
 import type { Profile } from '@/types/user'
 import type { PropType } from 'vue'
 import { defineComponent } from 'vue'
-import axios from 'axios'
+import SkeletonLoading from './UI/Loading/skeletonLoading.vue'
 
 export default defineComponent({
   name: 'Plans',
+  components: {
+    SkeletonLoading
+  },
   props: {
+    loading: Boolean,
     profile: {
       type: Object as PropType<Profile>
     }
@@ -85,17 +82,6 @@ export default defineComponent({
   methods: {
     upgradePlan() {
       this.$router.push('/plans')
-    },
-    async cancelPlan() {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_ENDPOINT}/plans/${
-          this.profile?.plan.id
-        }/cancel`
-      )
-      const message = response.data.body
-      if (message === 'Your subscription has been canceled.') {
-        this.$router.push('/plans')
-      }
     }
   }
 })

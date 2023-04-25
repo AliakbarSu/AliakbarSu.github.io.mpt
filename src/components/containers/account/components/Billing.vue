@@ -6,59 +6,50 @@
       <div>
         <h2 class="text-base font-semibold leading-7 text-gray-900">Billing</h2>
         <p class="mt-1 text-sm leading-6 text-gray-500">
-          This information will be displayed publicly so be careful what you
-          share.
+          Manage your subscription - view status, upgrade/downgrade, and cancel
+          anytime.
         </p>
 
         <dl
           class="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6"
         >
-          <div class="pt-6 sm:flex">
-            <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-              Full name
-            </dt>
-            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-              <div class="text-gray-900">Tom Cook</div>
-              <button
-                type="button"
-                class="font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                Update
-              </button>
-            </dd>
-          </div>
-          <div class="pt-6 sm:flex">
-            <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-              Email address
-            </dt>
-            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-              <div class="text-gray-900">tom.cook@example.com</div>
-              <button
-                type="button"
-                class="font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                Update
-              </button>
-            </dd>
-          </div>
-          <div class="pt-6 sm:flex">
-            <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">
-              Title
-            </dt>
-            <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-              <div class="text-gray-900">Human Resources Manager</div>
-              <button
-                type="button"
-                class="font-semibold text-indigo-600 hover:text-indigo-500"
-              >
-                Update
-              </button>
-            </dd>
-          </div>
+          <SkeletonLoading v-if="true" />
         </dl>
       </div>
     </div>
   </main>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts">
+import { defineComponent } from 'vue'
+import axios from 'axios'
+import SkeletonLoading from './UI/Loading/skeletonLoading.vue'
+
+export default defineComponent({
+  components: {
+    SkeletonLoading
+  },
+  data() {
+    return {
+      loading: false
+    }
+  },
+  created() {
+    this.getPortalLink()
+  },
+  methods: {
+    async getPortalLink() {
+      try {
+        this.loading = true
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_ENDPOINT}/billing/manage`
+        )
+        const link = response.data.body
+        window.location.replace(link)
+      } catch (err) {
+        this.loading = false
+      }
+    }
+  }
+})
+</script>
