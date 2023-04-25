@@ -7,7 +7,6 @@ export default () =>
     clientId,
     authorizationParams: {
       redirect_uri: window.location.origin,
-      audience: 'https://jwt-token-authorizer.com',
-      scope: 'openid profile email user:read'
+      audience: 'https://jwt-token-authorizer.com'
     }
   })
