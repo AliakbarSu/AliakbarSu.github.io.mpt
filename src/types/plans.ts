@@ -6,4 +6,5 @@ export interface Plan {
   features: string[]
   price: number
   mostPopular: boolean
+  freeTrial: boolean
 }

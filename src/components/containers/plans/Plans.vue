@@ -77,7 +77,11 @@
             </ul>
           </div>
           <a
-            @click="subscribeToPlan(tier.id)"
+            @click="
+              tier.freeTrial
+                ? subscribeToFreeTrial(tier.id)
+                : subscribeToPlan(tier.id)
+            "
             :aria-describedby="tier.id"
             :class="[
               tier.mostPopular
@@ -85,7 +89,11 @@
                 : 'text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300',
               'mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
             ]"
-            >Get plan</a
+            >{{
+              tier.freeTrial
+                ? `Start ${tier.freeTrial} days free trial`
+                : 'Get plan'
+            }}</a
           >
         </div>
       </div>
@@ -105,22 +113,37 @@ export default defineComponent({
   },
   data() {
     return {
+      loading: false,
       tiers: [] as Plan[]
     }
   },
   async created() {
-    const getPlans = async (): Promise<Plan[]> => {
-      const result = await axios.get(
-        `${import.meta.env.VITE_API_ENDPOINT}/plans`
-      )
-      return JSON.parse(result.data.body)
+    const getPlans = async () => {
+      this.loading = true
+      try {
+        const result = await axios.get(
+          `${import.meta.env.VITE_API_ENDPOINT}/plans`
+        )
+        this.tiers = JSON.parse(result.data.body)
+      } catch (err) {
+      } finally {
+        this.loading = false
+      }
     }
-    this.tiers = await getPlans()
+    getPlans()
   },
   methods: {
     async subscribeToPlan(planId: string) {
       const checkoutUrl = await axios.get(
         `${import.meta.env.VITE_API_ENDPOINT}/plans/${planId}/subscribe`
+      )
+      window.location.replace(checkoutUrl.data.body)
+    },
+    async subscribeToFreeTrial(planId: string) {
+      const checkoutUrl = await axios.get(
+        `${
+          import.meta.env.VITE_API_ENDPOINT
+        }/plans/${planId}/subscribe/free-trial`
       )
       window.location.replace(checkoutUrl.data.body)
     }
