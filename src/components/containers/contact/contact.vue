@@ -58,7 +58,7 @@
                 <a
                   class="hover:text-gray-900"
                   href="mailto:contact@practicemed.com"
-                  >contact@practicemed.com</a
+                  >contact@practicemed.org</a
                 >
               </dd>
             </div>
