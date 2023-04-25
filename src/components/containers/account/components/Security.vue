@@ -8,8 +8,7 @@
           Security
         </h2>
         <p class="mt-1 text-sm leading-6 text-gray-500">
-          This information will be displayed publicly so be careful what you
-          share.
+          Manage your account - Reset password
         </p>
 
         <dl

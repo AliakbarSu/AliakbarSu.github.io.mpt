@@ -6,8 +6,8 @@
       <div>
         <h2 class="text-base font-semibold leading-7 text-gray-900">Plans</h2>
         <p class="mt-1 text-sm leading-6 text-gray-500">
-          This information will be displayed publicly so be careful what you
-          share.
+          Manage your subscription - view status, upgrade/downgrade, and cancel
+          anytime.
         </p>
 
         <dl
@@ -25,6 +25,13 @@
                 class="font-semibold text-indigo-600 hover:text-indigo-500"
               >
                 Upgrade
+              </button>
+              <button
+                @click="cancelPlan"
+                type="button"
+                class="font-semibold text-indigo-600 hover:text-indigo-500"
+              >
+                Cancel
               </button>
             </dd>
           </div>
@@ -66,6 +73,7 @@
 import type { Profile } from '@/types/user'
 import type { PropType } from 'vue'
 import { defineComponent } from 'vue'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'Plans',
@@ -77,6 +85,17 @@ export default defineComponent({
   methods: {
     upgradePlan() {
       this.$router.push('/plans')
+    },
+    async cancelPlan() {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_ENDPOINT}/plans/${
+          this.profile?.plan.id
+        }/cancel`
+      )
+      const message = response.data.body
+      if (message === 'Your subscription has been canceled.') {
+        this.$router.push('/plans')
+      }
     }
   }
 })

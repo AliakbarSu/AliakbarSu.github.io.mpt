@@ -13,7 +13,7 @@
               @click="setItem(item.name)"
               :href="item.href"
               :class="[
-                item.current
+                isActive(item.name)
                   ? 'bg-gray-50 text-indigo-600'
                   : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
                 'group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm leading-6 font-semibold'
@@ -22,7 +22,7 @@
               <component
                 :is="item.icon"
                 :class="[
-                  item.current
+                  isActive(item.name)
                     ? 'text-indigo-600'
                     : 'text-gray-400 group-hover:text-indigo-600',
                   'h-6 w-6 shrink-0'
@@ -39,7 +39,7 @@
       <General :profile="profile" v-if="currentItem == 'General'" />
       <Security :profile="profile" v-if="currentItem == 'Security'" />
       <Plans :profile="profile" v-if="currentItem == 'Plan'" />
-      <Billing :profile="profile" v-if="currentItem == 'Billing'" />
+      <!-- <Billing :profile="profile" v-if="currentItem == 'Billing'" /> -->
     </div>
   </div>
 </template>
@@ -58,12 +58,13 @@ import {
   FingerPrintIcon,
   UserCircleIcon
 } from '@heroicons/vue/24/outline'
+import { useAuth0 } from '@auth0/auth0-vue'
 
 const secondaryNavigation = [
   { name: 'General', href: '#', icon: UserCircleIcon, current: true },
   { name: 'Security', href: '#', icon: FingerPrintIcon, current: false },
-  { name: 'Plan', href: '#', icon: CubeIcon, current: false },
-  { name: 'Billing', href: '#', icon: CreditCardIcon, current: false }
+  { name: 'Plan', href: '#', icon: CubeIcon, current: false }
+  // { name: 'Billing', href: '#', icon: CreditCardIcon, current: false }
 ]
 
 const currentItem = ref('General')
@@ -74,6 +75,7 @@ const setItem = (item: string) => {
 const profile = ref({} as Profile)
 const loading = ref(false)
 const error = ref(false)
+const { getAccessTokenSilently } = useAuth0()
 
 const fetchTestHistory = async () => {
   loading.value = true
@@ -88,6 +90,10 @@ const fetchTestHistory = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const isActive = (item: string) => {
+  return currentItem.value == item
 }
 
 fetchTestHistory()

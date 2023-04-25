@@ -1,22 +1,16 @@
-
 <template>
   <v-app app>
     <!-- <Alert /> -->
     <Navbar />
-
-    <!-- Sizes your content based upon application components -->
     <v-main>
       <router-view />
     </v-main>
 
     <Footer />
   </v-app>
-  <!-- <RouterView /> -->
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import Footer from '@/components/UI/footer/footer.vue'
 import Navbar from '@/components/UI/navbar/navbar.vue'
 // import Alert from '@/components/UI/alert/alert.vue'
@@ -27,38 +21,38 @@ export default {
   data() {
     return {
       isAuth: this.$auth0.isAuthenticated
-      }
-    },
+    }
+  },
   watch: {
     isAuth() {
-     if(this.isAuth) {
-      const userData = this.$auth0.user as unknown as {
-        nickname: string;
-        email: string;
-        picture: string;
+      if (this.isAuth) {
+        const userData = this.$auth0.user as unknown as {
+          nickname: string
+          email: string
+          picture: string
+        }
+        this.$store.commit('setUserData', {
+          name: DummyUser.name,
+          email: DummyUser.email,
+          picture: DummyUser.picture
+        })
       }
-      this.$store.commit('setUserData', {
-        name: DummyUser.name,
-        email: DummyUser.email,
-        picture: DummyUser.picture
-      })
-     }
     }
   },
   components: {
     Footer,
-    Navbar,
+    Navbar
     // Alert
   },
-  setup() {
-    // const { loginWithRedirect } = useAuth0()
-    // return {
-    //   login: () => {
-    //     loginWithRedirect()
-    //   }
-    // }
-  },
-  created() {
+  async created() {
+    try {
+      const token = await this.$auth0.getAccessTokenSilently()
+      axios.interceptors.request.use(function (config) {
+        config.headers.Authorization = token ? `Bearer ${token}` : ''
+        return config
+      })
+    } catch (err) {}
+
     axios.interceptors.response.use(undefined, function (err) {
       return new Promise(function () {
         if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
@@ -72,4 +66,3 @@ export default {
   }
 }
 </script>
-
