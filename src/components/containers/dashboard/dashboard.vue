@@ -254,7 +254,7 @@ export default {
     this.fetchTests()
     this.fetchTestHistory()
   },
-  data() {
+  data: () => {
     return {
       loading: false,
       currentView: 'tests',

@@ -206,7 +206,7 @@ export default defineComponent({
   created() {
     this.fetchTestHistory()
   },
-  data() {
+  data: () => {
     return {
       loading: false,
       error: false,

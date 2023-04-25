@@ -79,85 +79,6 @@ export interface QuestionInProgress extends Question {
   isFirst: boolean
 }
 
-const dummyTest: Test = {
-  id: 'fsjfsj',
-  name: 'jfsjf',
-  description: "This is the test's description",
-  questions: [
-    {
-      id: 'questionOne',
-      text: 'This is a good questin',
-      options: [
-        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
-        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
-      ],
-      correct_option_explanation: "This is the correct option's explanation",
-      field: "This is the question's field"
-    },
-    {
-      id: 'questionTwo',
-      text: 'This is a good questin',
-      options: [
-        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
-        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
-      ],
-      correct_option_explanation: "This is the correct option's explanation",
-      field: "This is the question's field"
-    },
-    {
-      id: 'questionThree',
-      text: 'This is a good questin',
-      options: [
-        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
-        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
-      ],
-      correct_option_explanation: "This is the correct option's explanation",
-      field: "This is the question's field"
-    },
-    {
-      id: 'questionFour',
-      text: 'This is a good questin',
-      options: [
-        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
-        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
-      ],
-      correct_option_explanation: "This is the correct option's explanation",
-      field: "This is the question's field"
-    },
-    {
-      id: 'questionFive',
-      text: 'This is a good questin',
-      options: [
-        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
-        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
-      ],
-      correct_option_explanation: "This is the correct option's explanation",
-      field: "This is the question's field"
-    },
-    {
-      id: 'questionSix',
-      text: 'This is a good questin',
-      options: [
-        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
-        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
-      ],
-      correct_option_explanation: "This is the correct option's explanation",
-      field: "This is the question's field"
-    },
-    {
-      id: 'questionSeven',
-      text: 'This is a good questin',
-      options: [
-        { id: 'optionOne', text: 'jfksajfajsf', alpha: 'A' },
-        { id: 'optionTwo', text: 'jfksajfajsf', alpha: 'B' }
-      ],
-      correct_option_explanation: "This is the correct option's explanation",
-      field: "This is the question's field"
-    }
-  ],
-  thumbnail: []
-}
-
 export interface Alerts {
   timeOver: boolean
   selectOption: boolean
@@ -169,7 +90,7 @@ export default defineComponent({
     await this.loadTest()
     this.numberQuestions()
   },
-  data() {
+  data: () => {
     return {
       skipping: false,
       test: {} as TestInProgress,
