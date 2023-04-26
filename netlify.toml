@@ -1,6 +1,6 @@
 # The following redirect is intended for use with most SPA's that handles routing internally.
 [[redirects]]
-  from = "/api/*"
+  from = "/https://api.practicemed.org/*"
   to = "https://api.practicemed.org"
   status = 200
 [[redirects]]
