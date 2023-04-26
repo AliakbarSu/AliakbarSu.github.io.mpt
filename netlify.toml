@@ -1,6 +1,6 @@
 [[redirects]]
   from = "/api/*"
-  to = "https://927y2ukd22.execute-api.ap-southeast-2.amazonaws.com:splat"
+  to = "https://927y2ukd22.execute-api.ap-southeast-2.amazonaws.com"
   status = 200
   force=true
 
