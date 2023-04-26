@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "/api/*"
+  from = "https://api/*"
   to = "https://api.practicemed.org:splat"
   status = 200
   force=true
